@@ -32,6 +32,8 @@ export type RsvpRecord = {
   notes?: string;
   status: RsvpStatus;
   tags: string[];
+  transportRouteId?: string | null;
+  transportAssignedSeats?: number;
 };
 
 export type RsvpMetrics = {
@@ -123,6 +125,13 @@ export function useRsvpData(limitTo = 200) {
             notes: data.notes ? String(data.notes) : undefined,
             status,
             tags,
+            transportRouteId:
+              typeof data.transportRouteId === "string"
+                ? String(data.transportRouteId)
+                : null,
+            transportAssignedSeats: Number.isFinite(data.transportAssignedSeats)
+              ? Number(data.transportAssignedSeats)
+              : undefined,
           });
         });
 
@@ -155,6 +164,9 @@ export function useRsvpData(limitTo = 200) {
         record.tags.forEach((tag) => {
           acc.tagCounts[tag] = (acc.tagCounts[tag] ?? 0) + 1;
         });
+        if (record.transportAssignedSeats) {
+          acc.transportSeats += record.transportAssignedSeats;
+        }
         return acc;
       },
       {
