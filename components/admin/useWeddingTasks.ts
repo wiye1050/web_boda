@@ -39,7 +39,7 @@ export function useWeddingTasks() {
   useEffect(() => {
     const db = getFirestoreDb();
     const tasksRef = collection(db, "tasks");
-    const tasksQuery = query(tasksRef, orderBy("dueDate", "asc"));
+    const tasksQuery = query(tasksRef, orderBy("createdAt", "desc"));
 
     const unsubscribe = onSnapshot(
       tasksQuery,
