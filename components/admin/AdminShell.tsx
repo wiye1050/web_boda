@@ -7,6 +7,7 @@ import { useAuth } from "@/components/admin/AuthContext";
 
 const NAV_LINKS = [
   { href: "/admin", label: "Dashboard" },
+  { href: "/admin/plan", label: "Plan" },
   { href: "/admin/rsvps", label: "RSVPs" },
   { href: "/admin/transporte", label: "Transporte" },
   { href: "/admin/configuracion", label: "Configuración" },
