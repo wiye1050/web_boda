@@ -68,6 +68,8 @@ export function RsvpDetailDialog({ record, onClose }: RsvpDetailDialogProps) {
     return null;
   }
 
+  const recordId = record.id;
+
   async function handleSave(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (isSaving) return;
@@ -76,7 +78,7 @@ export function RsvpDetailDialog({ record, onClose }: RsvpDetailDialogProps) {
 
     try {
       const db = getFirestoreDb();
-      const docRef = doc(db, "rsvps", record.id);
+      const docRef = doc(db, "rsvps", recordId);
 
       await updateDoc(docRef, {
         notes: notes.trim(),
