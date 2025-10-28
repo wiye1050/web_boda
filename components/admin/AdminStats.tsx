@@ -26,6 +26,7 @@ export function AdminStats({ metrics }: AdminStatsProps) {
 
   const topTags = useMemo(() => {
     return Object.entries(metrics.tagCounts)
+      .filter(([, count]) => count > 0)
       .sort(([, a], [, b]) => b - a)
       .slice(0, 5);
   }, [metrics.tagCounts]);
