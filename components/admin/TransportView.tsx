@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   onSnapshot,
   orderBy,
@@ -129,9 +130,18 @@ export function TransportView() {
     ? Math.max(selectedRoute.capacity - totalAssignedSeats, 0)
     : 0;
 
+  const currentRsvpAssignments = useMemo(() => {
+    return new Set(currentAssignments.map((assignment) => assignment.rsvpId));
+  }, [currentAssignments]);
+
   const availableRsvps = useMemo(() => {
-    return rsvps.filter((rsvp) => rsvp.needsTransport === "si");
-  }, [rsvps]);
+    return rsvps.filter(
+      (rsvp) =>
+        rsvp.needsTransport === "si" &&
+        !currentRsvpAssignments.has(rsvp.id) &&
+        (!rsvp.transportRouteId || rsvp.transportRouteId === selectedRouteId),
+    );
+  }, [rsvps, currentRsvpAssignments, selectedRouteId]);
 
   async function handleCreateDefaultRoute() {
     const db = getFirestoreDb();
@@ -162,6 +172,11 @@ export function TransportView() {
       return;
     }
 
+    if (currentRsvpAssignments.has(rsvp.id)) {
+      setError("Este invitado ya está asignado a este autobús.");
+      return;
+    }
+
     const db = getFirestoreDb();
     const assignmentsRef = collection(db, "transport_routes", selectedRoute.id, "assignments");
 
@@ -172,10 +187,33 @@ export function TransportView() {
         seats,
         createdAt: serverTimestamp(),
       });
+      await updateDoc(doc(db, "rsvps", rsvp.id), {
+        transportRouteId: selectedRoute.id,
+        transportAssignedSeats: seats,
+        updatedAt: serverTimestamp(),
+        updatedBy: user?.email ?? null,
+      });
       setError(null);
     } catch (err) {
       console.error(err);
       setError("No se pudo asignar el invitado. Intenta de nuevo.");
+    }
+  }
+
+  async function handleRemoveAssignment(assignment: Assignment) {
+    if (!selectedRoute) return;
+    const db = getFirestoreDb();
+    try {
+      await deleteDoc(doc(db, "transport_routes", selectedRoute.id, "assignments", assignment.id));
+      await updateDoc(doc(db, "rsvps", assignment.rsvpId), {
+        transportRouteId: null,
+        transportAssignedSeats: 0,
+        updatedAt: serverTimestamp(),
+        updatedBy: user?.email ?? null,
+      });
+    } catch (err) {
+      console.error(err);
+      setError("No se pudo eliminar la asignación.");
     }
   }
 
@@ -323,12 +361,13 @@ export function TransportView() {
               </p>
             ) : (
               <div className="overflow-x-auto rounded-[20px] border border-border/70 bg-surface/95 shadow-[var(--shadow-soft)]">
-                <table className="w-full min-w-[640px] divide-y divide-border/60 text-left text-sm">
+                <table className="w-full min-w-[720px] divide-y divide-border/60 text-left text-sm">
                   <thead className="bg-accent/70 text-xs uppercase tracking-[0.3em] text-muted">
                     <tr>
                       <th className="px-4 py-3">Invitado</th>
                       <th className="px-4 py-3">Plazas</th>
                       <th className="px-4 py-3">Asignado</th>
+                      <th className="px-4 py-3 text-right">Acciones</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/50">
@@ -347,6 +386,15 @@ export function TransportView() {
                                 minute: "2-digit",
                               })
                             : "—"}
+                        </td>
+                        <td className="px-4 py-4 text-right">
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveAssignment(assignment)}
+                            className="rounded-full border border-border px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+                          >
+                            Quitar
+                          </button>
                         </td>
                       </tr>
                     ))}

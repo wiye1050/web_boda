@@ -155,7 +155,6 @@ export function useRsvpData(limitTo = 200) {
         if (record.attendance === "si") {
           acc.attending += 1;
           acc.transportRequests += record.needsTransport === "si" ? 1 : 0;
-          acc.transportSeats += record.transportSeats ?? 0;
           acc.preboda += record.preboda === "si" ? 1 : 0;
         } else {
           acc.notAttending += 1;
@@ -164,9 +163,12 @@ export function useRsvpData(limitTo = 200) {
         record.tags.forEach((tag) => {
           acc.tagCounts[tag] = (acc.tagCounts[tag] ?? 0) + 1;
         });
-        if (record.transportAssignedSeats) {
-          acc.transportSeats += record.transportAssignedSeats;
-        }
+        const seatContribution = record.transportAssignedSeats != null
+          ? record.transportAssignedSeats
+          : record.needsTransport === "si"
+            ? record.transportSeats ?? 0
+            : 0;
+        acc.transportSeats += seatContribution;
         return acc;
       },
       {
