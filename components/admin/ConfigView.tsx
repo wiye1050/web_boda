@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { FirebaseError } from "firebase/app";
 import { getFirestoreDb } from "@/lib/firebase";
 import {
   DEFAULT_PUBLIC_CONTENT,
@@ -67,11 +68,19 @@ export function ConfigView() {
     try {
       const db = getFirestoreDb();
       const payload = serializePublicContent(config);
-      await setDoc(doc(db, "config", "general"), payload, { merge: true });
+      await setDoc(doc(db, "config", "general"), payload);
       setMessage("Contenido guardado correctamente.");
     } catch (err) {
       console.error(err);
-      setError("No pudimos guardar los cambios. Intenta de nuevo.");
+      if (err instanceof FirebaseError) {
+        setError(
+          `No pudimos guardar. Código: ${err.code}. ${err.message ?? ""}`.trim(),
+        );
+      } else if (err instanceof Error) {
+        setError(`No pudimos guardar: ${err.message}`);
+      } else {
+        setError("No pudimos guardar los cambios. Intenta de nuevo.");
+      }
     } finally {
       setIsSaving(false);
     }
