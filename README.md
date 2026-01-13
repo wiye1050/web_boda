@@ -27,6 +27,12 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
+## Admin y contenido
+
+- El contenido público se edita desde el panel en `/admin/configuracion`.
+- El acceso al panel se controla con `NEXT_PUBLIC_ADMIN_EMAILS` (emails separados por comas).
+- Las contraseñas se gestionan en Firebase Auth (Email/Password); no se guardan en este repositorio.
+
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
 ## Deploy on Vercel

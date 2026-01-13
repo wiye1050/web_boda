@@ -7,6 +7,7 @@ import {
   type VendorCategory,
   type VendorStatus,
 } from "@/components/admin/useVendors";
+import { formatCurrency } from "@/components/admin/utils/formatCurrency";
 
 const CATEGORY_LABELS: Record<VendorCategory, string> = {
   catering: "Catering",
@@ -418,12 +419,4 @@ function VendorCard({
       </div>
     </div>
   );
-}
-
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat("es-ES", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 0,
-  }).format(value);
 }

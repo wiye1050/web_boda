@@ -1,0 +1,623 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null &&
+        (request.auth.token.email in [
+          "guillemenendez1050@gmail.com",
+          "varelamaciasalba@gmail.com",
+        ]);
+    }
+
+    function stringField(field, minLen, maxLen) {
+      return field is string && field.size() >= minLen && field.size() <= maxLen;
+    }
+
+    function optionalString(data, key, minLen, maxLen) {
+      return !data.keys().hasAny([key]) || stringField(data[key], minLen, maxLen);
+    }
+
+    function optionalStringOrNull(data, key, minLen, maxLen) {
+      return !data.keys().hasAny([key]) ||
+        data[key] == null ||
+        stringField(data[key], minLen, maxLen);
+    }
+
+    function optionalTimestamp(data, key) {
+      return !data.keys().hasAny([key]) || data[key] is timestamp;
+    }
+
+    function optionalBoolean(data, key) {
+      return !data.keys().hasAny([key]) || data[key] is bool;
+    }
+
+    function isNumeric(value) {
+      return value is int || value is float;
+    }
+
+    function optionalNumber(data, key, minValue, maxValue) {
+      return !data.keys().hasAny([key]) ||
+        data[key] == null ||
+        (isNumeric(data[key]) && data[key] >= minValue && data[key] <= maxValue);
+    }
+
+    function optionalInt(data, key, minValue, maxValue) {
+      return !data.keys().hasAny([key]) ||
+        (data[key] is int && data[key] >= minValue && data[key] <= maxValue);
+    }
+
+    function optionalTags(data) {
+      return !data.keys().hasAny(["tags"]) ||
+        (data.tags is list && data.tags.size() <= 20);
+    }
+
+    function optionalStatus(data) {
+      return !data.keys().hasAny(["status"]) ||
+        (data.status is string &&
+          (data.status == "pendiente" ||
+           data.status == "contactado" ||
+           data.status == "confirmado"));
+    }
+
+    function optionalTransportLink(data) {
+      return !data.keys().hasAny(["transportRouteId"]) ||
+        data.transportRouteId == null ||
+        stringField(data.transportRouteId, 1, 200);
+    }
+
+    function optionalTransportSeatsAssigned(data) {
+      return !data.keys().hasAny(["transportAssignedSeats"]) ||
+        (data.transportAssignedSeats is int &&
+         data.transportAssignedSeats >= 0 &&
+         data.transportAssignedSeats <= 200);
+    }
+
+    function isValidRsvpTransport(data) {
+      return data.needsTransport == "si"
+        ? data.keys().hasAny(["transportSeats"]) &&
+          data.transportSeats is int &&
+          data.transportSeats >= 1 &&
+          data.transportSeats <= 6
+        : !data.keys().hasAny(["transportSeats"]) ||
+          data.transportSeats == null ||
+          data.transportSeats == 0;
+    }
+
+    function baseRsvpChecks(data) {
+      return stringField(data.fullName, 2, 150) &&
+        stringField(data.email, 3, 150) &&
+        stringField(data.phone, 8, 25) &&
+        data.attendance in ["si", "no"] &&
+        data.preboda in ["si", "no"] &&
+        data.needsTransport in ["si", "no"] &&
+        data.guests is int &&
+        data.guests >= 0 &&
+        data.guests <= 6 &&
+        (data.attendance == "si" ? data.guests >= 1 : data.guests == 0) &&
+        optionalString(data, "guestNames", 0, 250) &&
+        optionalString(data, "requests", 0, 600) &&
+        isValidRsvpTransport(data) &&
+        optionalTimestamp(data, "submittedAt") &&
+        optionalTimestamp(data, "updatedAt") &&
+        optionalStringOrNull(data, "updatedBy", 0, 200) &&
+        optionalBoolean(data, "processed") &&
+        optionalString(data, "notes", 0, 800) &&
+        optionalStatus(data) &&
+        optionalTags(data) &&
+        optionalTransportLink(data) &&
+        optionalTransportSeatsAssigned(data) &&
+        (!data.keys().hasAny(["source"]) || stringField(data.source, 2, 40));
+    }
+
+    function rsvpCreateKeys(data) {
+      return data.keys().hasOnly([
+        "fullName",
+        "email",
+        "phone",
+        "attendance",
+        "guests",
+        "guestNames",
+        "preboda",
+        "needsTransport",
+        "transportSeats",
+        "requests",
+        "submittedAt",
+        "source",
+      ]);
+    }
+
+    function rsvpUpdateKeys(data) {
+      return data.keys().hasOnly([
+        "fullName",
+        "email",
+        "phone",
+        "attendance",
+        "guests",
+        "guestNames",
+        "preboda",
+        "needsTransport",
+        "transportSeats",
+        "requests",
+        "submittedAt",
+        "source",
+        "processed",
+        "notes",
+        "updatedAt",
+        "updatedBy",
+        "status",
+        "tags",
+        "transportRouteId",
+        "transportAssignedSeats",
+      ]);
+    }
+
+    match /rsvps/{docId} {
+      allow create: if (request.auth == null || isAdmin()) &&
+        rsvpCreateKeys(request.resource.data) &&
+        baseRsvpChecks(request.resource.data);
+
+      allow read: if isAdmin();
+
+      allow update: if isAdmin() &&
+        rsvpUpdateKeys(request.resource.data) &&
+        baseRsvpChecks(request.resource.data);
+
+      allow delete: if isAdmin();
+    }
+
+    function baseTaskChecks(data) {
+      return stringField(data.title, 2, 200) &&
+        data.status in ["pendiente", "en-progreso", "completada"] &&
+        data.priority in ["alta", "media", "baja"] &&
+        optionalString(data, "description", 0, 600) &&
+        optionalString(data, "monthLabel", 0, 120) &&
+        optionalString(data, "dueDate", 0, 40) &&
+        optionalString(data, "assignee", 0, 160) &&
+        optionalString(data, "notes", 0, 800) &&
+        optionalStringOrNull(data, "category", 0, 120) &&
+        optionalTimestamp(data, "createdAt") &&
+        optionalTimestamp(data, "updatedAt");
+    }
+
+    function taskCreateKeys(data) {
+      return data.keys().hasOnly([
+        "title",
+        "description",
+        "monthLabel",
+        "dueDate",
+        "status",
+        "assignee",
+        "notes",
+        "category",
+        "priority",
+        "createdAt",
+      ]);
+    }
+
+    function taskUpdateKeys(data) {
+      return data.keys().hasOnly([
+        "title",
+        "description",
+        "monthLabel",
+        "dueDate",
+        "status",
+        "assignee",
+        "notes",
+        "category",
+        "priority",
+        "createdAt",
+        "updatedAt",
+      ]);
+    }
+
+    match /tasks/{taskId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() &&
+        taskCreateKeys(request.resource.data) &&
+        baseTaskChecks(request.resource.data);
+      allow update: if isAdmin() &&
+        taskUpdateKeys(request.resource.data) &&
+        baseTaskChecks(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    function baseVendorChecks(data) {
+      return stringField(data.name, 2, 200) &&
+        data.category in [
+          "catering",
+          "fotografia",
+          "video",
+          "musica",
+          "decoracion",
+          "floristeria",
+          "iluminacion",
+          "transporte",
+          "papeleria",
+          "officiant",
+          "otros",
+        ] &&
+        data.status in ["pendiente", "contratado", "pagado"] &&
+        optionalStringOrNull(data, "contactName", 0, 160) &&
+        optionalStringOrNull(data, "contactPhone", 0, 25) &&
+        optionalStringOrNull(data, "contactEmail", 0, 160) &&
+        optionalStringOrNull(data, "website", 0, 300) &&
+        optionalNumber(data, "costEstimate", 0, 1000000) &&
+        optionalNumber(data, "paidAmount", 0, 1000000) &&
+        optionalStringOrNull(data, "notes", 0, 800) &&
+        optionalStringOrNull(data, "paymentDueDate", 0, 40) &&
+        optionalStringOrNull(data, "contractUrl", 0, 400) &&
+        optionalTimestamp(data, "createdAt") &&
+        optionalTimestamp(data, "updatedAt");
+    }
+
+    function vendorCreateKeys(data) {
+      return data.keys().hasOnly([
+        "name",
+        "category",
+        "status",
+        "contactName",
+        "contactPhone",
+        "contactEmail",
+        "website",
+        "costEstimate",
+        "paidAmount",
+        "notes",
+        "paymentDueDate",
+        "contractUrl",
+        "createdAt",
+      ]);
+    }
+
+    function vendorUpdateKeys(data) {
+      return data.keys().hasOnly([
+        "name",
+        "category",
+        "status",
+        "contactName",
+        "contactPhone",
+        "contactEmail",
+        "website",
+        "costEstimate",
+        "paidAmount",
+        "notes",
+        "paymentDueDate",
+        "contractUrl",
+        "createdAt",
+        "updatedAt",
+      ]);
+    }
+
+    match /vendors/{vendorId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() &&
+        vendorCreateKeys(request.resource.data) &&
+        baseVendorChecks(request.resource.data);
+      allow update: if isAdmin() &&
+        vendorUpdateKeys(request.resource.data) &&
+        baseVendorChecks(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    function baseBudgetChecks(data) {
+      return stringField(data.concept, 2, 200) &&
+        data.status in ["planeado", "comprometido", "pagado"] &&
+        optionalString(data, "category", 0, 120) &&
+        optionalNumber(data, "estimate", 0, 1000000) &&
+        optionalNumber(data, "actual", 0, 1000000) &&
+        optionalNumber(data, "paid", 0, 1000000) &&
+        optionalStringOrNull(data, "vendorId", 0, 200) &&
+        optionalStringOrNull(data, "dueDate", 0, 40) &&
+        optionalStringOrNull(data, "notes", 0, 800) &&
+        optionalTimestamp(data, "createdAt") &&
+        optionalTimestamp(data, "updatedAt");
+    }
+
+    function budgetCreateKeys(data) {
+      return data.keys().hasOnly([
+        "concept",
+        "category",
+        "status",
+        "estimate",
+        "actual",
+        "paid",
+        "vendorId",
+        "dueDate",
+        "notes",
+        "createdAt",
+      ]);
+    }
+
+    function budgetUpdateKeys(data) {
+      return data.keys().hasOnly([
+        "concept",
+        "category",
+        "status",
+        "estimate",
+        "actual",
+        "paid",
+        "vendorId",
+        "dueDate",
+        "notes",
+        "createdAt",
+        "updatedAt",
+      ]);
+    }
+
+    match /budget/{itemId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() &&
+        budgetCreateKeys(request.resource.data) &&
+        baseBudgetChecks(request.resource.data);
+      allow update: if isAdmin() &&
+        budgetUpdateKeys(request.resource.data) &&
+        baseBudgetChecks(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    function baseRouteChecks(data) {
+      return stringField(data.name, 2, 120) &&
+        optionalString(data, "description", 0, 300) &&
+        stringField(data.departureTime, 8, 50) &&
+        stringField(data.returnTime, 8, 50) &&
+        optionalStringOrNull(data, "notes", 0, 800) &&
+        data.capacity is int &&
+        data.capacity >= 0 &&
+        data.capacity <= 200 &&
+        optionalTimestamp(data, "createdAt") &&
+        optionalTimestamp(data, "updatedAt") &&
+        optionalStringOrNull(data, "updatedBy", 0, 200);
+    }
+
+    function routeCreateKeys(data) {
+      return data.keys().hasOnly([
+        "name",
+        "description",
+        "departureTime",
+        "returnTime",
+        "capacity",
+        "notes",
+        "createdAt",
+      ]);
+    }
+
+    function routeUpdateKeys(data) {
+      return data.keys().hasOnly([
+        "name",
+        "description",
+        "departureTime",
+        "returnTime",
+        "capacity",
+        "notes",
+        "createdAt",
+        "updatedAt",
+        "updatedBy",
+      ]);
+    }
+
+    match /transport_routes/{routeId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() &&
+        routeCreateKeys(request.resource.data) &&
+        baseRouteChecks(request.resource.data);
+      allow update: if isAdmin() &&
+        routeUpdateKeys(request.resource.data) &&
+        baseRouteChecks(request.resource.data);
+      allow delete: if isAdmin();
+
+      function assignmentKeys(data) {
+        return data.keys().hasOnly([
+          "rsvpId",
+          "rsvpName",
+          "seats",
+          "createdAt",
+          "updatedAt",
+        ]);
+      }
+
+      function baseAssignmentChecks(data) {
+        return stringField(data.rsvpId, 1, 200) &&
+          stringField(data.rsvpName, 1, 200) &&
+          data.seats is int &&
+          data.seats >= 1 &&
+          data.seats <= 200 &&
+          optionalTimestamp(data, "createdAt") &&
+          optionalTimestamp(data, "updatedAt");
+      }
+
+      match /assignments/{assignmentId} {
+        allow read: if isAdmin();
+        allow create: if isAdmin() &&
+          assignmentKeys(request.resource.data) &&
+          baseAssignmentChecks(request.resource.data);
+        allow update: if isAdmin() &&
+          assignmentKeys(request.resource.data) &&
+          baseAssignmentChecks(request.resource.data);
+        allow delete: if isAdmin();
+      }
+    }
+
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if isAdmin() &&
+        request.resource.data.keys().hasOnly([
+          "brandName",
+          "headerCtaLabel",
+          "navWeddingLabel",
+          "navTimelineLabel",
+          "navStayLabel",
+          "navGiftsLabel",
+          "navRsvpLabel",
+          "heroEyebrow",
+          "heroTitle",
+          "heroDescription",
+          "heroPrimaryCtaLabel",
+          "heroSecondaryCtaLabel",
+          "heroMapCtaLabel",
+          "heroStatDateLabel",
+          "heroStatLocationLabel",
+          "heroStatTimeLabel",
+          "heroStatTimeNote",
+          "eventDate",
+          "eventTimeRange",
+          "locationName",
+          "locationAddress",
+          "locationMapUrl",
+          "locationMapLabel",
+          "prebodaPlace",
+          "prebodaTime",
+          "prebodaMapUrl",
+          "contactEmail",
+          "contactPhone",
+          "whatsappLink",
+          "giftLink",
+          "bankHolder",
+          "bankIban",
+          "prebodaEyebrow",
+          "prebodaTitle",
+          "prebodaDescription",
+          "prebodaCardOneLabel",
+          "prebodaCardOneCtaLabel",
+          "prebodaCardTwoLabel",
+          "prebodaCardTwoTitle",
+          "prebodaCardTwoDescription",
+          "ceremonyEyebrow",
+          "ceremonyTitle",
+          "ceremonyDescription",
+          "ceremonyCardOneLabel",
+          "ceremonyCardOneTitle",
+          "ceremonyCardOneDescription",
+          "ceremonyCardTwoLabel",
+          "ceremonyCardTwoTitle",
+          "ceremonyCardTwoDescription",
+          "timelineEyebrow",
+          "timelineTitle",
+          "timelineDescription",
+          "timelineItems",
+          "stayEyebrow",
+          "stayTitle",
+          "stayDescription",
+          "stayLinkLabel",
+          "stayOptions",
+          "giftsEyebrow",
+          "giftsTitle",
+          "giftsDescription",
+          "giftsRegistryTitle",
+          "giftsRegistryDescription",
+          "giftsRegistryCtaLabel",
+          "giftsBankTitle",
+          "giftsBankDescription",
+          "rsvpEyebrow",
+          "rsvpTitle",
+          "rsvpDescription",
+          "rsvpContactLead",
+          "rsvpContactWhatsappLead",
+          "rsvpImportantTitle",
+          "rsvpImportantNotes",
+          "locationEyebrow",
+          "locationTitle",
+          "locationDescription",
+          "locationContactTitle",
+          "locationEmailLabel",
+          "locationPhoneLabel",
+          "locationWhatsappLabel",
+          "locationWhatsappActionLabel",
+          "footerEyebrow",
+          "footerTitle",
+          "footerCtaLabel",
+          "footerCopyright",
+          "footerMadeWith",
+        ]) &&
+        optionalString(request.resource.data, "brandName", 0, 120) &&
+        optionalString(request.resource.data, "headerCtaLabel", 0, 60) &&
+        optionalString(request.resource.data, "navWeddingLabel", 0, 60) &&
+        optionalString(request.resource.data, "navTimelineLabel", 0, 60) &&
+        optionalString(request.resource.data, "navStayLabel", 0, 60) &&
+        optionalString(request.resource.data, "navGiftsLabel", 0, 60) &&
+        optionalString(request.resource.data, "navRsvpLabel", 0, 60) &&
+        optionalString(request.resource.data, "heroEyebrow", 0, 120) &&
+        optionalString(request.resource.data, "heroTitle", 0, 140) &&
+        optionalString(request.resource.data, "heroDescription", 0, 800) &&
+        optionalString(request.resource.data, "heroPrimaryCtaLabel", 0, 80) &&
+        optionalString(request.resource.data, "heroSecondaryCtaLabel", 0, 80) &&
+        optionalString(request.resource.data, "heroMapCtaLabel", 0, 100) &&
+        optionalString(request.resource.data, "heroStatDateLabel", 0, 60) &&
+        optionalString(request.resource.data, "heroStatLocationLabel", 0, 60) &&
+        optionalString(request.resource.data, "heroStatTimeLabel", 0, 60) &&
+        optionalString(request.resource.data, "heroStatTimeNote", 0, 80) &&
+        optionalString(request.resource.data, "eventDate", 0, 80) &&
+        optionalString(request.resource.data, "eventTimeRange", 0, 60) &&
+        optionalString(request.resource.data, "locationName", 0, 160) &&
+        optionalString(request.resource.data, "locationAddress", 0, 200) &&
+        optionalString(request.resource.data, "locationMapUrl", 0, 300) &&
+        optionalString(request.resource.data, "locationMapLabel", 0, 80) &&
+        optionalString(request.resource.data, "prebodaPlace", 0, 160) &&
+        optionalString(request.resource.data, "prebodaTime", 0, 80) &&
+        optionalString(request.resource.data, "prebodaMapUrl", 0, 300) &&
+        optionalString(request.resource.data, "contactEmail", 0, 120) &&
+        optionalString(request.resource.data, "contactPhone", 0, 40) &&
+        optionalString(request.resource.data, "whatsappLink", 0, 200) &&
+        optionalString(request.resource.data, "giftLink", 0, 200) &&
+        optionalString(request.resource.data, "bankHolder", 0, 200) &&
+        optionalString(request.resource.data, "bankIban", 0, 40) &&
+        optionalString(request.resource.data, "prebodaEyebrow", 0, 120) &&
+        optionalString(request.resource.data, "prebodaTitle", 0, 200) &&
+        optionalString(request.resource.data, "prebodaDescription", 0, 800) &&
+        optionalString(request.resource.data, "prebodaCardOneLabel", 0, 120) &&
+        optionalString(request.resource.data, "prebodaCardOneCtaLabel", 0, 120) &&
+        optionalString(request.resource.data, "prebodaCardTwoLabel", 0, 120) &&
+        optionalString(request.resource.data, "prebodaCardTwoTitle", 0, 160) &&
+        optionalString(request.resource.data, "prebodaCardTwoDescription", 0, 800) &&
+        optionalString(request.resource.data, "ceremonyEyebrow", 0, 120) &&
+        optionalString(request.resource.data, "ceremonyTitle", 0, 200) &&
+        optionalString(request.resource.data, "ceremonyDescription", 0, 800) &&
+        optionalString(request.resource.data, "ceremonyCardOneLabel", 0, 120) &&
+        optionalString(request.resource.data, "ceremonyCardOneTitle", 0, 160) &&
+        optionalString(request.resource.data, "ceremonyCardOneDescription", 0, 800) &&
+        optionalString(request.resource.data, "ceremonyCardTwoLabel", 0, 120) &&
+        optionalString(request.resource.data, "ceremonyCardTwoTitle", 0, 160) &&
+        optionalString(request.resource.data, "ceremonyCardTwoDescription", 0, 800) &&
+        optionalString(request.resource.data, "timelineEyebrow", 0, 120) &&
+        optionalString(request.resource.data, "timelineTitle", 0, 200) &&
+        optionalString(request.resource.data, "timelineDescription", 0, 800) &&
+        optionalString(request.resource.data, "timelineItems", 0, 8000) &&
+        optionalString(request.resource.data, "stayEyebrow", 0, 120) &&
+        optionalString(request.resource.data, "stayTitle", 0, 200) &&
+        optionalString(request.resource.data, "stayDescription", 0, 800) &&
+        optionalString(request.resource.data, "stayLinkLabel", 0, 120) &&
+        optionalString(request.resource.data, "stayOptions", 0, 8000) &&
+        optionalString(request.resource.data, "giftsEyebrow", 0, 120) &&
+        optionalString(request.resource.data, "giftsTitle", 0, 200) &&
+        optionalString(request.resource.data, "giftsDescription", 0, 800) &&
+        optionalString(request.resource.data, "giftsRegistryTitle", 0, 160) &&
+        optionalString(request.resource.data, "giftsRegistryDescription", 0, 800) &&
+        optionalString(request.resource.data, "giftsRegistryCtaLabel", 0, 120) &&
+        optionalString(request.resource.data, "giftsBankTitle", 0, 160) &&
+        optionalString(request.resource.data, "giftsBankDescription", 0, 800) &&
+        optionalString(request.resource.data, "rsvpEyebrow", 0, 120) &&
+        optionalString(request.resource.data, "rsvpTitle", 0, 200) &&
+        optionalString(request.resource.data, "rsvpDescription", 0, 800) &&
+        optionalString(request.resource.data, "rsvpContactLead", 0, 200) &&
+        optionalString(request.resource.data, "rsvpContactWhatsappLead", 0, 200) &&
+        optionalString(request.resource.data, "rsvpImportantTitle", 0, 160) &&
+        optionalString(request.resource.data, "rsvpImportantNotes", 0, 4000) &&
+        optionalString(request.resource.data, "locationEyebrow", 0, 120) &&
+        optionalString(request.resource.data, "locationTitle", 0, 200) &&
+        optionalString(request.resource.data, "locationDescription", 0, 800) &&
+        optionalString(request.resource.data, "locationContactTitle", 0, 160) &&
+        optionalString(request.resource.data, "locationEmailLabel", 0, 80) &&
+        optionalString(request.resource.data, "locationPhoneLabel", 0, 80) &&
+        optionalString(request.resource.data, "locationWhatsappLabel", 0, 80) &&
+        optionalString(request.resource.data, "locationWhatsappActionLabel", 0, 120) &&
+        optionalString(request.resource.data, "footerEyebrow", 0, 160) &&
+        optionalString(request.resource.data, "footerTitle", 0, 220) &&
+        optionalString(request.resource.data, "footerCtaLabel", 0, 120) &&
+        optionalString(request.resource.data, "footerCopyright", 0, 240) &&
+        optionalString(request.resource.data, "footerMadeWith", 0, 200);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

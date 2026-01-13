@@ -264,7 +264,7 @@ export function RsvpView() {
               }
             />
             <FilterPill
-              label="Pendientes"
+              label="Sin procesar"
               active={processedFilter === "pending"}
               onClick={() =>
                 setProcessedFilter((prev) =>

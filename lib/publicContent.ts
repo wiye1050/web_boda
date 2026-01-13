@@ -1,0 +1,702 @@
+export type TimelineItem = {
+  time: string;
+  title: string;
+  description: string;
+  location: string;
+  icon: string;
+};
+
+export type StayOption = {
+  name: string;
+  description: string;
+  distance: string;
+  link: string;
+};
+
+export type PublicContent = {
+  brandName: string;
+  headerCtaLabel: string;
+  navWeddingLabel: string;
+  navTimelineLabel: string;
+  navStayLabel: string;
+  navGiftsLabel: string;
+  navRsvpLabel: string;
+  heroEyebrow: string;
+  heroTitle: string;
+  heroDescription: string;
+  heroPrimaryCtaLabel: string;
+  heroSecondaryCtaLabel: string;
+  heroMapCtaLabel: string;
+  heroStatDateLabel: string;
+  heroStatLocationLabel: string;
+  heroStatTimeLabel: string;
+  heroStatTimeNote: string;
+  eventDate: string;
+  eventTimeRange: string;
+  locationName: string;
+  locationAddress: string;
+  locationMapUrl: string;
+  prebodaPlace: string;
+  prebodaTime: string;
+  prebodaMapUrl: string;
+  contactEmail: string;
+  contactPhone: string;
+  whatsappLink: string;
+  giftLink: string;
+  bankHolder: string;
+  bankIban: string;
+  prebodaEyebrow: string;
+  prebodaTitle: string;
+  prebodaDescription: string;
+  prebodaCardOneLabel: string;
+  prebodaCardOneCtaLabel: string;
+  prebodaCardTwoLabel: string;
+  prebodaCardTwoTitle: string;
+  prebodaCardTwoDescription: string;
+  ceremonyEyebrow: string;
+  ceremonyTitle: string;
+  ceremonyDescription: string;
+  ceremonyCardOneLabel: string;
+  ceremonyCardOneTitle: string;
+  ceremonyCardOneDescription: string;
+  ceremonyCardTwoLabel: string;
+  ceremonyCardTwoTitle: string;
+  ceremonyCardTwoDescription: string;
+  timelineEyebrow: string;
+  timelineTitle: string;
+  timelineDescription: string;
+  timelineItems: TimelineItem[];
+  stayEyebrow: string;
+  stayTitle: string;
+  stayDescription: string;
+  stayLinkLabel: string;
+  stayOptions: StayOption[];
+  giftsEyebrow: string;
+  giftsTitle: string;
+  giftsDescription: string;
+  giftsRegistryTitle: string;
+  giftsRegistryDescription: string;
+  giftsRegistryCtaLabel: string;
+  giftsBankTitle: string;
+  giftsBankDescription: string;
+  rsvpEyebrow: string;
+  rsvpTitle: string;
+  rsvpDescription: string;
+  rsvpContactLead: string;
+  rsvpContactWhatsappLead: string;
+  rsvpImportantTitle: string;
+  rsvpImportantNotes: string[];
+  locationEyebrow: string;
+  locationTitle: string;
+  locationDescription: string;
+  locationMapLabel: string;
+  locationContactTitle: string;
+  locationEmailLabel: string;
+  locationPhoneLabel: string;
+  locationWhatsappLabel: string;
+  locationWhatsappActionLabel: string;
+  footerEyebrow: string;
+  footerTitle: string;
+  footerCtaLabel: string;
+  footerCopyright: string;
+  footerMadeWith: string;
+};
+
+export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
+  brandName: "Alba & Guille",
+  headerCtaLabel: "Confirmar asistencia",
+  navWeddingLabel: "La boda",
+  navTimelineLabel: "Cronograma",
+  navStayLabel: "Alojamiento",
+  navGiftsLabel: "Regalos",
+  navRsvpLabel: "RSVP",
+  heroEyebrow: "Ponferrada · 2025",
+  heroTitle: "Alba & Guille",
+  heroDescription:
+    "El 12 de septiembre · 2025 nos damos el sí en Finca El Casar · Ponferrada. La celebración empieza con el aperitivo del mediodía y se alarga hasta la madrugada. El día previo nos vemos en la preboda para brindar con vistas a Ponferrada.",
+  heroPrimaryCtaLabel: "Confirmar asistencia",
+  heroSecondaryCtaLabel: "Ver cronograma",
+  heroMapCtaLabel: "Ver ubicación de la finca",
+  heroStatDateLabel: "Fecha",
+  heroStatLocationLabel: "Lugar",
+  heroStatTimeLabel: "Horario",
+  heroStatTimeNote: "adultos únicamente",
+  eventDate: "12 de septiembre · 2025",
+  eventTimeRange: "13:30 — 02:00",
+  locationName: "Finca El Casar · Ponferrada",
+  locationAddress: "Ponferrada, León",
+  locationMapUrl: "",
+  prebodaPlace: "Casino Rooftop Ponferrada",
+  prebodaTime: "11 de septiembre · 19:30 h",
+  prebodaMapUrl: "",
+  contactEmail: "hola@nuestraboda.com",
+  contactPhone: "+34 600 000 000",
+  whatsappLink: "https://wa.me/34600000000",
+  giftLink: "",
+  bankHolder: "Alba Fernández & Guillermo García",
+  bankIban: "ES00 0000 0000 0000 0000 0000",
+  prebodaEyebrow: "Preboda",
+  prebodaTitle: "Nos vemos el día antes en el Casino Rooftop",
+  prebodaDescription:
+    "Nos encantaría brindar contigo la víspera de la boda. Será un encuentro relajado para recibir a quienes llegan antes y ponernos al día.",
+  prebodaCardOneLabel: "Cuándo y dónde",
+  prebodaCardOneCtaLabel: "Ver ubicación",
+  prebodaCardTwoLabel: "Qué te espera",
+  prebodaCardTwoTitle: "Brindis informal entre amigos",
+  prebodaCardTwoDescription:
+    "Habrá cócteles, un picoteo ligero y buena música para empezar el fin de semana con energía. Igual que el gran día, será una noche solo para adultos.",
+  ceremonyEyebrow: "Ceremonia civil",
+  ceremonyTitle: "Todo lo que necesitas saber para acompañarnos",
+  ceremonyDescription:
+    "La finca abre sus portones a las 13:30 h. Tendremos ceremonia civil al aire libre, banquete con productos del Bierzo y una fiesta larga hasta las 02:00.",
+  ceremonyCardOneLabel: "Cómo llegar",
+  ceremonyCardOneTitle: "Accesos y traslados",
+  ceremonyCardOneDescription:
+    "La finca se encuentra a 10 minutos del centro de Ponferrada. Hay parking asfaltado dentro del recinto. Si prefieres transporte, dinos cuántas plazas necesitas y coordinamos un bus de ida y vuelta.",
+  ceremonyCardTwoLabel: "Solo adultos",
+  ceremonyCardTwoTitle: "Celebración para mayores de 18",
+  ceremonyCardTwoDescription:
+    "Queremos que disfrutes de un día sin prisas, por eso la boda será exclusivamente para adultos. Si necesitas ayuda con el cuidado de peques, avísanos y compartimos recomendaciones de confianza.",
+  timelineEyebrow: "Cronograma",
+  timelineTitle: "Así será nuestro gran día",
+  timelineDescription:
+    "Unimos lo mejor de un día en el campo berciano: comida larga, sobremesa al atardecer y fiesta nocturna. Revisa los hitos para organizar traslados y descanso.",
+  timelineItems: [
+    {
+      time: "13:30",
+      title: "Bienvenida & aperitivo",
+      description:
+        "Abrimos puertas con vermú y tapas locales para que puedas acomodarte con calma.",
+      location: "Patio de recepción, Finca El Casar",
+      icon: "🍹",
+    },
+    {
+      time: "14:15",
+      title: "Ceremonia civil",
+      description:
+        "Celebramos nuestra unión al aire libre. Tendremos música en directo y lectura de votos.",
+      location: "Jardín principal",
+      icon: "💍",
+    },
+    {
+      time: "16:00",
+      title: "Banquete bajo el sol",
+      description:
+        "Menú de temporada con guiños bercianos. Avisadnos intolerancias o alergias en el formulario.",
+      location: "Carpa acristalada",
+      icon: "🍽️",
+    },
+    {
+      time: "20:00",
+      title: "Atardecer & fiesta",
+      description:
+        "Pista de baile con DJ, barra libre y sorpresas. Preparad vuestras canciones favoritas.",
+      location: "Sala el Mirador",
+      icon: "🕺",
+    },
+    {
+      time: "00:30",
+      title: "Recena y despedida",
+      description:
+        "Food trucks dulces y salados para recargar energías antes de volver a casa. La música baja sobre las 02:00.",
+      location: "Terraza exterior",
+      icon: "🌙",
+    },
+  ],
+  stayEyebrow: "Planifica tu viaje",
+  stayTitle: "Opciones de alojamiento recomendadas",
+  stayDescription:
+    "Hemos bloqueado habitaciones con tarifa especial hasta 60 días antes. Llama indicando que asistes a la boda de Alba y Guille.",
+  stayLinkLabel: "Ver mapa",
+  stayOptions: [
+    {
+      name: "Hotel AC Ponferrada",
+      description:
+        "Moderno y céntrico, ideal si quieres explorar la ciudad a pie.",
+      distance: "10 minutos en coche",
+      link: "https://maps.app.goo.gl/",
+    },
+    {
+      name: "The Rock Suites & Spa",
+      description:
+        "Habitaciones amplias, spa y desayuno hasta tarde para recuperarse de la fiesta.",
+      distance: "12 minutos en coche",
+      link: "https://maps.app.goo.gl/",
+    },
+    {
+      name: "Casa Rural Lago de Carucedo",
+      description:
+        "Opción tranquila en plena naturaleza, perfecta para grupos.",
+      distance: "18 minutos en coche",
+      link: "https://maps.app.goo.gl/",
+    },
+  ],
+  giftsEyebrow: "Celebrar con detalles",
+  giftsTitle: "Tu presencia es lo más importante",
+  giftsDescription:
+    "Solo con tu presencia nos haces muy felices. Si aún así deseas tener un detalle con nosotros, aquí tienes algunas alternativas.",
+  giftsRegistryTitle: "Mesa de regalos",
+  giftsRegistryDescription:
+    "Seleccionamos algunos detalles para nuestro nuevo hogar. ¡Gracias por ayudarnos a elegir!",
+  giftsRegistryCtaLabel: "Ver mesa online",
+  giftsBankTitle: "Transferencia bancaria",
+  giftsBankDescription:
+    "Si prefieres hacer un regalo en efectivo, déjanos tu cariño en nuestra cuenta.",
+  rsvpEyebrow: "RSVP",
+  rsvpTitle: "Confirma tu asistencia",
+  rsvpDescription:
+    "Queremos preparar todo a tu medida. Completa el formulario y cuéntanos si vienes con acompañantes, intolerancias alimentarias u otras necesidades.",
+  rsvpContactLead: "¿Prefieres otro canal? Escríbenos a",
+  rsvpContactWhatsappLead: "o por WhatsApp al",
+  rsvpImportantTitle: "Información importante",
+  rsvpImportantNotes: [
+    "Evento solo para adultos (mayores de 18). Si necesitas referencias de canguros en Ponferrada, escríbenos y te ayudamos.",
+    "Si tienes alergias o intolerancias, cuéntanoslo para coordinarlo con el equipo de cocina.",
+    "Confirmaciones abiertas hasta el 15 de agosto. Después intentaremos acomodar cambios pero no podemos garantizarlo.",
+  ],
+  locationEyebrow: "Cómo llegar",
+  locationTitle: "Ubicación y contacto",
+  locationDescription:
+    "La finca cuenta con aparcamiento propio. Si necesitas ayuda con rutas, transporte o recomendaciones, escríbenos y te echamos una mano.",
+  locationMapLabel: "Abrir en Maps",
+  locationContactTitle: "Contacta con nosotros",
+  locationEmailLabel: "Email",
+  locationPhoneLabel: "Teléfono",
+  locationWhatsappLabel: "WhatsApp",
+  locationWhatsappActionLabel: "Abrir chat",
+  footerEyebrow: "Nos vemos en el gran día",
+  footerTitle: "Gracias por acompañarnos en esta celebración",
+  footerCtaLabel: "Confirmar asistencia",
+  footerCopyright:
+    "© {year} {brandName}. Todos los derechos reservados.",
+  footerMadeWith: "Hecho con amor usando Next.js, Vercel y Firebase.",
+};
+
+function normalizeString(value: unknown, fallback: string) {
+  return typeof value === "string" ? value : fallback;
+}
+
+function safeJsonParse(raw: unknown): unknown | null {
+  if (typeof raw !== "string") return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+export function parseTimelineItems(raw: unknown): TimelineItem[] {
+  const parsed = Array.isArray(raw) ? raw : safeJsonParse(raw);
+  if (!Array.isArray(parsed)) {
+    return DEFAULT_PUBLIC_CONTENT.timelineItems;
+  }
+
+  const cleaned = parsed
+    .map((item) => (item && typeof item === "object" ? item : {}))
+    .map((item) => {
+      const record = item as Record<string, unknown>;
+      return {
+        time: normalizeString(record.time, ""),
+        title: normalizeString(record.title, ""),
+        description: normalizeString(record.description, ""),
+        location: normalizeString(record.location, ""),
+        icon: normalizeString(record.icon, ""),
+      };
+    })
+    .filter(
+      (item) =>
+        item.time ||
+        item.title ||
+        item.description ||
+        item.location ||
+        item.icon,
+    );
+
+  return cleaned.length > 0 ? cleaned : DEFAULT_PUBLIC_CONTENT.timelineItems;
+}
+
+export function parseStayOptions(raw: unknown): StayOption[] {
+  const parsed = Array.isArray(raw) ? raw : safeJsonParse(raw);
+  if (!Array.isArray(parsed)) {
+    return DEFAULT_PUBLIC_CONTENT.stayOptions;
+  }
+
+  const cleaned = parsed
+    .map((item) => (item && typeof item === "object" ? item : {}))
+    .map((item) => {
+      const record = item as Record<string, unknown>;
+      return {
+        name: normalizeString(record.name, ""),
+        description: normalizeString(record.description, ""),
+        distance: normalizeString(record.distance, ""),
+        link: normalizeString(record.link, ""),
+      };
+    })
+    .filter(
+      (item) => item.name || item.description || item.distance || item.link,
+    );
+
+  return cleaned.length > 0 ? cleaned : DEFAULT_PUBLIC_CONTENT.stayOptions;
+}
+
+export function parseStringList(raw: unknown): string[] {
+  const parsed = Array.isArray(raw) ? raw : safeJsonParse(raw);
+  if (!Array.isArray(parsed)) {
+    return DEFAULT_PUBLIC_CONTENT.rsvpImportantNotes;
+  }
+
+  const cleaned = parsed
+    .filter((item) => typeof item === "string")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  return cleaned.length > 0 ? cleaned : DEFAULT_PUBLIC_CONTENT.rsvpImportantNotes;
+}
+
+export function normalizePublicContent(
+  data: Record<string, unknown>,
+): PublicContent {
+  return {
+    brandName: normalizeString(data.brandName, DEFAULT_PUBLIC_CONTENT.brandName),
+    headerCtaLabel: normalizeString(
+      data.headerCtaLabel,
+      DEFAULT_PUBLIC_CONTENT.headerCtaLabel,
+    ),
+    navWeddingLabel: normalizeString(
+      data.navWeddingLabel,
+      DEFAULT_PUBLIC_CONTENT.navWeddingLabel,
+    ),
+    navTimelineLabel: normalizeString(
+      data.navTimelineLabel,
+      DEFAULT_PUBLIC_CONTENT.navTimelineLabel,
+    ),
+    navStayLabel: normalizeString(
+      data.navStayLabel,
+      DEFAULT_PUBLIC_CONTENT.navStayLabel,
+    ),
+    navGiftsLabel: normalizeString(
+      data.navGiftsLabel,
+      DEFAULT_PUBLIC_CONTENT.navGiftsLabel,
+    ),
+    navRsvpLabel: normalizeString(
+      data.navRsvpLabel,
+      DEFAULT_PUBLIC_CONTENT.navRsvpLabel,
+    ),
+    heroEyebrow: normalizeString(
+      data.heroEyebrow,
+      DEFAULT_PUBLIC_CONTENT.heroEyebrow,
+    ),
+    heroTitle: normalizeString(
+      data.heroTitle,
+      DEFAULT_PUBLIC_CONTENT.heroTitle,
+    ),
+    heroDescription: normalizeString(
+      data.heroDescription,
+      DEFAULT_PUBLIC_CONTENT.heroDescription,
+    ),
+    heroPrimaryCtaLabel: normalizeString(
+      data.heroPrimaryCtaLabel,
+      DEFAULT_PUBLIC_CONTENT.heroPrimaryCtaLabel,
+    ),
+    heroSecondaryCtaLabel: normalizeString(
+      data.heroSecondaryCtaLabel,
+      DEFAULT_PUBLIC_CONTENT.heroSecondaryCtaLabel,
+    ),
+    heroMapCtaLabel: normalizeString(
+      data.heroMapCtaLabel,
+      DEFAULT_PUBLIC_CONTENT.heroMapCtaLabel,
+    ),
+    heroStatDateLabel: normalizeString(
+      data.heroStatDateLabel,
+      DEFAULT_PUBLIC_CONTENT.heroStatDateLabel,
+    ),
+    heroStatLocationLabel: normalizeString(
+      data.heroStatLocationLabel,
+      DEFAULT_PUBLIC_CONTENT.heroStatLocationLabel,
+    ),
+    heroStatTimeLabel: normalizeString(
+      data.heroStatTimeLabel,
+      DEFAULT_PUBLIC_CONTENT.heroStatTimeLabel,
+    ),
+    heroStatTimeNote: normalizeString(
+      data.heroStatTimeNote,
+      DEFAULT_PUBLIC_CONTENT.heroStatTimeNote,
+    ),
+    eventDate: normalizeString(
+      data.eventDate,
+      DEFAULT_PUBLIC_CONTENT.eventDate,
+    ),
+    eventTimeRange: normalizeString(
+      data.eventTimeRange,
+      DEFAULT_PUBLIC_CONTENT.eventTimeRange,
+    ),
+    locationName: normalizeString(
+      data.locationName,
+      DEFAULT_PUBLIC_CONTENT.locationName,
+    ),
+    locationAddress: normalizeString(
+      data.locationAddress,
+      DEFAULT_PUBLIC_CONTENT.locationAddress,
+    ),
+    locationMapUrl: normalizeString(
+      data.locationMapUrl,
+      DEFAULT_PUBLIC_CONTENT.locationMapUrl,
+    ),
+    prebodaPlace: normalizeString(
+      data.prebodaPlace,
+      DEFAULT_PUBLIC_CONTENT.prebodaPlace,
+    ),
+    prebodaTime: normalizeString(
+      data.prebodaTime,
+      DEFAULT_PUBLIC_CONTENT.prebodaTime,
+    ),
+    prebodaMapUrl: normalizeString(
+      data.prebodaMapUrl,
+      DEFAULT_PUBLIC_CONTENT.prebodaMapUrl,
+    ),
+    contactEmail: normalizeString(
+      data.contactEmail,
+      DEFAULT_PUBLIC_CONTENT.contactEmail,
+    ),
+    contactPhone: normalizeString(
+      data.contactPhone,
+      DEFAULT_PUBLIC_CONTENT.contactPhone,
+    ),
+    whatsappLink: normalizeString(
+      data.whatsappLink,
+      DEFAULT_PUBLIC_CONTENT.whatsappLink,
+    ),
+    giftLink: normalizeString(
+      data.giftLink,
+      DEFAULT_PUBLIC_CONTENT.giftLink,
+    ),
+    bankHolder: normalizeString(
+      data.bankHolder,
+      DEFAULT_PUBLIC_CONTENT.bankHolder,
+    ),
+    bankIban: normalizeString(
+      data.bankIban,
+      DEFAULT_PUBLIC_CONTENT.bankIban,
+    ),
+    prebodaEyebrow: normalizeString(
+      data.prebodaEyebrow,
+      DEFAULT_PUBLIC_CONTENT.prebodaEyebrow,
+    ),
+    prebodaTitle: normalizeString(
+      data.prebodaTitle,
+      DEFAULT_PUBLIC_CONTENT.prebodaTitle,
+    ),
+    prebodaDescription: normalizeString(
+      data.prebodaDescription,
+      DEFAULT_PUBLIC_CONTENT.prebodaDescription,
+    ),
+    prebodaCardOneLabel: normalizeString(
+      data.prebodaCardOneLabel,
+      DEFAULT_PUBLIC_CONTENT.prebodaCardOneLabel,
+    ),
+    prebodaCardOneCtaLabel: normalizeString(
+      data.prebodaCardOneCtaLabel,
+      DEFAULT_PUBLIC_CONTENT.prebodaCardOneCtaLabel,
+    ),
+    prebodaCardTwoLabel: normalizeString(
+      data.prebodaCardTwoLabel,
+      DEFAULT_PUBLIC_CONTENT.prebodaCardTwoLabel,
+    ),
+    prebodaCardTwoTitle: normalizeString(
+      data.prebodaCardTwoTitle,
+      DEFAULT_PUBLIC_CONTENT.prebodaCardTwoTitle,
+    ),
+    prebodaCardTwoDescription: normalizeString(
+      data.prebodaCardTwoDescription,
+      DEFAULT_PUBLIC_CONTENT.prebodaCardTwoDescription,
+    ),
+    ceremonyEyebrow: normalizeString(
+      data.ceremonyEyebrow,
+      DEFAULT_PUBLIC_CONTENT.ceremonyEyebrow,
+    ),
+    ceremonyTitle: normalizeString(
+      data.ceremonyTitle,
+      DEFAULT_PUBLIC_CONTENT.ceremonyTitle,
+    ),
+    ceremonyDescription: normalizeString(
+      data.ceremonyDescription,
+      DEFAULT_PUBLIC_CONTENT.ceremonyDescription,
+    ),
+    ceremonyCardOneLabel: normalizeString(
+      data.ceremonyCardOneLabel,
+      DEFAULT_PUBLIC_CONTENT.ceremonyCardOneLabel,
+    ),
+    ceremonyCardOneTitle: normalizeString(
+      data.ceremonyCardOneTitle,
+      DEFAULT_PUBLIC_CONTENT.ceremonyCardOneTitle,
+    ),
+    ceremonyCardOneDescription: normalizeString(
+      data.ceremonyCardOneDescription,
+      DEFAULT_PUBLIC_CONTENT.ceremonyCardOneDescription,
+    ),
+    ceremonyCardTwoLabel: normalizeString(
+      data.ceremonyCardTwoLabel,
+      DEFAULT_PUBLIC_CONTENT.ceremonyCardTwoLabel,
+    ),
+    ceremonyCardTwoTitle: normalizeString(
+      data.ceremonyCardTwoTitle,
+      DEFAULT_PUBLIC_CONTENT.ceremonyCardTwoTitle,
+    ),
+    ceremonyCardTwoDescription: normalizeString(
+      data.ceremonyCardTwoDescription,
+      DEFAULT_PUBLIC_CONTENT.ceremonyCardTwoDescription,
+    ),
+    timelineEyebrow: normalizeString(
+      data.timelineEyebrow,
+      DEFAULT_PUBLIC_CONTENT.timelineEyebrow,
+    ),
+    timelineTitle: normalizeString(
+      data.timelineTitle,
+      DEFAULT_PUBLIC_CONTENT.timelineTitle,
+    ),
+    timelineDescription: normalizeString(
+      data.timelineDescription,
+      DEFAULT_PUBLIC_CONTENT.timelineDescription,
+    ),
+    timelineItems: parseTimelineItems(data.timelineItems),
+    stayEyebrow: normalizeString(
+      data.stayEyebrow,
+      DEFAULT_PUBLIC_CONTENT.stayEyebrow,
+    ),
+    stayTitle: normalizeString(
+      data.stayTitle,
+      DEFAULT_PUBLIC_CONTENT.stayTitle,
+    ),
+    stayDescription: normalizeString(
+      data.stayDescription,
+      DEFAULT_PUBLIC_CONTENT.stayDescription,
+    ),
+    stayLinkLabel: normalizeString(
+      data.stayLinkLabel,
+      DEFAULT_PUBLIC_CONTENT.stayLinkLabel,
+    ),
+    stayOptions: parseStayOptions(data.stayOptions),
+    giftsEyebrow: normalizeString(
+      data.giftsEyebrow,
+      DEFAULT_PUBLIC_CONTENT.giftsEyebrow,
+    ),
+    giftsTitle: normalizeString(
+      data.giftsTitle,
+      DEFAULT_PUBLIC_CONTENT.giftsTitle,
+    ),
+    giftsDescription: normalizeString(
+      data.giftsDescription,
+      DEFAULT_PUBLIC_CONTENT.giftsDescription,
+    ),
+    giftsRegistryTitle: normalizeString(
+      data.giftsRegistryTitle,
+      DEFAULT_PUBLIC_CONTENT.giftsRegistryTitle,
+    ),
+    giftsRegistryDescription: normalizeString(
+      data.giftsRegistryDescription,
+      DEFAULT_PUBLIC_CONTENT.giftsRegistryDescription,
+    ),
+    giftsRegistryCtaLabel: normalizeString(
+      data.giftsRegistryCtaLabel,
+      DEFAULT_PUBLIC_CONTENT.giftsRegistryCtaLabel,
+    ),
+    giftsBankTitle: normalizeString(
+      data.giftsBankTitle,
+      DEFAULT_PUBLIC_CONTENT.giftsBankTitle,
+    ),
+    giftsBankDescription: normalizeString(
+      data.giftsBankDescription,
+      DEFAULT_PUBLIC_CONTENT.giftsBankDescription,
+    ),
+    rsvpEyebrow: normalizeString(
+      data.rsvpEyebrow,
+      DEFAULT_PUBLIC_CONTENT.rsvpEyebrow,
+    ),
+    rsvpTitle: normalizeString(
+      data.rsvpTitle,
+      DEFAULT_PUBLIC_CONTENT.rsvpTitle,
+    ),
+    rsvpDescription: normalizeString(
+      data.rsvpDescription,
+      DEFAULT_PUBLIC_CONTENT.rsvpDescription,
+    ),
+    rsvpContactLead: normalizeString(
+      data.rsvpContactLead,
+      DEFAULT_PUBLIC_CONTENT.rsvpContactLead,
+    ),
+    rsvpContactWhatsappLead: normalizeString(
+      data.rsvpContactWhatsappLead,
+      DEFAULT_PUBLIC_CONTENT.rsvpContactWhatsappLead,
+    ),
+    rsvpImportantTitle: normalizeString(
+      data.rsvpImportantTitle,
+      DEFAULT_PUBLIC_CONTENT.rsvpImportantTitle,
+    ),
+    rsvpImportantNotes: parseStringList(data.rsvpImportantNotes),
+    locationEyebrow: normalizeString(
+      data.locationEyebrow,
+      DEFAULT_PUBLIC_CONTENT.locationEyebrow,
+    ),
+    locationTitle: normalizeString(
+      data.locationTitle,
+      DEFAULT_PUBLIC_CONTENT.locationTitle,
+    ),
+    locationDescription: normalizeString(
+      data.locationDescription,
+      DEFAULT_PUBLIC_CONTENT.locationDescription,
+    ),
+    locationMapLabel: normalizeString(
+      data.locationMapLabel,
+      DEFAULT_PUBLIC_CONTENT.locationMapLabel,
+    ),
+    locationContactTitle: normalizeString(
+      data.locationContactTitle,
+      DEFAULT_PUBLIC_CONTENT.locationContactTitle,
+    ),
+    locationEmailLabel: normalizeString(
+      data.locationEmailLabel,
+      DEFAULT_PUBLIC_CONTENT.locationEmailLabel,
+    ),
+    locationPhoneLabel: normalizeString(
+      data.locationPhoneLabel,
+      DEFAULT_PUBLIC_CONTENT.locationPhoneLabel,
+    ),
+    locationWhatsappLabel: normalizeString(
+      data.locationWhatsappLabel,
+      DEFAULT_PUBLIC_CONTENT.locationWhatsappLabel,
+    ),
+    locationWhatsappActionLabel: normalizeString(
+      data.locationWhatsappActionLabel,
+      DEFAULT_PUBLIC_CONTENT.locationWhatsappActionLabel,
+    ),
+    footerEyebrow: normalizeString(
+      data.footerEyebrow,
+      DEFAULT_PUBLIC_CONTENT.footerEyebrow,
+    ),
+    footerTitle: normalizeString(
+      data.footerTitle,
+      DEFAULT_PUBLIC_CONTENT.footerTitle,
+    ),
+    footerCtaLabel: normalizeString(
+      data.footerCtaLabel,
+      DEFAULT_PUBLIC_CONTENT.footerCtaLabel,
+    ),
+    footerCopyright: normalizeString(
+      data.footerCopyright,
+      DEFAULT_PUBLIC_CONTENT.footerCopyright,
+    ),
+    footerMadeWith: normalizeString(
+      data.footerMadeWith,
+      DEFAULT_PUBLIC_CONTENT.footerMadeWith,
+    ),
+  };
+}
+
+export function serializePublicContent(content: PublicContent) {
+  return {
+    ...content,
+    timelineItems: JSON.stringify(content.timelineItems),
+    stayOptions: JSON.stringify(content.stayOptions),
+    rsvpImportantNotes: JSON.stringify(content.rsvpImportantNotes),
+  };
+}

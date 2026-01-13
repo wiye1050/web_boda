@@ -1,9 +1,10 @@
 // Componente cliente porque interactúa con Firestore y maneja estado de UI.
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { firebaseClient } from "@/lib/firebase";
+import { DEFAULT_PUBLIC_CONTENT } from "@/lib/publicContent";
 
 type RSVPStatus = "idle" | "loading" | "success" | "error";
 
@@ -35,10 +36,20 @@ const INITIAL_STATE: FormState = {
   requests: "",
 };
 
-export function RSVPForm() {
+type RSVPFormProps = {
+  importantTitle?: string;
+  importantNotes?: string[];
+};
+
+export function RSVPForm({
+  importantTitle = DEFAULT_PUBLIC_CONTENT.rsvpImportantTitle,
+  importantNotes = DEFAULT_PUBLIC_CONTENT.rsvpImportantNotes,
+}: RSVPFormProps) {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [status, setStatus] = useState<RSVPStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [botField, setBotField] = useState("");
+  const startedAt = useRef(Date.now());
   const radioBaseClasses =
     "inline-flex w-full items-center justify-center gap-2 rounded-full border px-4 py-3 text-sm uppercase tracking-[0.2em] transition focus-within:outline focus-within:outline-2 focus-within:outline-offset-[3px] focus-within:outline-primary sm:flex-1";
 
@@ -155,6 +166,22 @@ export function RSVPForm() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    if (botField.trim().length > 0) {
+      setStatus("error");
+      setErrorMessage(
+        "No pudimos enviar el formulario. Inténtalo de nuevo en unos segundos.",
+      );
+      setTimeout(() => setStatus("idle"), 6000);
+      return;
+    }
+
+    if (Date.now() - startedAt.current < 2500) {
+      setStatus("error");
+      setErrorMessage("Espera unos segundos y vuelve a intentarlo.");
+      setTimeout(() => setStatus("idle"), 6000);
+      return;
+    }
+
     if (!isValid || status === "loading") {
       return;
     }
@@ -210,6 +237,17 @@ export function RSVPForm() {
       onSubmit={handleSubmit}
       className="mx-auto flex w-full max-w-3xl flex-col gap-8 rounded-[var(--radius-card)] border border-border/70 bg-surface/95 p-8 shadow-[var(--shadow-soft)]"
     >
+      <label className="sr-only">
+        No completar
+        <input
+          type="text"
+          name="company"
+          tabIndex={-1}
+          autoComplete="off"
+          value={botField}
+          onChange={(event) => setBotField(event.target.value)}
+        />
+      </label>
       <div className="grid gap-6 md:grid-cols-2">
         <label className="flex flex-col gap-2 text-left">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
@@ -492,21 +530,12 @@ export function RSVPForm() {
 
       <div className="rounded-[20px] border border-border/80 bg-accent/70 px-5 py-4 text-left text-xs text-muted">
         <p className="font-semibold uppercase tracking-[0.3em] text-muted">
-          Información importante
+          {importantTitle}
         </p>
         <ul className="mt-3 space-y-2 text-foreground/90">
-          <li>
-            · Evento solo para adultos (mayores de 18). Si necesitas referencias
-            de canguros en Ponferrada, escríbenos y te ayudamos.
-          </li>
-          <li>
-            · Si tienes alergias o intolerancias, cuéntanoslo para coordinarlo
-            con el equipo de cocina.
-          </li>
-          <li>
-            · Confirmaciones abiertas hasta el 15 de agosto. Después intentaremos
-            acomodar cambios pero no podemos garantizarlo.
-          </li>
+          {importantNotes.map((note, index) => (
+            <li key={`${index}-${note}`}>· {note}</li>
+          ))}
         </ul>
       </div>
     </form>

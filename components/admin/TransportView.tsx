@@ -4,13 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import {
   addDoc,
   collection,
-  deleteDoc,
   doc,
   onSnapshot,
   orderBy,
   query,
   serverTimestamp,
   updateDoc,
+  writeBatch,
 } from "firebase/firestore";
 import { getFirestoreDb } from "@/lib/firebase";
 import { useAuth } from "@/components/admin/AuthContext";
@@ -181,18 +181,21 @@ export function TransportView() {
     const assignmentsRef = collection(db, "transport_routes", selectedRoute.id, "assignments");
 
     try {
-      await addDoc(assignmentsRef, {
+      const assignmentRef = doc(assignmentsRef);
+      const batch = writeBatch(db);
+      batch.set(assignmentRef, {
         rsvpId: rsvp.id,
         rsvpName: rsvp.fullName,
         seats,
         createdAt: serverTimestamp(),
       });
-      await updateDoc(doc(db, "rsvps", rsvp.id), {
+      batch.update(doc(db, "rsvps", rsvp.id), {
         transportRouteId: selectedRoute.id,
         transportAssignedSeats: seats,
         updatedAt: serverTimestamp(),
         updatedBy: user?.email ?? null,
       });
+      await batch.commit();
       setError(null);
     } catch (err) {
       console.error(err);
@@ -204,13 +207,17 @@ export function TransportView() {
     if (!selectedRoute) return;
     const db = getFirestoreDb();
     try {
-      await deleteDoc(doc(db, "transport_routes", selectedRoute.id, "assignments", assignment.id));
-      await updateDoc(doc(db, "rsvps", assignment.rsvpId), {
+      const batch = writeBatch(db);
+      batch.delete(
+        doc(db, "transport_routes", selectedRoute.id, "assignments", assignment.id),
+      );
+      batch.update(doc(db, "rsvps", assignment.rsvpId), {
         transportRouteId: null,
         transportAssignedSeats: 0,
         updatedAt: serverTimestamp(),
         updatedBy: user?.email ?? null,
       });
+      await batch.commit();
     } catch (err) {
       console.error(err);
       setError("No se pudo eliminar la asignación.");

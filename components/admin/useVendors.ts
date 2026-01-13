@@ -150,8 +150,7 @@ export function useVendors() {
     };
 
     Object.entries(data).forEach(([key, value]) => {
-      if (value === undefined) return;
-      payload[key] = value;
+      payload[key] = value === undefined ? null : value;
     });
 
     await updateDoc(vendorRef, payload);
