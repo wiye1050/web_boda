@@ -53,7 +53,7 @@ export function Header({
         </CTAButton>
       </div>
       <nav className="sm:hidden">
-        <div className="mx-auto flex w-full max-w-6xl gap-5 overflow-x-auto px-6 pb-4 text-[0.65rem] font-semibold uppercase tracking-[0.4em] text-muted">
+        <div className="mx-auto flex w-full max-w-6xl flex-wrap justify-center gap-x-6 gap-y-2 px-6 pb-4 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-muted">
           {navItems.map((item) => (
             <Link
               key={item.href}

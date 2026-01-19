@@ -60,6 +60,10 @@ body {
   overflow-x: hidden;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 main {
   width: 100%;
 }
