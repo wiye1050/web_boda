@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { MapsChooserModal } from "@/components/MapsChooserModal";
 
 type LocationOption = {
@@ -23,9 +23,7 @@ export function MobileBottomBar({
 }: MobileBottomBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const canOpen = Boolean(wedding?.url);
-  const mapsButtonRef = useState<React.RefObject<HTMLButtonElement>>(() =>
-    ({ current: null } as React.RefObject<HTMLButtonElement>)
-  )[0];
+  const mapsButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <>
