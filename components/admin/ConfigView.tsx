@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 import { getFirestoreDb } from "@/lib/firebase";
@@ -230,6 +230,7 @@ function validateConfig(content: PublicContent): ValidationIssue[] {
 
 export function ConfigView() {
   const [config, setConfig] = useState<PublicContent>(DEFAULT_PUBLIC_CONTENT);
+  const [savedConfig, setSavedConfig] = useState<PublicContent>(DEFAULT_PUBLIC_CONTENT);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -243,9 +244,12 @@ export function ConfigView() {
         const snapshot = await getDoc(docRef);
         if (snapshot.exists()) {
           const data = snapshot.data() as Record<string, unknown>;
-          setConfig(normalizePublicContent(data));
+          const normalized = normalizePublicContent(data);
+          setConfig(normalized);
+          setSavedConfig(normalized);
         } else {
           setConfig(DEFAULT_PUBLIC_CONTENT);
+          setSavedConfig(DEFAULT_PUBLIC_CONTENT);
         }
       } catch (err) {
         console.error(err);
@@ -284,6 +288,7 @@ export function ConfigView() {
       const db = getFirestoreDb();
       const payload = serializePublicContent(config);
       await setDoc(doc(db, "config", "general"), payload, { merge: true });
+      setSavedConfig(config);
       setMessage("Contenido guardado correctamente.");
     } catch (err) {
       console.error(err);
@@ -300,6 +305,29 @@ export function ConfigView() {
       setIsSaving(false);
     }
   }
+
+  const hasUnsavedChanges = useMemo(
+    () => JSON.stringify(config) !== JSON.stringify(savedConfig),
+    [config, savedConfig],
+  );
+  const listLengths = useMemo(
+    () => ({
+      timelineItems: JSON.stringify(config.timelineItems).length,
+      stayOptions: JSON.stringify(config.stayOptions).length,
+      rsvpImportantNotes: JSON.stringify(config.rsvpImportantNotes).length,
+    }),
+    [config],
+  );
+
+  useEffect(() => {
+    if (!hasUnsavedChanges) return;
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasUnsavedChanges]);
 
   function updateField<K extends keyof PublicContent>(
     key: K,
@@ -392,6 +420,18 @@ export function ConfigView() {
 
   return (
     <div className="flex flex-col gap-8">
+      {(message || error) && (
+        <div
+          className={[
+            "rounded-[20px] border px-4 py-3 text-sm",
+            error
+              ? "border-primary/50 bg-primary/10 text-primary"
+              : "border-emerald-400/40 bg-emerald-500/10 text-emerald-200",
+          ].join(" ")}
+        >
+          {error ?? message}
+        </div>
+      )}
       <header className="flex flex-col gap-3">
         <p className="text-xs font-semibold uppercase tracking-[0.4em] text-muted">
           Contenido web
@@ -405,41 +445,53 @@ export function ConfigView() {
       </header>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+        {hasUnsavedChanges && (
+          <div className="rounded-[20px] border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-xs uppercase tracking-[0.3em] text-amber-200">
+            Tienes cambios sin guardar
+          </div>
+        )}
         <Fieldset title="Marca y navegación">
           <InputField
             label="Nombre de la marca"
             value={config.brandName}
             onChange={(value) => updateField("brandName", value)}
+            maxLength={FIELD_LIMITS.brandName}
           />
           <InputField
             label="Botón principal del menú"
             value={config.headerCtaLabel}
             onChange={(value) => updateField("headerCtaLabel", value)}
+            maxLength={FIELD_LIMITS.headerCtaLabel}
           />
           <InputField
             label="Menú: La boda"
             value={config.navWeddingLabel}
             onChange={(value) => updateField("navWeddingLabel", value)}
+            maxLength={FIELD_LIMITS.navWeddingLabel}
           />
           <InputField
             label="Menú: Cronograma"
             value={config.navTimelineLabel}
             onChange={(value) => updateField("navTimelineLabel", value)}
+            maxLength={FIELD_LIMITS.navTimelineLabel}
           />
           <InputField
             label="Menú: Alojamiento"
             value={config.navStayLabel}
             onChange={(value) => updateField("navStayLabel", value)}
+            maxLength={FIELD_LIMITS.navStayLabel}
           />
           <InputField
             label="Menú: Regalos"
             value={config.navGiftsLabel}
             onChange={(value) => updateField("navGiftsLabel", value)}
+            maxLength={FIELD_LIMITS.navGiftsLabel}
           />
           <InputField
             label="Menú: RSVP"
             value={config.navRsvpLabel}
             onChange={(value) => updateField("navRsvpLabel", value)}
+            maxLength={FIELD_LIMITS.navRsvpLabel}
           />
         </Fieldset>
 
@@ -448,32 +500,38 @@ export function ConfigView() {
             label="Texto superior"
             value={config.heroEyebrow}
             onChange={(value) => updateField("heroEyebrow", value)}
+            maxLength={FIELD_LIMITS.heroEyebrow}
           />
           <InputField
             label="Título principal"
             value={config.heroTitle}
             onChange={(value) => updateField("heroTitle", value)}
+            maxLength={FIELD_LIMITS.heroTitle}
           />
           <TextAreaField
             label="Descripción principal"
             value={config.heroDescription}
             onChange={(value) => updateField("heroDescription", value)}
             rows={4}
+            maxLength={FIELD_LIMITS.heroDescription}
           />
           <InputField
             label="Botón principal"
             value={config.heroPrimaryCtaLabel}
             onChange={(value) => updateField("heroPrimaryCtaLabel", value)}
+            maxLength={FIELD_LIMITS.heroPrimaryCtaLabel}
           />
           <InputField
             label="Botón secundario"
             value={config.heroSecondaryCtaLabel}
             onChange={(value) => updateField("heroSecondaryCtaLabel", value)}
+            maxLength={FIELD_LIMITS.heroSecondaryCtaLabel}
           />
           <InputField
             label="Botón de mapa"
             value={config.heroMapCtaLabel}
             onChange={(value) => updateField("heroMapCtaLabel", value)}
+            maxLength={FIELD_LIMITS.heroMapCtaLabel}
           />
         </Fieldset>
 
@@ -482,31 +540,37 @@ export function ConfigView() {
             label="Fecha"
             value={config.eventDate}
             onChange={(value) => updateField("eventDate", value)}
+            maxLength={FIELD_LIMITS.eventDate}
           />
           <InputField
             label="Horario"
             value={config.eventTimeRange}
             onChange={(value) => updateField("eventTimeRange", value)}
+            maxLength={FIELD_LIMITS.eventTimeRange}
           />
           <InputField
             label="Etiqueta: Fecha"
             value={config.heroStatDateLabel}
             onChange={(value) => updateField("heroStatDateLabel", value)}
+            maxLength={FIELD_LIMITS.heroStatDateLabel}
           />
           <InputField
             label="Etiqueta: Lugar"
             value={config.heroStatLocationLabel}
             onChange={(value) => updateField("heroStatLocationLabel", value)}
+            maxLength={FIELD_LIMITS.heroStatLocationLabel}
           />
           <InputField
             label="Etiqueta: Horario"
             value={config.heroStatTimeLabel}
             onChange={(value) => updateField("heroStatTimeLabel", value)}
+            maxLength={FIELD_LIMITS.heroStatTimeLabel}
           />
           <InputField
             label="Nota de horario (opcional)"
             value={config.heroStatTimeNote}
             onChange={(value) => updateField("heroStatTimeNote", value)}
+            maxLength={FIELD_LIMITS.heroStatTimeNote}
           />
         </Fieldset>
 
@@ -515,22 +579,26 @@ export function ConfigView() {
             label="Nombre del lugar"
             value={config.locationName}
             onChange={(value) => updateField("locationName", value)}
+            maxLength={FIELD_LIMITS.locationName}
           />
           <TextAreaField
             label="Dirección"
             value={config.locationAddress}
             onChange={(value) => updateField("locationAddress", value)}
             rows={2}
+            maxLength={FIELD_LIMITS.locationAddress}
           />
           <InputField
             label="Link Google Maps"
             value={config.locationMapUrl}
             onChange={(value) => updateField("locationMapUrl", value)}
+            maxLength={FIELD_LIMITS.locationMapUrl}
           />
           <InputField
             label="Texto del botón de mapa"
             value={config.locationMapLabel}
             onChange={(value) => updateField("locationMapLabel", value)}
+            maxLength={FIELD_LIMITS.locationMapLabel}
           />
         </Fieldset>
 
@@ -539,58 +607,69 @@ export function ConfigView() {
             label="Eyebrow"
             value={config.prebodaEyebrow}
             onChange={(value) => updateField("prebodaEyebrow", value)}
+            maxLength={FIELD_LIMITS.prebodaEyebrow}
           />
           <InputField
             label="Título"
             value={config.prebodaTitle}
             onChange={(value) => updateField("prebodaTitle", value)}
+            maxLength={FIELD_LIMITS.prebodaTitle}
           />
           <TextAreaField
             label="Descripción"
             value={config.prebodaDescription}
             onChange={(value) => updateField("prebodaDescription", value)}
             rows={3}
+            maxLength={FIELD_LIMITS.prebodaDescription}
           />
           <InputField
             label="Horario preboda"
             value={config.prebodaTime}
             onChange={(value) => updateField("prebodaTime", value)}
+            maxLength={FIELD_LIMITS.prebodaTime}
           />
           <InputField
             label="Lugar preboda"
             value={config.prebodaPlace}
             onChange={(value) => updateField("prebodaPlace", value)}
+            maxLength={FIELD_LIMITS.prebodaPlace}
           />
           <InputField
             label="Link mapa preboda (opcional)"
             value={config.prebodaMapUrl}
             onChange={(value) => updateField("prebodaMapUrl", value)}
+            maxLength={FIELD_LIMITS.prebodaMapUrl}
           />
           <InputField
             label="Etiqueta tarjeta 1"
             value={config.prebodaCardOneLabel}
             onChange={(value) => updateField("prebodaCardOneLabel", value)}
+            maxLength={FIELD_LIMITS.prebodaCardOneLabel}
           />
           <InputField
             label="Botón tarjeta 1"
             value={config.prebodaCardOneCtaLabel}
             onChange={(value) => updateField("prebodaCardOneCtaLabel", value)}
+            maxLength={FIELD_LIMITS.prebodaCardOneCtaLabel}
           />
           <InputField
             label="Etiqueta tarjeta 2"
             value={config.prebodaCardTwoLabel}
             onChange={(value) => updateField("prebodaCardTwoLabel", value)}
+            maxLength={FIELD_LIMITS.prebodaCardTwoLabel}
           />
           <InputField
             label="Título tarjeta 2"
             value={config.prebodaCardTwoTitle}
             onChange={(value) => updateField("prebodaCardTwoTitle", value)}
+            maxLength={FIELD_LIMITS.prebodaCardTwoTitle}
           />
           <TextAreaField
             label="Descripción tarjeta 2"
             value={config.prebodaCardTwoDescription}
             onChange={(value) => updateField("prebodaCardTwoDescription", value)}
             rows={3}
+            maxLength={FIELD_LIMITS.prebodaCardTwoDescription}
           />
         </Fieldset>
 
@@ -599,68 +678,83 @@ export function ConfigView() {
             label="Eyebrow"
             value={config.ceremonyEyebrow}
             onChange={(value) => updateField("ceremonyEyebrow", value)}
+            maxLength={FIELD_LIMITS.ceremonyEyebrow}
           />
           <InputField
             label="Título"
             value={config.ceremonyTitle}
             onChange={(value) => updateField("ceremonyTitle", value)}
+            maxLength={FIELD_LIMITS.ceremonyTitle}
           />
           <TextAreaField
             label="Descripción"
             value={config.ceremonyDescription}
             onChange={(value) => updateField("ceremonyDescription", value)}
             rows={3}
+            maxLength={FIELD_LIMITS.ceremonyDescription}
           />
           <InputField
             label="Etiqueta tarjeta 1"
             value={config.ceremonyCardOneLabel}
             onChange={(value) => updateField("ceremonyCardOneLabel", value)}
+            maxLength={FIELD_LIMITS.ceremonyCardOneLabel}
           />
           <InputField
             label="Título tarjeta 1"
             value={config.ceremonyCardOneTitle}
             onChange={(value) => updateField("ceremonyCardOneTitle", value)}
+            maxLength={FIELD_LIMITS.ceremonyCardOneTitle}
           />
           <TextAreaField
             label="Descripción tarjeta 1"
             value={config.ceremonyCardOneDescription}
             onChange={(value) => updateField("ceremonyCardOneDescription", value)}
             rows={3}
+            maxLength={FIELD_LIMITS.ceremonyCardOneDescription}
           />
           <InputField
             label="Etiqueta tarjeta 2"
             value={config.ceremonyCardTwoLabel}
             onChange={(value) => updateField("ceremonyCardTwoLabel", value)}
+            maxLength={FIELD_LIMITS.ceremonyCardTwoLabel}
           />
           <InputField
             label="Título tarjeta 2"
             value={config.ceremonyCardTwoTitle}
             onChange={(value) => updateField("ceremonyCardTwoTitle", value)}
+            maxLength={FIELD_LIMITS.ceremonyCardTwoTitle}
           />
           <TextAreaField
             label="Descripción tarjeta 2"
             value={config.ceremonyCardTwoDescription}
             onChange={(value) => updateField("ceremonyCardTwoDescription", value)}
             rows={3}
+            maxLength={FIELD_LIMITS.ceremonyCardTwoDescription}
           />
         </Fieldset>
 
-        <Fieldset title="Cronograma">
+        <Fieldset
+          title="Cronograma"
+          meta={`${listLengths.timelineItems}/${FIELD_LIMITS.timelineItems}`}
+        >
           <InputField
             label="Eyebrow"
             value={config.timelineEyebrow}
             onChange={(value) => updateField("timelineEyebrow", value)}
+            maxLength={FIELD_LIMITS.timelineEyebrow}
           />
           <InputField
             label="Título"
             value={config.timelineTitle}
             onChange={(value) => updateField("timelineTitle", value)}
+            maxLength={FIELD_LIMITS.timelineTitle}
           />
           <TextAreaField
             label="Descripción"
             value={config.timelineDescription}
             onChange={(value) => updateField("timelineDescription", value)}
             rows={3}
+            maxLength={FIELD_LIMITS.timelineDescription}
           />
           <div className="flex flex-col gap-4">
             {config.timelineItems.map((item, index) => (
@@ -719,7 +813,10 @@ export function ConfigView() {
           </button>
         </Fieldset>
 
-        <Fieldset title="Alojamiento">
+        <Fieldset
+          title="Alojamiento"
+          meta={`${listLengths.stayOptions}/${FIELD_LIMITS.stayOptions}`}
+        >
           <InputField
             label="Eyebrow"
             value={config.stayEyebrow}
@@ -796,93 +893,113 @@ export function ConfigView() {
             label="Eyebrow"
             value={config.giftsEyebrow}
             onChange={(value) => updateField("giftsEyebrow", value)}
+            maxLength={FIELD_LIMITS.giftsEyebrow}
           />
           <InputField
             label="Título"
             value={config.giftsTitle}
             onChange={(value) => updateField("giftsTitle", value)}
+            maxLength={FIELD_LIMITS.giftsTitle}
           />
           <TextAreaField
             label="Descripción"
             value={config.giftsDescription}
             onChange={(value) => updateField("giftsDescription", value)}
             rows={3}
+            maxLength={FIELD_LIMITS.giftsDescription}
           />
           <InputField
             label="Título mesa de regalos"
             value={config.giftsRegistryTitle}
             onChange={(value) => updateField("giftsRegistryTitle", value)}
+            maxLength={FIELD_LIMITS.giftsRegistryTitle}
           />
           <TextAreaField
             label="Descripción mesa de regalos"
             value={config.giftsRegistryDescription}
             onChange={(value) => updateField("giftsRegistryDescription", value)}
             rows={3}
+            maxLength={FIELD_LIMITS.giftsRegistryDescription}
           />
           <InputField
             label="Botón mesa de regalos"
             value={config.giftsRegistryCtaLabel}
             onChange={(value) => updateField("giftsRegistryCtaLabel", value)}
+            maxLength={FIELD_LIMITS.giftsRegistryCtaLabel}
           />
           <InputField
             label="Link mesa de regalos"
             value={config.giftLink}
             onChange={(value) => updateField("giftLink", value)}
+            maxLength={FIELD_LIMITS.giftLink}
           />
           <InputField
             label="Título transferencia"
             value={config.giftsBankTitle}
             onChange={(value) => updateField("giftsBankTitle", value)}
+            maxLength={FIELD_LIMITS.giftsBankTitle}
           />
           <TextAreaField
             label="Descripción transferencia"
             value={config.giftsBankDescription}
             onChange={(value) => updateField("giftsBankDescription", value)}
             rows={3}
+            maxLength={FIELD_LIMITS.giftsBankDescription}
           />
           <InputField
             label="Titulares cuenta bancaria"
             value={config.bankHolder}
             onChange={(value) => updateField("bankHolder", value)}
+            maxLength={FIELD_LIMITS.bankHolder}
           />
           <InputField
             label="IBAN"
             value={config.bankIban}
             onChange={(value) => updateField("bankIban", value)}
+            maxLength={FIELD_LIMITS.bankIban}
           />
         </Fieldset>
 
-        <Fieldset title="RSVP">
+        <Fieldset
+          title="RSVP"
+          meta={`${listLengths.rsvpImportantNotes}/${FIELD_LIMITS.rsvpImportantNotes}`}
+        >
           <InputField
             label="Eyebrow"
             value={config.rsvpEyebrow}
             onChange={(value) => updateField("rsvpEyebrow", value)}
+            maxLength={FIELD_LIMITS.rsvpEyebrow}
           />
           <InputField
             label="Título"
             value={config.rsvpTitle}
             onChange={(value) => updateField("rsvpTitle", value)}
+            maxLength={FIELD_LIMITS.rsvpTitle}
           />
           <TextAreaField
             label="Descripción"
             value={config.rsvpDescription}
             onChange={(value) => updateField("rsvpDescription", value)}
             rows={3}
+            maxLength={FIELD_LIMITS.rsvpDescription}
           />
           <InputField
             label="Texto antes del email"
             value={config.rsvpContactLead}
             onChange={(value) => updateField("rsvpContactLead", value)}
+            maxLength={FIELD_LIMITS.rsvpContactLead}
           />
           <InputField
             label="Texto antes del WhatsApp"
             value={config.rsvpContactWhatsappLead}
             onChange={(value) => updateField("rsvpContactWhatsappLead", value)}
+            maxLength={FIELD_LIMITS.rsvpContactWhatsappLead}
           />
           <InputField
             label="Título de notas importantes"
             value={config.rsvpImportantTitle}
             onChange={(value) => updateField("rsvpImportantTitle", value)}
+            maxLength={FIELD_LIMITS.rsvpImportantTitle}
           />
           <div className="flex flex-col gap-3">
             {config.rsvpImportantNotes.map((note, index) => (
@@ -917,41 +1034,49 @@ export function ConfigView() {
             label="Email de contacto"
             value={config.contactEmail}
             onChange={(value) => updateField("contactEmail", value)}
+            maxLength={FIELD_LIMITS.contactEmail}
           />
           <InputField
             label="Teléfono de contacto"
             value={config.contactPhone}
             onChange={(value) => updateField("contactPhone", value)}
+            maxLength={FIELD_LIMITS.contactPhone}
           />
           <InputField
             label="Link WhatsApp"
             value={config.whatsappLink}
             onChange={(value) => updateField("whatsappLink", value)}
+            maxLength={FIELD_LIMITS.whatsappLink}
           />
           <InputField
             label="Título sección contacto"
             value={config.locationContactTitle}
             onChange={(value) => updateField("locationContactTitle", value)}
+            maxLength={FIELD_LIMITS.locationContactTitle}
           />
           <InputField
             label="Etiqueta Email"
             value={config.locationEmailLabel}
             onChange={(value) => updateField("locationEmailLabel", value)}
+            maxLength={FIELD_LIMITS.locationEmailLabel}
           />
           <InputField
             label="Etiqueta Teléfono"
             value={config.locationPhoneLabel}
             onChange={(value) => updateField("locationPhoneLabel", value)}
+            maxLength={FIELD_LIMITS.locationPhoneLabel}
           />
           <InputField
             label="Etiqueta WhatsApp"
             value={config.locationWhatsappLabel}
             onChange={(value) => updateField("locationWhatsappLabel", value)}
+            maxLength={FIELD_LIMITS.locationWhatsappLabel}
           />
           <InputField
             label="Texto del enlace WhatsApp"
             value={config.locationWhatsappActionLabel}
             onChange={(value) => updateField("locationWhatsappActionLabel", value)}
+            maxLength={FIELD_LIMITS.locationWhatsappActionLabel}
           />
         </Fieldset>
 
@@ -960,17 +1085,20 @@ export function ConfigView() {
             label="Eyebrow"
             value={config.locationEyebrow}
             onChange={(value) => updateField("locationEyebrow", value)}
+            maxLength={FIELD_LIMITS.locationEyebrow}
           />
           <InputField
             label="Título"
             value={config.locationTitle}
             onChange={(value) => updateField("locationTitle", value)}
+            maxLength={FIELD_LIMITS.locationTitle}
           />
           <TextAreaField
             label="Descripción"
             value={config.locationDescription}
             onChange={(value) => updateField("locationDescription", value)}
             rows={3}
+            maxLength={FIELD_LIMITS.locationDescription}
           />
         </Fieldset>
 
@@ -979,21 +1107,25 @@ export function ConfigView() {
             label="Eyebrow"
             value={config.footerEyebrow}
             onChange={(value) => updateField("footerEyebrow", value)}
+            maxLength={FIELD_LIMITS.footerEyebrow}
           />
           <InputField
             label="Título"
             value={config.footerTitle}
             onChange={(value) => updateField("footerTitle", value)}
+            maxLength={FIELD_LIMITS.footerTitle}
           />
           <InputField
             label="Botón"
             value={config.footerCtaLabel}
             onChange={(value) => updateField("footerCtaLabel", value)}
+            maxLength={FIELD_LIMITS.footerCtaLabel}
           />
           <InputField
             label="Texto legal"
             value={config.footerCopyright}
             onChange={(value) => updateField("footerCopyright", value)}
+            maxLength={FIELD_LIMITS.footerCopyright}
           />
           <p className="text-xs text-muted">
             Puedes usar {"{year}"} y {"{brandName}"} si quieres que se
@@ -1003,27 +1135,32 @@ export function ConfigView() {
             label="Texto secundario"
             value={config.footerMadeWith}
             onChange={(value) => updateField("footerMadeWith", value)}
+            maxLength={FIELD_LIMITS.footerMadeWith}
           />
         </Fieldset>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-          <button
-            type="button"
-            onClick={() => setConfig(DEFAULT_PUBLIC_CONTENT)}
-            className="rounded-full border border-border px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-          >
-            Restaurar valores base
-          </button>
-          <button
-            type="submit"
-            disabled={isSaving}
-            className="rounded-full bg-primary px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-primary-foreground transition hover:translate-y-[-1px] hover:shadow-lg hover:shadow-primary/30 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isSaving ? "Guardando..." : "Guardar cambios"}
-          </button>
+        <div className="sticky bottom-4 z-10 -mx-4 rounded-[28px] border border-border/70 bg-surface/95 px-4 py-4 shadow-[var(--shadow-soft)] sm:mx-0">
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+            <button
+              type="button"
+              onClick={() => setConfig(DEFAULT_PUBLIC_CONTENT)}
+              className="rounded-full border border-border px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+            >
+              Restaurar valores base
+            </button>
+            <button
+              type="submit"
+              disabled={isSaving || !hasUnsavedChanges}
+              className="rounded-full bg-primary px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-primary-foreground transition hover:translate-y-[-1px] hover:shadow-lg hover:shadow-primary/30 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isSaving
+                ? "Guardando..."
+                : hasUnsavedChanges
+                  ? "Guardar cambios"
+                  : "Sin cambios"}
+            </button>
+          </div>
         </div>
-        {message && <p className="text-xs text-primary">{message}</p>}
-        {error && <p className="text-xs text-primary">{error}</p>}
       </form>
     </div>
   );
@@ -1032,14 +1169,17 @@ export function ConfigView() {
 function Fieldset({
   children,
   title,
+  meta,
 }: {
   children: ReactNode;
   title: string;
+  meta?: ReactNode;
 }) {
   return (
     <fieldset className="flex flex-col gap-4 rounded-[24px] border border-border/70 bg-surface px-5 py-5 shadow-[var(--shadow-soft)]">
-      <legend className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-        {title}
+      <legend className="flex w-full items-center justify-between text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+        <span>{title}</span>
+        {meta && <span className="text-[0.65rem] tracking-[0.2em]">{meta}</span>}
       </legend>
       {children}
     </fieldset>
