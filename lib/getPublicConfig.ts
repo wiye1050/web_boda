@@ -5,13 +5,40 @@ import {
 } from "@/lib/publicContent";
 
 type ConfigResponse = {
-  fields?: Record<
-    string,
-    {
-      stringValue?: string;
-    }
-  >;
+  fields?: Record<string, FirestoreValue>;
 };
+
+type FirestoreValue = {
+  stringValue?: string;
+  booleanValue?: boolean;
+  integerValue?: string;
+  doubleValue?: number;
+  nullValue?: null;
+  arrayValue?: { values?: FirestoreValue[] };
+  mapValue?: { fields?: Record<string, FirestoreValue> };
+};
+
+function parseFirestoreValue(value: FirestoreValue | undefined): unknown {
+  if (!value) return undefined;
+  if (value.stringValue !== undefined) return value.stringValue;
+  if (value.booleanValue !== undefined) return value.booleanValue;
+  if (value.integerValue !== undefined) return Number(value.integerValue);
+  if (value.doubleValue !== undefined) return value.doubleValue;
+  if (value.nullValue === null) return null;
+  if (value.arrayValue) {
+    const values = value.arrayValue.values ?? [];
+    return values.map((item) => parseFirestoreValue(item));
+  }
+  if (value.mapValue) {
+    const fields = value.mapValue.fields ?? {};
+    const entries = Object.entries(fields).map(([key, val]) => [
+      key,
+      parseFirestoreValue(val),
+    ]);
+    return Object.fromEntries(entries);
+  }
+  return undefined;
+}
 
 function parseConfig(data: ConfigResponse | null | undefined): PublicContent {
   if (!data?.fields) {
@@ -20,7 +47,7 @@ function parseConfig(data: ConfigResponse | null | undefined): PublicContent {
 
   const rawEntries = Object.entries(data.fields).map(([key, value]) => [
     key,
-    value?.stringValue,
+    parseFirestoreValue(value),
   ]);
   const rawData = Object.fromEntries(rawEntries) as Record<string, unknown>;
   return normalizePublicContent(rawData);

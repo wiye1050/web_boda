@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { href: "/admin/rsvps", label: "RSVPs" },
   { href: "/admin/transporte", label: "Transporte" },
   { href: "/admin/configuracion", label: "Contenido" },
+  { href: "/admin/secciones", label: "Secciones" },
   { href: "/admin/privado", label: "Privado" },
 ];
 

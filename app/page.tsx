@@ -168,10 +168,8 @@ export default async function Home() {
     10,
   );
   const heroInterval = Number.isFinite(intervalMs) ? intervalMs : 8000;
-  const prebodaLabel = config.prebodaEyebrow?.trim() || "Preboda";
   const hasPracticalItems = config.practicalItems.length > 0;
   const hasFaqItems = config.faqItems.length > 0;
-  const faqLabel = config.faqEyebrow?.trim() || "FAQ";
   const giftContactHref = config.whatsappLink.trim().length > 0
     ? config.whatsappLink
     : config.contactPhone.trim().length > 0
@@ -200,19 +198,40 @@ export default async function Home() {
     },
   ];
 
-  const navItems = [
-    { label: prebodaLabel, href: "#preboda" },
-    { label: config.navWeddingLabel, href: "#ceremonia" },
-    ...(hasPracticalItems
-      ? [{ label: config.navDetailsLabel, href: "#detalles" }]
-      : []),
-    { label: config.navTimelineLabel, href: "#cronograma" },
-    { label: config.navStayLabel, href: "#alojamiento" },
-    { label: config.navGiftsLabel, href: "#regalos" },
-    ...(hasFaqItems ? [{ label: faqLabel, href: "#faq" }] : []),
-    { label: config.navRsvpLabel, href: "#asistencia" },
-    { label: config.navLocationLabel, href: "#ubicacion" },
-  ];
+  const sectionHasContent = (sectionId: string) => {
+    switch (sectionId) {
+      case "detalles":
+        return hasPracticalItems;
+      case "faq":
+        return hasFaqItems;
+      case "cronograma":
+        return config.timelineItems.length > 0;
+      case "alojamiento":
+        return config.stayOptions.length > 0;
+      case "ubicacion":
+        return Boolean(
+          config.locationName.trim() ||
+            config.locationAddress.trim() ||
+            config.locationMapUrl.trim(),
+        );
+      default:
+        return true;
+    }
+  };
+
+  const isSectionEnabled = (sectionId: string) => {
+    const section = config.sections.find((item) => item.id === sectionId);
+    return Boolean(section?.enabled && sectionHasContent(sectionId));
+  };
+
+  const navItems = config.sections
+    .filter((section) => section.enabled && section.nav)
+    .filter((section) => sectionHasContent(section.id))
+    .sort((a, b) => a.order - b.order)
+    .map((section) => ({
+      label: section.label.trim() || section.id,
+      href: `#${section.id}`,
+    }));
 
   return (
     <div id="top" className="flex min-h-screen flex-col">
@@ -285,82 +304,86 @@ export default async function Home() {
           </div>
         </section>
 
-        <Section
-          id="preboda"
-          eyebrow={config.prebodaEyebrow}
-          title={config.prebodaTitle}
-          description={config.prebodaDescription}
-        >
-          <div className="grid gap-6 md:grid-cols-2">
-            <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6 shadow-[var(--shadow-soft)]">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                {config.prebodaCardOneLabel}
-              </p>
-              <h3 className="mt-3 text-2xl font-semibold">
-                {config.prebodaTime}
-              </h3>
-              <p className="mt-3 text-sm text-muted">
-                {config.prebodaPlace}. Confirma tu asistencia en el formulario
-                para que sepamos cuántos brindaremos en el rooftop.
-              </p>
-              {prebodaMapUrl && (
-                <CTAButton
-                  href={prebodaMapUrl}
-                  variant="ghost"
-                  className="mt-6 w-fit"
-                  prefetch={false}
-                >
-                  {config.prebodaCardOneCtaLabel}
-                </CTAButton>
-              )}
-            </article>
-            <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6 shadow-[var(--shadow-soft)]">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                {config.prebodaCardTwoLabel}
-              </p>
-              <h3 className="mt-3 text-2xl font-semibold">
-                {config.prebodaCardTwoTitle}
-              </h3>
-              <p className="mt-3 text-sm text-muted">
-                {config.prebodaCardTwoDescription}
-              </p>
-            </article>
-          </div>
-        </Section>
+        {isSectionEnabled("preboda") && (
+          <Section
+            id="preboda"
+            eyebrow={config.prebodaEyebrow}
+            title={config.prebodaTitle}
+            description={config.prebodaDescription}
+          >
+            <div className="grid gap-6 md:grid-cols-2">
+              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6 shadow-[var(--shadow-soft)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                  {config.prebodaCardOneLabel}
+                </p>
+                <h3 className="mt-3 text-2xl font-semibold">
+                  {config.prebodaTime}
+                </h3>
+                <p className="mt-3 text-sm text-muted">
+                  {config.prebodaPlace}. Confirma tu asistencia en el formulario
+                  para que sepamos cuántos brindaremos en el rooftop.
+                </p>
+                {prebodaMapUrl && (
+                  <CTAButton
+                    href={prebodaMapUrl}
+                    variant="ghost"
+                    className="mt-6 w-fit"
+                    prefetch={false}
+                  >
+                    {config.prebodaCardOneCtaLabel}
+                  </CTAButton>
+                )}
+              </article>
+              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6 shadow-[var(--shadow-soft)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                  {config.prebodaCardTwoLabel}
+                </p>
+                <h3 className="mt-3 text-2xl font-semibold">
+                  {config.prebodaCardTwoTitle}
+                </h3>
+                <p className="mt-3 text-sm text-muted">
+                  {config.prebodaCardTwoDescription}
+                </p>
+              </article>
+            </div>
+          </Section>
+        )}
 
-        <Section
-          id="ceremonia"
-          eyebrow={config.ceremonyEyebrow}
-          title={config.ceremonyTitle}
-          description={config.ceremonyDescription}
-        >
-          <div className="grid gap-6 md:grid-cols-2">
-            <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/80 p-6 shadow-[var(--shadow-soft)]">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                {config.ceremonyCardOneLabel}
-              </p>
-              <h3 className="mt-3 text-2xl font-semibold">
-                {config.ceremonyCardOneTitle}
-              </h3>
-              <p className="mt-3 text-sm text-muted">
-                {config.ceremonyCardOneDescription}
-              </p>
-            </article>
-            <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/80 p-6 shadow-[var(--shadow-soft)]">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                {config.ceremonyCardTwoLabel}
-              </p>
-              <h3 className="mt-3 text-2xl font-semibold">
-                {config.ceremonyCardTwoTitle}
-              </h3>
-              <p className="mt-3 text-sm text-muted">
-                {config.ceremonyCardTwoDescription}
-              </p>
-            </article>
-          </div>
-        </Section>
+        {isSectionEnabled("ceremonia") && (
+          <Section
+            id="ceremonia"
+            eyebrow={config.ceremonyEyebrow}
+            title={config.ceremonyTitle}
+            description={config.ceremonyDescription}
+          >
+            <div className="grid gap-6 md:grid-cols-2">
+              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/80 p-6 shadow-[var(--shadow-soft)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                  {config.ceremonyCardOneLabel}
+                </p>
+                <h3 className="mt-3 text-2xl font-semibold">
+                  {config.ceremonyCardOneTitle}
+                </h3>
+                <p className="mt-3 text-sm text-muted">
+                  {config.ceremonyCardOneDescription}
+                </p>
+              </article>
+              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/80 p-6 shadow-[var(--shadow-soft)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                  {config.ceremonyCardTwoLabel}
+                </p>
+                <h3 className="mt-3 text-2xl font-semibold">
+                  {config.ceremonyCardTwoTitle}
+                </h3>
+                <p className="mt-3 text-sm text-muted">
+                  {config.ceremonyCardTwoDescription}
+                </p>
+              </article>
+            </div>
+          </Section>
+        )}
 
-        {hasPracticalItems && (
+        {isSectionEnabled("detalles") && (
           <Section
             id="detalles"
             eyebrow={config.practicalEyebrow}
@@ -371,37 +394,46 @@ export default async function Home() {
           </Section>
         )}
 
-        <Section
-          id="cronograma"
-          eyebrow={config.timelineEyebrow}
-          title={config.timelineTitle}
-          description={config.timelineDescription}
-          background="accent"
-        >
-          <Timeline items={config.timelineItems} />
-        </Section>
+        {isSectionEnabled("cronograma") && (
+          <Section
+            id="cronograma"
+            eyebrow={config.timelineEyebrow}
+            title={config.timelineTitle}
+            description={config.timelineDescription}
+            background="accent"
+          >
+            <Timeline items={config.timelineItems} />
+          </Section>
+        )}
 
-        <Section
-          id="alojamiento"
-          eyebrow={config.stayEyebrow}
-          title={config.stayTitle}
-          description={config.stayDescription}
-        >
-          <StayList items={config.stayOptions} linkLabel={config.stayLinkLabel} />
-        </Section>
+        {isSectionEnabled("alojamiento") && (
+          <Section
+            id="alojamiento"
+            eyebrow={config.stayEyebrow}
+            title={config.stayTitle}
+            description={config.stayDescription}
+          >
+            <StayList
+              items={config.stayOptions}
+              linkLabel={config.stayLinkLabel}
+            />
+          </Section>
+        )}
 
-        <Section
-          id="regalos"
-          eyebrow={config.giftsEyebrow}
-          title={config.giftsTitle}
-          description={config.giftsDescription}
-          background="surface"
-          align="center"
-        >
-          <GiftList gifts={giftOptions} />
-        </Section>
+        {isSectionEnabled("regalos") && (
+          <Section
+            id="regalos"
+            eyebrow={config.giftsEyebrow}
+            title={config.giftsTitle}
+            description={config.giftsDescription}
+            background="surface"
+            align="center"
+          >
+            <GiftList gifts={giftOptions} />
+          </Section>
+        )}
 
-        {hasFaqItems && (
+        {isSectionEnabled("faq") && (
           <Section
             id="faq"
             eyebrow={config.faqEyebrow}
@@ -413,100 +445,106 @@ export default async function Home() {
           </Section>
         )}
 
-        <Section
-          id="asistencia"
-          eyebrow={config.rsvpEyebrow}
-          title={config.rsvpTitle}
-          description={config.rsvpDescription}
-          background="accent"
-          align="center"
-        >
-          <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-6 rounded-[var(--radius-card)] border border-border/80 bg-surface/95 p-8 text-center shadow-[var(--shadow-soft)]">
-            <RSVPForm
-              importantTitle={config.rsvpImportantTitle}
-              importantNotes={config.rsvpImportantNotes}
-            />
-            <p className="mx-auto mt-2 max-w-2xl text-sm text-muted">
-              {config.rsvpContactLead}{" "}
-              <a
-                href={`mailto:${config.contactEmail}`}
-                className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
-              >
-                {config.contactEmail}
-              </a>{" "}
-              {config.rsvpContactWhatsappLead}{" "}
-              <a
-                href={config.whatsappLink || `tel:${config.contactPhone}`}
-                className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
-              >
-                {config.contactPhone}
-              </a>
-              .
-            </p>
-          </div>
-        </Section>
+        {isSectionEnabled("asistencia") && (
+          <Section
+            id="asistencia"
+            eyebrow={config.rsvpEyebrow}
+            title={config.rsvpTitle}
+            description={config.rsvpDescription}
+            background="accent"
+            align="center"
+          >
+            <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-6 rounded-[var(--radius-card)] border border-border/80 bg-surface/95 p-8 text-center shadow-[var(--shadow-soft)]">
+              <RSVPForm
+                importantTitle={config.rsvpImportantTitle}
+                importantNotes={config.rsvpImportantNotes}
+              />
+              <p className="mx-auto mt-2 max-w-2xl text-sm text-muted">
+                {config.rsvpContactLead}{" "}
+                <a
+                  href={`mailto:${config.contactEmail}`}
+                  className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
+                >
+                  {config.contactEmail}
+                </a>{" "}
+                {config.rsvpContactWhatsappLead}{" "}
+                <a
+                  href={config.whatsappLink || `tel:${config.contactPhone}`}
+                  className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
+                >
+                  {config.contactPhone}
+                </a>
+                .
+              </p>
+            </div>
+          </Section>
+        )}
 
-        <Section
-          id="ubicacion"
-          eyebrow={config.locationEyebrow}
-          title={config.locationTitle}
-          description={config.locationDescription}
-          background="surface"
-        >
-          <div className="grid gap-6 md:grid-cols-2">
-            <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6 shadow-[var(--shadow-soft)]">
-              <h3 className="text-xl font-semibold">{config.locationName}</h3>
-              <p className="mt-3 text-sm text-muted">{config.locationAddress}</p>
-              <div className="mt-5 flex flex-wrap gap-3">
-                {config.locationMapUrl && (
-                  <CTAButton
-                    href={config.locationMapUrl}
-                    variant="outline"
-                    prefetch={false}
-                  >
-                    {config.locationMapLabel}
-                  </CTAButton>
-                )}
-              </div>
-            </article>
-            <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6 shadow-[var(--shadow-soft)]">
-              <h3 className="text-xl font-semibold">
-                {config.locationContactTitle}
-              </h3>
-              <ul className="mt-3 space-y-2 text-sm text-muted">
-                <li>
-                  {config.locationEmailLabel}:{" "}
-                  <a
-                    href={`mailto:${config.contactEmail}`}
-                    className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
-                  >
-                    {config.contactEmail}
-                  </a>
-                </li>
-                <li>
-                  {config.locationPhoneLabel}:{" "}
-                  <a
-                    href={`tel:${config.contactPhone}`}
-                    className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
-                  >
-                    {config.contactPhone}
-                  </a>
-                </li>
-                {config.whatsappLink && (
+        {isSectionEnabled("ubicacion") && (
+          <Section
+            id="ubicacion"
+            eyebrow={config.locationEyebrow}
+            title={config.locationTitle}
+            description={config.locationDescription}
+            background="surface"
+          >
+            <div className="grid gap-6 md:grid-cols-2">
+              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6 shadow-[var(--shadow-soft)]">
+                <h3 className="text-xl font-semibold">{config.locationName}</h3>
+                <p className="mt-3 text-sm text-muted">
+                  {config.locationAddress}
+                </p>
+                <div className="mt-5 flex flex-wrap gap-3">
+                  {config.locationMapUrl && (
+                    <CTAButton
+                      href={config.locationMapUrl}
+                      variant="outline"
+                      prefetch={false}
+                    >
+                      {config.locationMapLabel}
+                    </CTAButton>
+                  )}
+                </div>
+              </article>
+              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6 shadow-[var(--shadow-soft)]">
+                <h3 className="text-xl font-semibold">
+                  {config.locationContactTitle}
+                </h3>
+                <ul className="mt-3 space-y-2 text-sm text-muted">
                   <li>
-                    {config.locationWhatsappLabel}:{" "}
+                    {config.locationEmailLabel}:{" "}
                     <a
-                      href={config.whatsappLink}
+                      href={`mailto:${config.contactEmail}`}
                       className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
                     >
-                      {config.locationWhatsappActionLabel}
+                      {config.contactEmail}
                     </a>
                   </li>
-                )}
-              </ul>
-            </article>
-          </div>
-        </Section>
+                  <li>
+                    {config.locationPhoneLabel}:{" "}
+                    <a
+                      href={`tel:${config.contactPhone}`}
+                      className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
+                    >
+                      {config.contactPhone}
+                    </a>
+                  </li>
+                  {config.whatsappLink && (
+                    <li>
+                      {config.locationWhatsappLabel}:{" "}
+                      <a
+                        href={config.whatsappLink}
+                        className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
+                      >
+                        {config.locationWhatsappActionLabel}
+                      </a>
+                    </li>
+                  )}
+                </ul>
+              </article>
+            </div>
+          </Section>
+        )}
       </main>
       <Footer
         eyebrow={config.footerEyebrow}

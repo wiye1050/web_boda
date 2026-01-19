@@ -542,6 +542,7 @@ service cloud.firestore {
           "footerMadeWith",
           "heroBackgroundImages",
           "heroBackgroundIntervalMs",
+          "sections",
         ]);
     }
 

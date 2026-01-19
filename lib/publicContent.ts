@@ -24,6 +24,14 @@ export type FaqItem = {
   answer: string;
 };
 
+export type SectionConfig = {
+  id: string;
+  label: string;
+  enabled: boolean;
+  nav: boolean;
+  order: number;
+};
+
 export type PublicContent = {
   brandName: string;
   headerCtaLabel: string;
@@ -121,7 +129,20 @@ export type PublicContent = {
   footerMadeWith: string;
   heroBackgroundImages: string[];
   heroBackgroundIntervalMs: string;
+  sections: SectionConfig[];
 };
+
+export const DEFAULT_SECTIONS: SectionConfig[] = [
+  { id: "preboda", label: "Preboda", enabled: true, nav: true, order: 1 },
+  { id: "ceremonia", label: "La boda", enabled: true, nav: true, order: 2 },
+  { id: "detalles", label: "Detalles", enabled: true, nav: true, order: 3 },
+  { id: "cronograma", label: "Cronograma", enabled: true, nav: true, order: 4 },
+  { id: "alojamiento", label: "Alojamiento", enabled: true, nav: true, order: 5 },
+  { id: "regalos", label: "Regalos", enabled: true, nav: true, order: 6 },
+  { id: "faq", label: "FAQ", enabled: true, nav: true, order: 7 },
+  { id: "asistencia", label: "Confirmar asistencia", enabled: true, nav: true, order: 8 },
+  { id: "ubicacion", label: "Ubicación", enabled: true, nav: true, order: 9 },
+];
 
 export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   brandName: "Alba & Guille",
@@ -341,6 +362,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     "/photos/hero/boda2.jpg",
   ],
   heroBackgroundIntervalMs: "8000",
+  sections: DEFAULT_SECTIONS,
 };
 
 function normalizeString(value: unknown, fallback: string) {
@@ -480,6 +502,66 @@ export function parseFaqItems(raw: unknown): FaqItem[] {
     .filter((item) => item.question || item.answer);
 
   return cleaned.length > 0 ? cleaned : DEFAULT_PUBLIC_CONTENT.faqItems;
+}
+
+export function parseSections(raw: unknown): SectionConfig[] {
+  const parsed = Array.isArray(raw) ? raw : safeJsonParse(raw);
+  if (!Array.isArray(parsed)) {
+    return DEFAULT_PUBLIC_CONTENT.sections;
+  }
+
+  const cleaned = parsed
+    .map((item) => (item && typeof item === "object" ? item : {}))
+    .map((item) => {
+      const record = item as Record<string, unknown>;
+      return {
+        id: normalizeString(record.id, "").trim(),
+        label: normalizeString(record.label, "").trim(),
+        enabled: Boolean(record.enabled),
+        nav: Boolean(record.nav),
+        order: Number.isFinite(record.order) ? Number(record.order) : 0,
+      };
+    })
+    .filter((item) => item.id.length > 0);
+
+  return cleaned.length > 0 ? cleaned : DEFAULT_PUBLIC_CONTENT.sections;
+}
+
+export function mergeSections(
+  defaults: SectionConfig[],
+  incoming: SectionConfig[],
+): SectionConfig[] {
+  const byId = new Map<string, SectionConfig>();
+  defaults.forEach((section) => {
+    byId.set(section.id, section);
+  });
+  incoming.forEach((section) => {
+    if (!section.id) return;
+    const base = byId.get(section.id);
+    byId.set(section.id, {
+      id: section.id,
+      label: section.label || base?.label || section.id,
+      enabled:
+        typeof section.enabled === "boolean"
+          ? section.enabled
+          : base?.enabled ?? true,
+      nav:
+        typeof section.nav === "boolean"
+          ? section.nav
+          : base?.nav ?? true,
+      order: Number.isFinite(section.order)
+        ? section.order
+        : base?.order ?? 0,
+    });
+  });
+
+  return Array.from(byId.values())
+    .map((section) => ({
+      ...section,
+      label: section.label || section.id,
+      order: Number.isFinite(section.order) ? section.order : 0,
+    }))
+    .sort((a, b) => a.order - b.order);
 }
 
 export function normalizePublicContent(
@@ -849,6 +931,10 @@ export function normalizePublicContent(
       data.heroBackgroundIntervalMs,
       DEFAULT_PUBLIC_CONTENT.heroBackgroundIntervalMs,
     ),
+    sections: mergeSections(
+      DEFAULT_PUBLIC_CONTENT.sections,
+      parseSections(data.sections),
+    ),
   };
 }
 
@@ -861,5 +947,6 @@ export function serializePublicContent(content: PublicContent) {
     rsvpImportantNotes: JSON.stringify(content.rsvpImportantNotes),
     faqItems: JSON.stringify(content.faqItems),
     heroBackgroundImages: JSON.stringify(content.heroBackgroundImages),
+    sections: content.sections,
   };
 }
