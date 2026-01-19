@@ -99,19 +99,19 @@ export function HeroSlideshow({
         .filter(Boolean)
         .join(" ")}
     >
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-opacity duration-[1200ms] ease-out"
-        style={{
-          backgroundImage: `url(${currentImage})`,
-          opacity: isFading ? 0 : 1,
-        }}
+      <img
+        src={currentImage}
+        alt=""
+        aria-hidden
+        className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out"
+        style={{ opacity: isFading ? 0 : 1 }}
       />
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-opacity duration-[1200ms] ease-out"
-        style={{
-          backgroundImage: `url(${upcomingImage})`,
-          opacity: isFading ? 1 : 0,
-        }}
+      <img
+        src={upcomingImage}
+        alt=""
+        aria-hidden
+        className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out"
+        style={{ opacity: isFading ? 1 : 0 }}
       />
       <div className="absolute inset-0 bg-black/30" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(0,0,0,0.35),_transparent_55%),radial-gradient(circle_at_80%_20%,_rgba(0,0,0,0.15),_transparent_60%)]" />
