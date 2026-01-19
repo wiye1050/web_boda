@@ -221,7 +221,7 @@ export default async function Home() {
           )}
           {typeof debugHeroRaw === "string" && (
             <div className="absolute bottom-3 left-3 z-10 rounded-full bg-black/60 px-3 py-1 text-[0.6rem] uppercase tracking-[0.3em] text-white">
-              Hero raw: {debugHeroRaw.slice(0, 80)}
+              Hero raw: {String(debugHeroRaw).slice(0, 80)}
             </div>
           )}
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-[calc(var(--spacing-section)*1.2)] sm:px-8">
