@@ -117,6 +117,10 @@ export type PublicContent = {
   locationTitle: string;
   locationDescription: string;
   locationMapLabel: string;
+  weddingMapsUrl: string;
+  prebodaMapsUrl: string;
+  weddingVenueName: string;
+  prebodaVenueName: string;
   locationContactTitle: string;
   locationEmailLabel: string;
   locationPhoneLabel: string;
@@ -346,6 +350,10 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   locationDescription:
     "La finca cuenta con aparcamiento propio. Si necesitas ayuda con rutas, transporte o recomendaciones, escríbenos y te echamos una mano.",
   locationMapLabel: "Abrir en Maps",
+  weddingMapsUrl: "",
+  prebodaMapsUrl: "",
+  weddingVenueName: "Finca El Casar",
+  prebodaVenueName: "Casino Rooftop",
   locationContactTitle: "Contacta con nosotros",
   locationEmailLabel: "Email",
   locationPhoneLabel: "Teléfono",
@@ -882,6 +890,22 @@ export function normalizePublicContent(
     locationMapLabel: normalizeString(
       data.locationMapLabel,
       DEFAULT_PUBLIC_CONTENT.locationMapLabel,
+    ),
+    weddingMapsUrl: normalizeString(
+      data.weddingMapsUrl,
+      DEFAULT_PUBLIC_CONTENT.weddingMapsUrl,
+    ),
+    prebodaMapsUrl: normalizeString(
+      data.prebodaMapsUrl,
+      DEFAULT_PUBLIC_CONTENT.prebodaMapsUrl,
+    ),
+    weddingVenueName: normalizeString(
+      data.weddingVenueName,
+      DEFAULT_PUBLIC_CONTENT.weddingVenueName,
+    ),
+    prebodaVenueName: normalizeString(
+      data.prebodaVenueName,
+      DEFAULT_PUBLIC_CONTENT.prebodaVenueName,
     ),
     locationContactTitle: normalizeString(
       data.locationContactTitle,

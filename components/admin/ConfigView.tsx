@@ -57,6 +57,10 @@ const FIELD_LIMITS: Record<string, number> = {
   locationAddress: 200,
   locationMapUrl: 300,
   locationMapLabel: 80,
+  weddingMapsUrl: 300,
+  prebodaMapsUrl: 300,
+  weddingVenueName: 120,
+  prebodaVenueName: 120,
   prebodaPlace: 160,
   prebodaTime: 80,
   prebodaMapUrl: 300,
@@ -156,6 +160,10 @@ const FIELD_LABELS: Record<string, string> = {
   locationAddress: "Dirección",
   locationMapUrl: "Enlace del mapa",
   locationMapLabel: "Texto del mapa",
+  weddingMapsUrl: "Maps: URL Boda (Google Maps)",
+  prebodaMapsUrl: "Maps: URL Preboda (Google Maps)",
+  weddingVenueName: "Nombre ubicación boda",
+  prebodaVenueName: "Nombre ubicación preboda",
   prebodaPlace: "Lugar preboda",
   prebodaTime: "Hora preboda",
   prebodaMapUrl: "Mapa preboda",
@@ -819,6 +827,30 @@ export function ConfigView() {
             value={config.locationMapLabel}
             onChange={(value) => updateField("locationMapLabel", value)}
             maxLength={FIELD_LIMITS.locationMapLabel}
+          />
+          <InputField
+            label="Maps: URL Boda (Google Maps)"
+            value={config.weddingMapsUrl}
+            onChange={(value) => updateField("weddingMapsUrl", value)}
+            maxLength={FIELD_LIMITS.weddingMapsUrl}
+          />
+          <InputField
+            label="Maps: URL Preboda (Google Maps)"
+            value={config.prebodaMapsUrl}
+            onChange={(value) => updateField("prebodaMapsUrl", value)}
+            maxLength={FIELD_LIMITS.prebodaMapsUrl}
+          />
+          <InputField
+            label="Nombre ubicación boda"
+            value={config.weddingVenueName}
+            onChange={(value) => updateField("weddingVenueName", value)}
+            maxLength={FIELD_LIMITS.weddingVenueName}
+          />
+          <InputField
+            label="Nombre ubicación preboda"
+            value={config.prebodaVenueName}
+            onChange={(value) => updateField("prebodaVenueName", value)}
+            maxLength={FIELD_LIMITS.prebodaVenueName}
           />
         </Fieldset>
 

@@ -2,6 +2,7 @@ import { CTAButton } from "@/components/CTAButton";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
+import { MobileBottomBar } from "@/components/MobileBottomBar";
 import { Section } from "@/components/Section";
 import { RSVPForm } from "@/components/RSVPForm";
 import { getPublicConfig } from "@/lib/getPublicConfig";
@@ -170,6 +171,8 @@ export default async function Home() {
   const heroInterval = Number.isFinite(intervalMs) ? intervalMs : 8000;
   const hasPracticalItems = config.practicalItems.length > 0;
   const hasFaqItems = config.faqItems.length > 0;
+  const weddingMapsUrl = config.weddingMapsUrl.trim();
+  const prebodaMapsUrl = config.prebodaMapsUrl.trim();
   const giftContactHref = config.whatsappLink.trim().length > 0
     ? config.whatsappLink
     : config.contactPhone.trim().length > 0
@@ -553,6 +556,26 @@ export default async function Home() {
         copyright={config.footerCopyright}
         madeWith={config.footerMadeWith}
         brandName={config.brandName}
+      />
+      <MobileBottomBar
+        confirmHref="#asistencia"
+        wedding={
+          weddingMapsUrl
+            ? {
+                name: config.weddingVenueName.trim() || "Boda",
+                url: weddingMapsUrl,
+              }
+            : null
+        }
+        preboda={
+          prebodaMapsUrl
+            ? {
+                name: config.prebodaVenueName.trim() || "Preboda",
+                url: prebodaMapsUrl,
+              }
+            : null
+        }
+        weddingVenueName={config.weddingVenueName.trim()}
       />
     </div>
   );
