@@ -57,6 +57,7 @@ body {
     sans-serif;
   line-height: 1.6;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 main {
