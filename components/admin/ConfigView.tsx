@@ -206,15 +206,22 @@ const FIELD_LABELS: Record<string, string> = {
   footerMadeWith: "Footer: texto final",
 };
 
-function validateConfig(content: PublicContent) {
+type ValidationIssue = {
+  key: string;
+  label: string;
+  length: number;
+  max: number;
+};
+
+function validateConfig(content: PublicContent): ValidationIssue[] {
   const payload = serializePublicContent(content);
-  const errors: string[] = [];
+  const errors: ValidationIssue[] = [];
 
   Object.entries(FIELD_LIMITS).forEach(([key, max]) => {
     const value = payload[key as keyof typeof payload];
     if (typeof value === "string" && value.length > max) {
       const label = FIELD_LABELS[key] ?? key;
-      errors.push(`${label} (máx. ${max} caracteres)`);
+      errors.push({ key, label, length: value.length, max });
     }
   });
 
@@ -263,7 +270,9 @@ export function ConfigView() {
       const visibleErrors = validationErrors.slice(0, 3);
       const extraCount = validationErrors.length - visibleErrors.length;
       setError(
-        `Revisa estos campos: ${visibleErrors.join(", ")}${
+        `Revisa estos campos: ${visibleErrors
+          .map((issue) => `${issue.label} (${issue.length}/${issue.max})`)
+          .join(", ")}${
           extraCount > 0 ? ` (+${extraCount} más)` : ""
         }.`,
       );
