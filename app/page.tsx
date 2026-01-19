@@ -148,7 +148,7 @@ function FaqList({ items }: { items: FaqItem[] }) {
           key={`${item.question}-${index}`}
           className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-5 shadow-[var(--shadow-soft)]"
         >
-          <summary className="cursor-pointer text-sm font-semibold uppercase tracking-[0.25em] text-muted">
+          <summary className="cursor-pointer text-sm font-semibold uppercase tracking-[0.2em] text-muted sm:tracking-[0.25em]">
             {item.question}
           </summary>
           <p className="mt-3 text-sm text-muted">{item.answer}</p>
@@ -243,14 +243,14 @@ export default async function Home() {
         navItems={navItems}
         ctaLabel={config.headerCtaLabel}
       />
-      <main className="flex-1">
+      <main className="flex-1 pb-[calc(env(safe-area-inset-bottom)_+_84px)] sm:pb-0">
         <section className="relative">
           {heroImages.length > 0 ? (
             <HeroSlideshow images={heroImages} intervalMs={heroInterval} />
           ) : (
             <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(183,110,121,0.25),_transparent_55%),radial-gradient(circle_at_80%_10%,_rgba(241,223,215,0.8),_transparent_60%)]" />
           )}
-          <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-[calc(var(--spacing-section)*1.2)] sm:px-8">
+          <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-[calc(var(--spacing-section)*0.9)] sm:px-8 sm:py-[calc(var(--spacing-section)*1.2)]">
             <span className="text-xs font-semibold uppercase tracking-[0.6em] text-muted">
               {config.heroEyebrow}
             </span>

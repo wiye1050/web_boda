@@ -23,6 +23,9 @@ export function MobileBottomBar({
 }: MobileBottomBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const canOpen = Boolean(wedding?.url);
+  const mapsButtonRef = useState<React.RefObject<HTMLButtonElement>>(() =>
+    ({ current: null } as React.RefObject<HTMLButtonElement>)
+  )[0];
 
   return (
     <>
@@ -35,6 +38,7 @@ export function MobileBottomBar({
             Confirmar
           </a>
           <button
+            ref={mapsButtonRef}
             type="button"
             disabled={!canOpen}
             onClick={() => setIsOpen(true)}
@@ -46,7 +50,10 @@ export function MobileBottomBar({
       </div>
       <MapsChooserModal
         open={isOpen}
-        onClose={() => setIsOpen(false)}
+        onClose={() => {
+          setIsOpen(false);
+          mapsButtonRef.current?.focus();
+        }}
         wedding={wedding}
         preboda={preboda}
         weddingVenueName={weddingVenueName}

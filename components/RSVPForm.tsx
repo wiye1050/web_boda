@@ -51,7 +51,7 @@ export function RSVPForm({
   const [botField, setBotField] = useState("");
   const startedAt = useRef(Date.now());
   const radioBaseClasses =
-    "inline-flex w-full items-center justify-center gap-2 rounded-full border px-4 py-3 text-sm uppercase tracking-[0.2em] transition focus-within:outline focus-within:outline-2 focus-within:outline-offset-[3px] focus-within:outline-primary sm:flex-1";
+    "inline-flex w-full items-center justify-center gap-2 rounded-full border px-4 py-3 text-sm uppercase tracking-[0.15em] transition focus-within:outline focus-within:outline-2 focus-within:outline-offset-[3px] focus-within:outline-primary sm:flex-1 sm:tracking-[0.2em]";
 
   const attending = form.attendance === "si";
   const guestsNumber = Number.parseInt(form.guests, 10);
@@ -522,7 +522,7 @@ export function RSVPForm({
         <button
           type="submit"
           disabled={!isValid || status === "loading"}
-          className="inline-flex w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold uppercase tracking-[0.25em] text-primary-foreground transition hover:translate-y-[-1px] hover:shadow-lg hover:shadow-primary/30 disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
+          className="inline-flex w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary-foreground transition hover:translate-y-[-1px] hover:shadow-lg hover:shadow-primary/30 disabled:cursor-not-allowed disabled:opacity-60 md:w-auto sm:tracking-[0.25em]"
         >
           {status === "loading" ? "Guardando..." : "Enviar respuesta"}
         </button>
