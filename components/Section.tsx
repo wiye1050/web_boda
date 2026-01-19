@@ -42,13 +42,13 @@ export function Section({
       aria-labelledby={headingId}
       aria-describedby={descriptionId}
       className={[
-        "relative w-full py-[var(--spacing-section)]",
+        "relative w-full py-[calc(var(--spacing-section)*0.85)] sm:py-[var(--spacing-section)]",
         backgroundClassMap[background],
       ]
         .filter(Boolean)
         .join(" ")}
     >
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 sm:px-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 sm:gap-10 sm:px-8">
         {(eyebrow || title || description) && (
           <header
             className={[

@@ -250,7 +250,7 @@ export default async function Home() {
           ) : (
             <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(183,110,121,0.25),_transparent_55%),radial-gradient(circle_at_80%_10%,_rgba(241,223,215,0.8),_transparent_60%)]" />
           )}
-          <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-[calc(var(--spacing-section)*0.9)] sm:px-8 sm:py-[calc(var(--spacing-section)*1.2)]">
+          <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-[calc(var(--spacing-section)*0.75)] sm:gap-10 sm:px-8 sm:py-[calc(var(--spacing-section)*1.2)]">
             <span className="text-xs font-semibold uppercase tracking-[0.6em] text-muted">
               {config.heroEyebrow}
             </span>
@@ -266,7 +266,7 @@ export default async function Home() {
                 {config.heroSecondaryCtaLabel}
               </CTAButton>
             </div>
-            <div className="mt-6 grid gap-6 rounded-[var(--radius-card)] border border-border/70 bg-surface/80 p-6 sm:grid-cols-3">
+            <div className="mt-6 grid gap-6 rounded-[var(--radius-card)] border border-border/70 bg-surface/80 p-4 sm:grid-cols-3 sm:p-6">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
                   {config.heroStatDateLabel}
