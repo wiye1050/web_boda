@@ -129,7 +129,6 @@ export default async function Home() {
     { label: config.navTimelineLabel, href: "#cronograma" },
     { label: config.navStayLabel, href: "#alojamiento" },
     { label: config.navGiftsLabel, href: "#regalos" },
-    { label: config.navRsvpLabel, href: "#rsvp" },
   ];
 
   return (

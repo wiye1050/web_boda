@@ -124,7 +124,7 @@ const FIELD_LABELS: Record<string, string> = {
   navTimelineLabel: "Menú: Cronograma",
   navStayLabel: "Menú: Alojamiento",
   navGiftsLabel: "Menú: Regalos",
-  navRsvpLabel: "Menú: RSVP",
+  navRsvpLabel: "Menú: Confirmar asistencia",
   heroEyebrow: "Texto superior",
   heroTitle: "Título principal",
   heroDescription: "Descripción principal",
@@ -184,13 +184,13 @@ const FIELD_LABELS: Record<string, string> = {
   giftsRegistryCtaLabel: "Regalos: mesa botón",
   giftsBankTitle: "Regalos: banco título",
   giftsBankDescription: "Regalos: banco descripción",
-  rsvpEyebrow: "RSVP: texto superior",
-  rsvpTitle: "RSVP: título",
-  rsvpDescription: "RSVP: descripción",
-  rsvpContactLead: "RSVP: texto contacto",
-  rsvpContactWhatsappLead: "RSVP: texto WhatsApp",
-  rsvpImportantTitle: "RSVP: título importante",
-  rsvpImportantNotes: "RSVP: notas importantes",
+  rsvpEyebrow: "Confirmar asistencia: texto superior",
+  rsvpTitle: "Confirmar asistencia: título",
+  rsvpDescription: "Confirmar asistencia: descripción",
+  rsvpContactLead: "Confirmar asistencia: texto contacto",
+  rsvpContactWhatsappLead: "Confirmar asistencia: texto WhatsApp",
+  rsvpImportantTitle: "Confirmar asistencia: título importante",
+  rsvpImportantNotes: "Confirmar asistencia: notas importantes",
   locationEyebrow: "Ubicación: texto superior",
   locationTitle: "Ubicación: título",
   locationDescription: "Ubicación: descripción",
@@ -486,12 +486,6 @@ export function ConfigView() {
             value={config.navGiftsLabel}
             onChange={(value) => updateField("navGiftsLabel", value)}
             maxLength={FIELD_LIMITS.navGiftsLabel}
-          />
-          <InputField
-            label="Menú: RSVP"
-            value={config.navRsvpLabel}
-            onChange={(value) => updateField("navRsvpLabel", value)}
-            maxLength={FIELD_LIMITS.navRsvpLabel}
           />
         </Fieldset>
 
@@ -961,7 +955,7 @@ export function ConfigView() {
         </Fieldset>
 
         <Fieldset
-          title="RSVP"
+          title="Confirmar asistencia"
           meta={`${listLengths.rsvpImportantNotes}/${FIELD_LIMITS.rsvpImportantNotes}`}
         >
           <InputField

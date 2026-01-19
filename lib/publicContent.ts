@@ -109,7 +109,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   navTimelineLabel: "Cronograma",
   navStayLabel: "Alojamiento",
   navGiftsLabel: "Regalos",
-  navRsvpLabel: "RSVP",
+  navRsvpLabel: "Confirmar asistencia",
   heroEyebrow: "Ponferrada · 2025",
   heroTitle: "Alba & Guille",
   heroDescription:
@@ -242,7 +242,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   giftsBankTitle: "Transferencia bancaria",
   giftsBankDescription:
     "Si prefieres hacer un regalo en efectivo, déjanos tu cariño en nuestra cuenta.",
-  rsvpEyebrow: "RSVP",
+  rsvpEyebrow: "Confirmar asistencia",
   rsvpTitle: "Confirma tu asistencia",
   rsvpDescription:
     "Queremos preparar todo a tu medida. Completa el formulario y cuéntanos si vienes con acompañantes, intolerancias alimentarias u otras necesidades.",
