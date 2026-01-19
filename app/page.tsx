@@ -251,18 +251,20 @@ export default async function Home() {
             <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(183,110,121,0.25),_transparent_55%),radial-gradient(circle_at_80%_10%,_rgba(241,223,215,0.8),_transparent_60%)]" />
           )}
           <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-[calc(var(--spacing-section)*0.75)] sm:gap-10 sm:px-8 sm:py-[calc(var(--spacing-section)*1.2)]">
-            <span className="text-xs font-semibold uppercase tracking-[0.6em] text-muted">
+            <span className="text-[0.65rem] font-semibold uppercase tracking-[0.5em] text-muted sm:text-xs sm:tracking-[0.6em]">
               {config.heroEyebrow}
             </span>
-            <h1 className="font-display text-[clamp(3.5rem,10vw,6rem)] font-semibold leading-[1.05]">
+            <h1 className="font-display text-[clamp(2.6rem,9vw,4.2rem)] font-semibold leading-[1.05] sm:text-[clamp(3.5rem,10vw,6rem)]">
               {config.heroTitle}
             </h1>
-            <p className="max-w-xl text-base text-muted">
+            <p className="max-w-xl text-sm text-muted sm:text-base">
               {config.heroDescription}
             </p>
-            <div className="flex flex-wrap gap-4">
-              <CTAButton href="#asistencia">{config.heroPrimaryCtaLabel}</CTAButton>
-              <CTAButton href="#cronograma" variant="outline">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+              <CTAButton href="#asistencia" className="w-full sm:w-auto">
+                {config.heroPrimaryCtaLabel}
+              </CTAButton>
+              <CTAButton href="#cronograma" variant="outline" className="w-full sm:w-auto">
                 {config.heroSecondaryCtaLabel}
               </CTAButton>
             </div>
