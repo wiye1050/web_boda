@@ -402,6 +402,11 @@ export function ConfigView() {
       setIsSaving(false);
       return;
     }
+    if (!heroParsed.value) {
+      setError("Hero imágenes: JSON inválido.");
+      setIsSaving(false);
+      return;
+    }
     if (heroParsed.value.some((item) => typeof item !== "string")) {
       setError("Hero imágenes: solo se permiten strings en la lista.");
       setIsSaving(false);
