@@ -372,14 +372,28 @@ export function SectionsManager() {
                   <button
                     type="button"
                     onClick={() => toggleSection(section.id)}
-                    className="text-left"
+                    aria-expanded={isOpen}
+                    className="group flex items-start gap-3 text-left"
                   >
-                    <p className="text-sm font-semibold text-foreground">
-                      {SECTION_LABELS[section.id] ?? section.id}
-                    </p>
-                    <p className="text-xs uppercase tracking-[0.3em] text-muted">
-                      {section.id}
-                    </p>
+                    <span
+                      className={[
+                        "mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full border border-border/70 text-xs text-muted transition",
+                        isOpen ? "rotate-180 border-primary/60 text-primary" : "",
+                        "group-hover:border-primary/60 group-hover:text-primary",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                    >
+                      ▾
+                    </span>
+                    <span>
+                      <p className="text-sm font-semibold text-foreground">
+                        {SECTION_LABELS[section.id] ?? section.id}
+                      </p>
+                      <p className="text-xs uppercase tracking-[0.3em] text-muted">
+                        {section.id}
+                      </p>
+                    </span>
                   </button>
                   <label className="inline-flex items-center gap-2 text-sm">
                     <input
