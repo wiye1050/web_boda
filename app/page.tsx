@@ -160,9 +160,10 @@ function FaqList({ items }: { items: FaqItem[] }) {
 export default async function Home() {
   const config = await getPublicConfig();
   const prebodaMapUrl = config.prebodaMapUrl || config.locationMapUrl;
-  const debugHeroRaw = typeof config.heroBackgroundImages === "string"
-    ? config.heroBackgroundImages
-    : "";
+  const debugHeroRaw =
+    typeof config.heroBackgroundImages === "string"
+      ? config.heroBackgroundImages
+      : null;
   const heroImages = (config.heroBackgroundImages ?? []).filter(
     (src) => typeof src === "string" && src.trim().length > 0,
   );
@@ -218,7 +219,7 @@ export default async function Home() {
           ) : (
             <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,_rgba(183,110,121,0.25),_transparent_55%),radial-gradient(circle_at_80%_10%,_rgba(241,223,215,0.8),_transparent_60%)]" />
           )}
-          {debugHeroRaw && (
+          {typeof debugHeroRaw === "string" && (
             <div className="absolute bottom-3 left-3 z-10 rounded-full bg-black/60 px-3 py-1 text-[0.6rem] uppercase tracking-[0.3em] text-white">
               Hero raw: {debugHeroRaw.slice(0, 80)}
             </div>
