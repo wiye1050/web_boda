@@ -93,7 +93,7 @@ export function HeroSlideshow({
   return (
     <div
       className={[
-        "absolute inset-0 -z-10 overflow-hidden bg-cover bg-center",
+        "absolute inset-0 z-0 overflow-hidden bg-cover bg-center pointer-events-none",
         className ?? "",
       ]
         .filter(Boolean)

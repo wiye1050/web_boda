@@ -214,12 +214,12 @@ export default async function Home() {
           {heroImages.length > 0 ? (
             <HeroSlideshow images={heroImages} intervalMs={heroInterval} />
           ) : (
-            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,_rgba(183,110,121,0.25),_transparent_55%),radial-gradient(circle_at_80%_10%,_rgba(241,223,215,0.8),_transparent_60%)]" />
+            <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(183,110,121,0.25),_transparent_55%),radial-gradient(circle_at_80%_10%,_rgba(241,223,215,0.8),_transparent_60%)]" />
           )}
           <div className="absolute bottom-3 left-3 z-10 rounded-full bg-black/60 px-3 py-1 text-[0.6rem] uppercase tracking-[0.3em] text-white">
             {heroDebugLabel}
           </div>
-          <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-[calc(var(--spacing-section)*1.2)] sm:px-8">
+          <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-[calc(var(--spacing-section)*1.2)] sm:px-8">
             <span className="text-xs font-semibold uppercase tracking-[0.6em] text-muted">
               {config.heroEyebrow}
             </span>
