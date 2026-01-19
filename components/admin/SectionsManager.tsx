@@ -1404,6 +1404,29 @@ export function SectionsManager() {
                           </div>
                           <div className="grid gap-3 sm:grid-cols-2">
                             <InputField
+                              label="Toggle detalles: mostrar"
+                              value={content.rsvpForm.advancedToggleShow}
+                              onChange={(value) =>
+                                updateRsvpForm("advancedToggleShow", value)
+                              }
+                            />
+                            <InputField
+                              label="Toggle detalles: ocultar"
+                              value={content.rsvpForm.advancedToggleHide}
+                              onChange={(value) =>
+                                updateRsvpForm("advancedToggleHide", value)
+                              }
+                            />
+                          </div>
+                          <InputField
+                            label="Detalles opcionales: título"
+                            value={content.rsvpForm.advancedSectionTitle}
+                            onChange={(value) =>
+                              updateRsvpForm("advancedSectionTitle", value)
+                            }
+                          />
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <InputField
                               label="Preboda: título"
                               value={content.rsvpForm.prebodaLegend}
                               onChange={(value) =>

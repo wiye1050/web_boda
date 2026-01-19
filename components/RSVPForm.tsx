@@ -50,6 +50,7 @@ export function RSVPForm({
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [status, setStatus] = useState<RSVPStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [botField, setBotField] = useState("");
   const startedAt = useRef(Date.now());
   const radioBaseClasses =
@@ -132,6 +133,10 @@ export function RSVPForm({
         if (attendingValue === "si" && next.guests === "0") {
           next.guests = "";
         }
+        if (attendingValue === "si") {
+          next.preboda = next.preboda ?? "no";
+          next.needsTransport = next.needsTransport ?? "no";
+        }
       }
 
       if (field === "needsTransport") {
@@ -206,8 +211,8 @@ export function RSVPForm({
         attendance: form.attendance!, // asegurado por validación previa
         guests: attending ? guestsNumber : 0,
         guestNames: form.guestNames.trim(),
-        preboda: form.preboda!, // asegurado por validación previa
-        needsTransport: form.needsTransport!, // asegurado por validación previa
+        preboda: form.preboda ?? "no",
+        needsTransport: form.needsTransport ?? "no",
         transportSeats:
           form.needsTransport === "si"
             ? Math.min(seatsRequested, Math.max(guestsNumber, 1))
@@ -354,7 +359,7 @@ export function RSVPForm({
         </fieldset>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6">
         <label className="flex flex-col gap-2 text-left">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
             {copy.guestsLabel}
@@ -379,142 +384,170 @@ export function RSVPForm({
             </span>
           )}
         </label>
-
-        <label className="flex flex-col gap-2 text-left">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            {copy.guestNamesLabel}
+      </div>
+      <div className="flex items-center justify-center">
+        <button
+          type="button"
+          onClick={() => setShowAdvanced((prev) => !prev)}
+          aria-expanded={showAdvanced}
+          aria-controls="rsvp-advanced"
+          className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+        >
+          <span>{showAdvanced ? copy.advancedToggleHide : copy.advancedToggleShow}</span>
+          <span
+            className={[
+              "text-[0.7rem] transition",
+              showAdvanced ? "rotate-180 text-primary" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            ▾
           </span>
-          <textarea
-            name="guestNames"
-            value={form.guestNames}
-            onChange={(event) => handleChange("guestNames", event.target.value)}
-            rows={3}
-            placeholder={copy.guestNamesPlaceholder}
-            className="min-h-[100px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
-            disabled={!attending}
-          />
-        </label>
+        </button>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-left shadow-sm">
-          <legend className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            {copy.prebodaLegend}
-          </legend>
-          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            {["si", "no"].map((value) => (
-              <label
-                key={value}
-                className={[
-                  radioBaseClasses,
-                  "min-w-[160px]",
-                  form.preboda === value
-                    ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                    : "border-border bg-surface text-muted hover:border-primary/60 hover:text-primary",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                <input
-                  className="sr-only"
-                  type="radio"
-                  name="preboda"
-                  value={value}
-                  checked={form.preboda === value}
-                  onChange={(event) =>
-                    handleChange(
-                      "preboda",
-                      event.target.value as FormState["preboda"],
-                    )
-                  }
-                />
-                {value === "si" ? copy.prebodaYesLabel : copy.prebodaNoLabel}
-              </label>
-            ))}
-          </div>
-          <p className="text-xs text-muted">{copy.prebodaNote}</p>
-        </fieldset>
-
-        <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-left shadow-sm">
-          <legend className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            {copy.transportLegend}
-          </legend>
-          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            {["no", "si"].map((value) => (
-              <label
-                key={value}
-                className={[
-                  radioBaseClasses,
-                  "min-w-[160px]",
-                  form.needsTransport === value
-                    ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                    : "border-border bg-surface text-muted hover:border-primary/60 hover:text-primary",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                <input
-                  className="sr-only"
-                  type="radio"
-                  name="needsTransport"
-                  value={value}
-                  checked={form.needsTransport === value}
-                  onChange={(event) =>
-                    handleChange(
-                      "needsTransport",
-                      event.target.value as FormState["needsTransport"],
-                    )
-                  }
-                />
-                {value === "si"
-                  ? copy.transportYesLabel
-                  : copy.transportNoLabel}
-              </label>
-            ))}
-          </div>
-          <p className="text-xs text-muted">{copy.transportNote}</p>
-        </fieldset>
-      </div>
-
-      {form.needsTransport === "si" && (
-        <label className="flex flex-col gap-2 text-left">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            {copy.transportSeatsLabel}
-          </span>
-          <input
-            name="transportSeats"
-            inputMode="numeric"
-            min={1}
-            max={attending && !Number.isNaN(guestsNumber) ? guestsNumber : undefined}
-            required
-            value={form.transportSeats}
-            onChange={(event) =>
-              handleChange("transportSeats", event.target.value)
-            }
-            placeholder={copy.transportSeatsPlaceholder}
-            className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
-          />
-          {showSeatsError && (
-            <span className="text-xs text-primary">
-              {copy.transportSeatsError}
+      {showAdvanced && (
+        <div
+          id="rsvp-advanced"
+          className="grid gap-6 rounded-[24px] border border-border/80 bg-surface/90 p-6 md:grid-cols-2"
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted md:col-span-2">
+            {copy.advancedSectionTitle}
+          </p>
+          <label className="flex flex-col gap-2 text-left">
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+              {copy.guestNamesLabel}
             </span>
-          )}
-        </label>
-      )}
+            <textarea
+              name="guestNames"
+              value={form.guestNames}
+              onChange={(event) => handleChange("guestNames", event.target.value)}
+              rows={3}
+              placeholder={copy.guestNamesPlaceholder}
+              className="min-h-[100px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+              disabled={!attending}
+            />
+          </label>
+          <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-left shadow-sm">
+            <legend className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+              {copy.prebodaLegend}
+            </legend>
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              {["si", "no"].map((value) => (
+                <label
+                  key={value}
+                  className={[
+                    radioBaseClasses,
+                    "min-w-[160px]",
+                    form.preboda === value
+                      ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                      : "border-border bg-surface text-muted hover:border-primary/60 hover:text-primary",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  <input
+                    className="sr-only"
+                    type="radio"
+                    name="preboda"
+                    value={value}
+                    checked={form.preboda === value}
+                    onChange={(event) =>
+                      handleChange(
+                        "preboda",
+                        event.target.value as FormState["preboda"],
+                      )
+                    }
+                  />
+                  {value === "si" ? copy.prebodaYesLabel : copy.prebodaNoLabel}
+                </label>
+              ))}
+            </div>
+            <p className="text-xs text-muted">{copy.prebodaNote}</p>
+          </fieldset>
 
-      <label className="flex flex-col gap-2 text-left">
-        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-          {copy.requestsLabel}
-        </span>
-        <textarea
-          name="requests"
-          value={form.requests}
-          onChange={(event) => handleChange("requests", event.target.value)}
-          rows={4}
-          placeholder={copy.requestsPlaceholder}
-          className="min-h-[160px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
-        />
-      </label>
+          <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-left shadow-sm">
+            <legend className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+              {copy.transportLegend}
+            </legend>
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              {["no", "si"].map((value) => (
+                <label
+                  key={value}
+                  className={[
+                    radioBaseClasses,
+                    "min-w-[160px]",
+                    form.needsTransport === value
+                      ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                      : "border-border bg-surface text-muted hover:border-primary/60 hover:text-primary",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  <input
+                    className="sr-only"
+                    type="radio"
+                    name="needsTransport"
+                    value={value}
+                    checked={form.needsTransport === value}
+                    onChange={(event) =>
+                      handleChange(
+                        "needsTransport",
+                        event.target.value as FormState["needsTransport"],
+                      )
+                    }
+                  />
+                  {value === "si"
+                    ? copy.transportYesLabel
+                    : copy.transportNoLabel}
+                </label>
+              ))}
+            </div>
+            <p className="text-xs text-muted">{copy.transportNote}</p>
+          </fieldset>
+
+          {form.needsTransport === "si" && (
+            <label className="flex flex-col gap-2 text-left md:col-span-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                {copy.transportSeatsLabel}
+              </span>
+              <input
+                name="transportSeats"
+                inputMode="numeric"
+                min={1}
+                max={attending && !Number.isNaN(guestsNumber) ? guestsNumber : undefined}
+                required
+                value={form.transportSeats}
+                onChange={(event) =>
+                  handleChange("transportSeats", event.target.value)
+                }
+                placeholder={copy.transportSeatsPlaceholder}
+                className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+              />
+              {showSeatsError && (
+                <span className="text-xs text-primary">
+                  {copy.transportSeatsError}
+                </span>
+              )}
+            </label>
+          )}
+
+          <label className="flex flex-col gap-2 text-left md:col-span-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+              {copy.requestsLabel}
+            </span>
+            <textarea
+              name="requests"
+              value={form.requests}
+              onChange={(event) => handleChange("requests", event.target.value)}
+              rows={4}
+              placeholder={copy.requestsPlaceholder}
+              className="min-h-[160px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+            />
+          </label>
+        </div>
+      )}
 
       <div className="flex flex-col items-center gap-4 text-center">
         <button
