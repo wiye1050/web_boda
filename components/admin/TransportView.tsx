@@ -126,8 +126,13 @@ export function TransportView() {
     0,
   );
 
+  const overbooked =
+    selectedRoute != null && totalAssignedSeats > selectedRoute.capacity;
   const remainingSeats = selectedRoute
     ? Math.max(selectedRoute.capacity - totalAssignedSeats, 0)
+    : 0;
+  const capacityUsage = selectedRoute
+    ? Math.min((totalAssignedSeats / Math.max(selectedRoute.capacity, 1)) * 100, 100)
     : 0;
 
   const currentRsvpAssignments = useMemo(() => {
@@ -169,6 +174,17 @@ export function TransportView() {
     if (seats < 1) return;
     if (seats > remainingSeats) {
       setError("No hay suficientes plazas disponibles en este autobús.");
+      return;
+    }
+
+    const maxAllowedSeats = Math.max(
+      rsvp.transportSeats ?? rsvp.guests ?? 1,
+      1,
+    );
+    if (seats > maxAllowedSeats) {
+      setError(
+        `Este invitado pidió ${maxAllowedSeats} plaza${maxAllowedSeats === 1 ? "" : "s"}.`,
+      );
       return;
     }
 
@@ -338,6 +354,22 @@ export function TransportView() {
                   <p className="text-lg font-semibold">{remainingSeats}</p>
                 </div>
               </div>
+              <div className="mt-4">
+                <div className="h-2 w-full overflow-hidden rounded-full bg-border/60">
+                  <div
+                    className={[
+                      "h-full rounded-full",
+                      overbooked ? "bg-primary" : "bg-emerald-400",
+                    ].join(" ")}
+                    style={{ width: `${capacityUsage}%` }}
+                  />
+                </div>
+                {overbooked && (
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary">
+                    Capacidad superada
+                  </p>
+                )}
+              </div>
             </article>
 
             <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/95 p-5 shadow-[var(--shadow-soft)]">
@@ -447,6 +479,20 @@ function AssignForm({
   const [selectedRsvpId, setSelectedRsvpId] = useState<string>("");
   const [seats, setSeats] = useState<string>("1");
   const [localError, setLocalError] = useState<string | null>(null);
+  const selectedRsvp = useMemo(
+    () => rsvps.find((item) => item.id === selectedRsvpId) ?? null,
+    [rsvps, selectedRsvpId],
+  );
+  const suggestedSeats = useMemo(() => {
+    if (!selectedRsvp) return 1;
+    const requested = selectedRsvp.transportSeats ?? selectedRsvp.guests ?? 1;
+    return Math.min(Math.max(requested, 1), Math.max(maxSeats, 1));
+  }, [maxSeats, selectedRsvp]);
+
+  useEffect(() => {
+    if (!selectedRsvp) return;
+    setSeats(String(suggestedSeats));
+  }, [selectedRsvp, suggestedSeats]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -458,8 +504,14 @@ function AssignForm({
       return;
     }
 
-    if (!Number.isInteger(seatNumber) || seatNumber < 1 || seatNumber > maxSeats) {
-      setLocalError("Número de plazas no válido.");
+    const maxAllowedSeats = Math.max(
+      rsvp.transportSeats ?? rsvp.guests ?? 1,
+      1,
+    );
+    const finalMax = Math.min(maxAllowedSeats, maxSeats);
+
+    if (!Number.isInteger(seatNumber) || seatNumber < 1 || seatNumber > finalMax) {
+      setLocalError("Número de plazas no válido para este invitado.");
       return;
     }
 
@@ -490,6 +542,11 @@ function AssignForm({
             </option>
           ))}
         </select>
+        {selectedRsvp && (
+          <span className="text-xs text-muted">
+            Solicitó {selectedRsvp.transportSeats ?? selectedRsvp.guests ?? 1} plazas
+          </span>
+        )}
       </div>
       <div className="flex flex-col gap-2">
         <label className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">

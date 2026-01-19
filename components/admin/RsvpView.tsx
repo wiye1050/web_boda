@@ -111,6 +111,39 @@ export function RsvpView() {
     });
   }, [filtered, sortOption]);
 
+  const isFilterActive = useMemo(() => {
+    return (
+      search.trim().length > 0 ||
+      attendanceFilter !== "all" ||
+      statusFilter !== "all" ||
+      onlyPreboda ||
+      onlyTransport ||
+      processedFilter !== "all" ||
+      selectedTag !== "all" ||
+      sortOption !== "date-desc"
+    );
+  }, [
+    attendanceFilter,
+    onlyPreboda,
+    onlyTransport,
+    processedFilter,
+    search,
+    selectedTag,
+    sortOption,
+    statusFilter,
+  ]);
+
+  function handleClearFilters() {
+    setSearch("");
+    setAttendanceFilter("all");
+    setOnlyPreboda(false);
+    setOnlyTransport(false);
+    setProcessedFilter("all");
+    setStatusFilter("all");
+    setSelectedTag("all");
+    setSortOption("date-desc");
+  }
+
   function handleExport() {
     const rows = sorted.map((record) => ({
       Nombre: record.fullName,
@@ -171,6 +204,9 @@ export function RsvpView() {
               Busca por nombre, filtra por estado, preboda o transporte y
               exporta los datos para compartirlos con el equipo.
             </p>
+            <p className="mt-2 text-xs uppercase tracking-[0.3em] text-muted">
+              {sorted.length} de {records.length} resultados
+            </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative w-full max-w-xs">
@@ -197,6 +233,15 @@ export function RsvpView() {
             >
               Exportar CSV
             </button>
+            {isFilterActive && (
+              <button
+                type="button"
+                onClick={handleClearFilters}
+                className="inline-flex items-center justify-center rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+              >
+                Limpiar filtros
+              </button>
+            )}
           </div>
         </div>
 
