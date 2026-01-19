@@ -28,6 +28,199 @@ const EMPTY_STAY_OPTION: StayOption = {
   link: "",
 };
 
+const FIELD_LIMITS: Record<string, number> = {
+  brandName: 120,
+  headerCtaLabel: 60,
+  navWeddingLabel: 60,
+  navTimelineLabel: 60,
+  navStayLabel: 60,
+  navGiftsLabel: 60,
+  navRsvpLabel: 60,
+  heroEyebrow: 120,
+  heroTitle: 140,
+  heroDescription: 800,
+  heroPrimaryCtaLabel: 80,
+  heroSecondaryCtaLabel: 80,
+  heroMapCtaLabel: 100,
+  heroStatDateLabel: 60,
+  heroStatLocationLabel: 60,
+  heroStatTimeLabel: 60,
+  heroStatTimeNote: 80,
+  eventDate: 80,
+  eventTimeRange: 60,
+  locationName: 160,
+  locationAddress: 200,
+  locationMapUrl: 300,
+  locationMapLabel: 80,
+  prebodaPlace: 160,
+  prebodaTime: 80,
+  prebodaMapUrl: 300,
+  contactEmail: 120,
+  contactPhone: 40,
+  whatsappLink: 200,
+  giftLink: 200,
+  bankHolder: 200,
+  bankIban: 40,
+  prebodaEyebrow: 120,
+  prebodaTitle: 200,
+  prebodaDescription: 800,
+  prebodaCardOneLabel: 120,
+  prebodaCardOneCtaLabel: 120,
+  prebodaCardTwoLabel: 120,
+  prebodaCardTwoTitle: 160,
+  prebodaCardTwoDescription: 800,
+  ceremonyEyebrow: 120,
+  ceremonyTitle: 200,
+  ceremonyDescription: 800,
+  ceremonyCardOneLabel: 120,
+  ceremonyCardOneTitle: 160,
+  ceremonyCardOneDescription: 800,
+  ceremonyCardTwoLabel: 120,
+  ceremonyCardTwoTitle: 160,
+  ceremonyCardTwoDescription: 800,
+  timelineEyebrow: 120,
+  timelineTitle: 200,
+  timelineDescription: 800,
+  timelineItems: 8000,
+  stayEyebrow: 120,
+  stayTitle: 200,
+  stayDescription: 800,
+  stayLinkLabel: 120,
+  stayOptions: 8000,
+  giftsEyebrow: 120,
+  giftsTitle: 200,
+  giftsDescription: 800,
+  giftsRegistryTitle: 160,
+  giftsRegistryDescription: 800,
+  giftsRegistryCtaLabel: 120,
+  giftsBankTitle: 160,
+  giftsBankDescription: 800,
+  rsvpEyebrow: 120,
+  rsvpTitle: 200,
+  rsvpDescription: 800,
+  rsvpContactLead: 200,
+  rsvpContactWhatsappLead: 200,
+  rsvpImportantTitle: 160,
+  rsvpImportantNotes: 4000,
+  locationEyebrow: 120,
+  locationTitle: 200,
+  locationDescription: 800,
+  locationContactTitle: 160,
+  locationEmailLabel: 80,
+  locationPhoneLabel: 80,
+  locationWhatsappLabel: 80,
+  locationWhatsappActionLabel: 120,
+  footerEyebrow: 160,
+  footerTitle: 220,
+  footerCtaLabel: 120,
+  footerCopyright: 240,
+  footerMadeWith: 200,
+};
+
+const FIELD_LABELS: Record<string, string> = {
+  brandName: "Nombre de la marca",
+  headerCtaLabel: "Botón principal del menú",
+  navWeddingLabel: "Menú: La boda",
+  navTimelineLabel: "Menú: Cronograma",
+  navStayLabel: "Menú: Alojamiento",
+  navGiftsLabel: "Menú: Regalos",
+  navRsvpLabel: "Menú: RSVP",
+  heroEyebrow: "Texto superior",
+  heroTitle: "Título principal",
+  heroDescription: "Descripción principal",
+  heroPrimaryCtaLabel: "Botón principal",
+  heroSecondaryCtaLabel: "Botón secundario",
+  heroMapCtaLabel: "Botón de mapa",
+  heroStatDateLabel: "Etiqueta fecha",
+  heroStatLocationLabel: "Etiqueta lugar",
+  heroStatTimeLabel: "Etiqueta horario",
+  heroStatTimeNote: "Nota de horario",
+  eventDate: "Fecha del evento",
+  eventTimeRange: "Horario del evento",
+  locationName: "Nombre de la ubicación",
+  locationAddress: "Dirección",
+  locationMapUrl: "Enlace del mapa",
+  locationMapLabel: "Texto del mapa",
+  prebodaPlace: "Lugar preboda",
+  prebodaTime: "Hora preboda",
+  prebodaMapUrl: "Mapa preboda",
+  contactEmail: "Email de contacto",
+  contactPhone: "Teléfono de contacto",
+  whatsappLink: "Enlace de WhatsApp",
+  giftLink: "Enlace regalos",
+  bankHolder: "Titular banco",
+  bankIban: "IBAN",
+  prebodaEyebrow: "Preboda: texto superior",
+  prebodaTitle: "Preboda: título",
+  prebodaDescription: "Preboda: descripción",
+  prebodaCardOneLabel: "Preboda: tarjeta 1 etiqueta",
+  prebodaCardOneCtaLabel: "Preboda: tarjeta 1 botón",
+  prebodaCardTwoLabel: "Preboda: tarjeta 2 etiqueta",
+  prebodaCardTwoTitle: "Preboda: tarjeta 2 título",
+  prebodaCardTwoDescription: "Preboda: tarjeta 2 descripción",
+  ceremonyEyebrow: "Ceremonia: texto superior",
+  ceremonyTitle: "Ceremonia: título",
+  ceremonyDescription: "Ceremonia: descripción",
+  ceremonyCardOneLabel: "Ceremonia: tarjeta 1 etiqueta",
+  ceremonyCardOneTitle: "Ceremonia: tarjeta 1 título",
+  ceremonyCardOneDescription: "Ceremonia: tarjeta 1 descripción",
+  ceremonyCardTwoLabel: "Ceremonia: tarjeta 2 etiqueta",
+  ceremonyCardTwoTitle: "Ceremonia: tarjeta 2 título",
+  ceremonyCardTwoDescription: "Ceremonia: tarjeta 2 descripción",
+  timelineEyebrow: "Cronograma: texto superior",
+  timelineTitle: "Cronograma: título",
+  timelineDescription: "Cronograma: descripción",
+  timelineItems: "Cronograma: lista",
+  stayEyebrow: "Alojamiento: texto superior",
+  stayTitle: "Alojamiento: título",
+  stayDescription: "Alojamiento: descripción",
+  stayLinkLabel: "Alojamiento: texto del botón",
+  stayOptions: "Alojamiento: lista",
+  giftsEyebrow: "Regalos: texto superior",
+  giftsTitle: "Regalos: título",
+  giftsDescription: "Regalos: descripción",
+  giftsRegistryTitle: "Regalos: mesa título",
+  giftsRegistryDescription: "Regalos: mesa descripción",
+  giftsRegistryCtaLabel: "Regalos: mesa botón",
+  giftsBankTitle: "Regalos: banco título",
+  giftsBankDescription: "Regalos: banco descripción",
+  rsvpEyebrow: "RSVP: texto superior",
+  rsvpTitle: "RSVP: título",
+  rsvpDescription: "RSVP: descripción",
+  rsvpContactLead: "RSVP: texto contacto",
+  rsvpContactWhatsappLead: "RSVP: texto WhatsApp",
+  rsvpImportantTitle: "RSVP: título importante",
+  rsvpImportantNotes: "RSVP: notas importantes",
+  locationEyebrow: "Ubicación: texto superior",
+  locationTitle: "Ubicación: título",
+  locationDescription: "Ubicación: descripción",
+  locationContactTitle: "Ubicación: título contacto",
+  locationEmailLabel: "Ubicación: etiqueta email",
+  locationPhoneLabel: "Ubicación: etiqueta teléfono",
+  locationWhatsappLabel: "Ubicación: etiqueta WhatsApp",
+  locationWhatsappActionLabel: "Ubicación: botón WhatsApp",
+  footerEyebrow: "Footer: texto superior",
+  footerTitle: "Footer: título",
+  footerCtaLabel: "Footer: botón",
+  footerCopyright: "Footer: copyright",
+  footerMadeWith: "Footer: texto final",
+};
+
+function validateConfig(content: PublicContent) {
+  const payload = serializePublicContent(content);
+  const errors: string[] = [];
+
+  Object.entries(FIELD_LIMITS).forEach(([key, max]) => {
+    const value = payload[key as keyof typeof payload];
+    if (typeof value === "string" && value.length > max) {
+      const label = FIELD_LABELS[key] ?? key;
+      errors.push(`${label} (máx. ${max} caracteres)`);
+    }
+  });
+
+  return errors;
+}
+
 export function ConfigView() {
   const [config, setConfig] = useState<PublicContent>(DEFAULT_PUBLIC_CONTENT);
   const [isLoading, setIsLoading] = useState(true);
@@ -65,10 +258,23 @@ export function ConfigView() {
     setMessage(null);
     setError(null);
 
+    const validationErrors = validateConfig(config);
+    if (validationErrors.length > 0) {
+      const visibleErrors = validationErrors.slice(0, 3);
+      const extraCount = validationErrors.length - visibleErrors.length;
+      setError(
+        `Revisa estos campos: ${visibleErrors.join(", ")}${
+          extraCount > 0 ? ` (+${extraCount} más)` : ""
+        }.`,
+      );
+      setIsSaving(false);
+      return;
+    }
+
     try {
       const db = getFirestoreDb();
       const payload = serializePublicContent(config);
-      await setDoc(doc(db, "config", "general"), payload);
+      await setDoc(doc(db, "config", "general"), payload, { merge: true });
       setMessage("Contenido guardado correctamente.");
     } catch (err) {
       console.error(err);
