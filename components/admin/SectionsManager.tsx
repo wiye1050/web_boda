@@ -28,6 +28,13 @@ const SECTION_LABELS: Record<string, string> = {
   ubicacion: "Ubicación",
 };
 
+const GLOBAL_BLOCKS = [
+  { id: "marca", label: "Marca y cabecera" },
+  { id: "hero", label: "Hero principal" },
+  { id: "evento", label: "Datos del evento" },
+  { id: "footer", label: "Footer" },
+];
+
 const EMPTY_TIMELINE_ITEM: TimelineItem = {
   time: "",
   title: "",
@@ -72,6 +79,7 @@ function normalizeOrders(sections: SectionConfig[]) {
 export function SectionsManager() {
   const [content, setContent] = useState<PublicContent>(DEFAULT_PUBLIC_CONTENT);
   const [openSections, setOpenSections] = useState<string[]>([]);
+  const [openBlocks, setOpenBlocks] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -108,6 +116,17 @@ export function SectionsManager() {
     () => normalizeOrders(sortSections(content.sections)),
     [content.sections],
   );
+
+  const heroImagesText = useMemo(
+    () => content.heroBackgroundImages.join("\n"),
+    [content.heroBackgroundImages],
+  );
+
+  function toggleBlock(id: string) {
+    setOpenBlocks((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+    );
+  }
 
   function toggleSection(id: string) {
     setOpenSections((prev) =>
@@ -146,6 +165,13 @@ export function SectionsManager() {
     value: PublicContent[K],
   ) {
     setContent((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function parseLineList(raw: string) {
+    return raw
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
   }
 
   function updateTimelineItem(
@@ -277,6 +303,7 @@ export function SectionsManager() {
   function handleRestoreDefaults() {
     setContent(DEFAULT_PUBLIC_CONTENT);
     setOpenSections([]);
+    setOpenBlocks([]);
     setMessage(null);
     setError(null);
   }
@@ -354,6 +381,211 @@ export function SectionsManager() {
           cada bloque sin tocar JSON.
         </p>
       </header>
+
+      <section className="overflow-hidden rounded-[24px] border border-border/70 bg-surface/95 shadow-[var(--shadow-soft)]">
+        <div className="border-b border-border/70 px-5 py-4 text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+          Ajustes globales
+        </div>
+        <div className="divide-y divide-border/70">
+          {GLOBAL_BLOCKS.map((block) => {
+            const isOpen = openBlocks.includes(block.id);
+            return (
+              <div key={block.id} className="px-5 py-4">
+                <button
+                  type="button"
+                  onClick={() => toggleBlock(block.id)}
+                  aria-expanded={isOpen}
+                  className="group flex w-full items-start gap-3 text-left"
+                >
+                  <span
+                    className={[
+                      "mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full border border-border/70 text-xs text-muted transition",
+                      isOpen ? "rotate-180 border-primary/60 text-primary" : "",
+                      "group-hover:border-primary/60 group-hover:text-primary",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                  >
+                    ▾
+                  </span>
+                  <span>
+                    <p className="text-sm font-semibold text-foreground">
+                      {block.label}
+                    </p>
+                    <p className="text-xs uppercase tracking-[0.3em] text-muted">
+                      {block.id}
+                    </p>
+                  </span>
+                </button>
+
+                {isOpen && (
+                  <div className="mt-6 grid gap-6 rounded-[20px] border border-border/70 bg-background/60 p-5">
+                    {block.id === "marca" && (
+                      <div className="grid gap-4">
+                        <InputField
+                          label="Nombre de la marca"
+                          value={content.brandName}
+                          onChange={(value) => updateField("brandName", value)}
+                        />
+                        <InputField
+                          label="Botón principal del header"
+                          value={content.headerCtaLabel}
+                          onChange={(value) =>
+                            updateField("headerCtaLabel", value)
+                          }
+                        />
+                      </div>
+                    )}
+
+                    {block.id === "hero" && (
+                      <div className="grid gap-4">
+                        <InputField
+                          label="Eyebrow"
+                          value={content.heroEyebrow}
+                          onChange={(value) => updateField("heroEyebrow", value)}
+                        />
+                        <InputField
+                          label="Título"
+                          value={content.heroTitle}
+                          onChange={(value) => updateField("heroTitle", value)}
+                        />
+                        <TextAreaField
+                          label="Descripción"
+                          value={content.heroDescription}
+                          onChange={(value) =>
+                            updateField("heroDescription", value)
+                          }
+                        />
+                        <InputField
+                          label="Botón principal"
+                          value={content.heroPrimaryCtaLabel}
+                          onChange={(value) =>
+                            updateField("heroPrimaryCtaLabel", value)
+                          }
+                        />
+                        <InputField
+                          label="Botón secundario"
+                          value={content.heroSecondaryCtaLabel}
+                          onChange={(value) =>
+                            updateField("heroSecondaryCtaLabel", value)
+                          }
+                        />
+                        <InputField
+                          label="Botón mapa hero"
+                          value={content.heroMapCtaLabel}
+                          onChange={(value) =>
+                            updateField("heroMapCtaLabel", value)
+                          }
+                        />
+                        <TextAreaField
+                          label="Fotos de fondo (una URL por línea)"
+                          value={heroImagesText}
+                          onChange={(value) =>
+                            updateField(
+                              "heroBackgroundImages",
+                              parseLineList(value),
+                            )
+                          }
+                        />
+                        <InputField
+                          label="Intervalo slideshow (ms)"
+                          value={content.heroBackgroundIntervalMs}
+                          onChange={(value) =>
+                            updateField("heroBackgroundIntervalMs", value)
+                          }
+                        />
+                      </div>
+                    )}
+
+                    {block.id === "evento" && (
+                      <div className="grid gap-4">
+                        <InputField
+                          label="Fecha del evento"
+                          value={content.eventDate}
+                          onChange={(value) => updateField("eventDate", value)}
+                        />
+                        <InputField
+                          label="Horario"
+                          value={content.eventTimeRange}
+                          onChange={(value) =>
+                            updateField("eventTimeRange", value)
+                          }
+                        />
+                        <InputField
+                          label="Etiqueta fecha"
+                          value={content.heroStatDateLabel}
+                          onChange={(value) =>
+                            updateField("heroStatDateLabel", value)
+                          }
+                        />
+                        <InputField
+                          label="Etiqueta lugar"
+                          value={content.heroStatLocationLabel}
+                          onChange={(value) =>
+                            updateField("heroStatLocationLabel", value)
+                          }
+                        />
+                        <InputField
+                          label="Etiqueta horario"
+                          value={content.heroStatTimeLabel}
+                          onChange={(value) =>
+                            updateField("heroStatTimeLabel", value)
+                          }
+                        />
+                        <InputField
+                          label="Nota horario (opcional)"
+                          value={content.heroStatTimeNote}
+                          onChange={(value) =>
+                            updateField("heroStatTimeNote", value)
+                          }
+                        />
+                      </div>
+                    )}
+
+                    {block.id === "footer" && (
+                      <div className="grid gap-4">
+                        <InputField
+                          label="Eyebrow"
+                          value={content.footerEyebrow}
+                          onChange={(value) =>
+                            updateField("footerEyebrow", value)
+                          }
+                        />
+                        <InputField
+                          label="Título"
+                          value={content.footerTitle}
+                          onChange={(value) => updateField("footerTitle", value)}
+                        />
+                        <InputField
+                          label="Botón footer"
+                          value={content.footerCtaLabel}
+                          onChange={(value) =>
+                            updateField("footerCtaLabel", value)
+                          }
+                        />
+                        <InputField
+                          label="Copyright"
+                          value={content.footerCopyright}
+                          onChange={(value) =>
+                            updateField("footerCopyright", value)
+                          }
+                        />
+                        <InputField
+                          label="Texto hecho con"
+                          value={content.footerMadeWith}
+                          onChange={(value) =>
+                            updateField("footerMadeWith", value)
+                          }
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
       <section className="overflow-hidden rounded-[24px] border border-border/70 bg-surface/95 shadow-[var(--shadow-soft)]">
         <div className="grid grid-cols-[1.1fr_0.7fr_0.7fr_1fr_0.7fr] gap-4 border-b border-border/70 px-5 py-4 text-xs font-semibold uppercase tracking-[0.3em] text-muted">
