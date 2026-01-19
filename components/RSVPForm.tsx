@@ -195,11 +195,12 @@ export function RSVPForm({
 
     try {
       const db = firebaseClient.getFirestore();
+      const phoneDigits = form.phone.replace(/\\D/g, "");
 
       await addDoc(collection(db, "rsvps"), {
         fullName: form.fullName.trim(),
         email: form.email.trim(),
-        phone: form.phone.trim(),
+        phone: phoneDigits,
         attendance: form.attendance!, // asegurado por validación previa
         guests: attending ? guestsNumber : 0,
         guestNames: form.guestNames.trim(),

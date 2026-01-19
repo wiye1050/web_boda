@@ -171,6 +171,16 @@ export default async function Home() {
   const prebodaLabel = config.prebodaEyebrow?.trim() || "Preboda";
   const hasPracticalItems = config.practicalItems.length > 0;
   const hasFaqItems = config.faqItems.length > 0;
+  const faqLabel = config.faqEyebrow?.trim() || "FAQ";
+  const giftContactHref = config.whatsappLink.trim().length > 0
+    ? config.whatsappLink
+    : config.contactPhone.trim().length > 0
+      ? `tel:${config.contactPhone}`
+      : "";
+  const giftContactLabel =
+    config.whatsappLink.trim().length > 0
+      ? "Escribir por WhatsApp"
+      : "Llamar por teléfono";
 
   const giftOptions: GiftOption[] = [
     {
@@ -184,11 +194,9 @@ export default async function Home() {
     {
       title: config.giftsBankTitle,
       description: config.giftsBankDescription,
-      details: [
-        `Titulares: ${config.bankHolder}`,
-        `IBAN: ${config.bankIban}`,
-      ],
-      hideDetails: true,
+      action: giftContactHref
+        ? { label: giftContactLabel, href: giftContactHref }
+        : undefined,
     },
   ];
 
@@ -201,6 +209,7 @@ export default async function Home() {
     { label: config.navTimelineLabel, href: "#cronograma" },
     { label: config.navStayLabel, href: "#alojamiento" },
     { label: config.navGiftsLabel, href: "#regalos" },
+    ...(hasFaqItems ? [{ label: faqLabel, href: "#faq" }] : []),
     { label: config.navRsvpLabel, href: "#asistencia" },
     { label: config.navLocationLabel, href: "#ubicacion" },
   ];

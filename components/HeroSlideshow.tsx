@@ -19,6 +19,7 @@ export function HeroSlideshow({
   const [nextIndex, setNextIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [invalidImages, setInvalidImages] = useState<string[]>([]);
   const currentIndexRef = useRef(0);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -42,25 +43,34 @@ export function HeroSlideshow({
     return () => media.removeListener(handleChange);
   }, []);
 
+  const availableImages = useMemo(
+    () => normalizedImages.filter((src) => !invalidImages.includes(src)),
+    [invalidImages, normalizedImages],
+  );
+
   useEffect(() => {
-    if (normalizedImages.length === 0) return;
+    setInvalidImages([]);
+  }, [normalizedImages]);
+
+  useEffect(() => {
+    if (availableImages.length === 0) return;
     setCurrentIndex(0);
-    setNextIndex(normalizedImages.length > 1 ? 1 : 0);
+    setNextIndex(availableImages.length > 1 ? 1 : 0);
     setIsFading(false);
     currentIndexRef.current = 0;
-  }, [normalizedImages]);
+  }, [availableImages.length]);
 
   useEffect(() => {
     currentIndexRef.current = currentIndex;
   }, [currentIndex]);
 
   useEffect(() => {
-    if (normalizedImages.length < 2 || prefersReducedMotion) {
+    if (availableImages.length < 2 || prefersReducedMotion) {
       return;
     }
 
     const intervalId = setInterval(() => {
-      const next = (currentIndexRef.current + 1) % normalizedImages.length;
+      const next = (currentIndexRef.current + 1) % availableImages.length;
       setNextIndex(next);
       setIsFading(true);
 
@@ -80,15 +90,33 @@ export function HeroSlideshow({
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [intervalMs, normalizedImages.length, prefersReducedMotion]);
+  }, [availableImages.length, intervalMs, prefersReducedMotion]);
 
-  if (normalizedImages.length === 0) {
+  const hasImages = availableImages.length > 0;
+  const currentImage = hasImages
+    ? availableImages[currentIndex] ?? availableImages[0]
+    : "";
+  const upcomingImage = hasImages
+    ? availableImages[nextIndex] ??
+      availableImages[currentIndex] ??
+      availableImages[0]
+    : "";
+
+  useEffect(() => {
+    if (!upcomingImage) return;
+    const image = new Image();
+    image.src = upcomingImage;
+  }, [upcomingImage]);
+
+  const handleImageError = (src: string) => {
+    setInvalidImages((prev) => (prev.includes(src) ? prev : [...prev, src]));
+  };
+
+  const isInitialImage = currentIndex === 0;
+
+  if (!hasImages) {
     return null;
   }
-
-  const currentImage = normalizedImages[currentIndex] ?? normalizedImages[0];
-  const upcomingImage =
-    normalizedImages[nextIndex] ?? normalizedImages[currentIndex] ?? normalizedImages[0];
 
   return (
     <div
@@ -103,15 +131,20 @@ export function HeroSlideshow({
         src={currentImage}
         alt=""
         aria-hidden
+        loading="eager"
+        fetchPriority={isInitialImage ? "high" : "auto"}
         className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out"
         style={{ opacity: isFading ? 0 : 1 }}
+        onError={() => handleImageError(currentImage)}
       />
       <img
         src={upcomingImage}
         alt=""
         aria-hidden
+        loading="lazy"
         className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out"
         style={{ opacity: isFading ? 1 : 0 }}
+        onError={() => handleImageError(upcomingImage)}
       />
       <div className="absolute inset-0 bg-black/30" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(0,0,0,0.35),_transparent_55%),radial-gradient(circle_at_80%_20%,_rgba(0,0,0,0.15),_transparent_60%)]" />

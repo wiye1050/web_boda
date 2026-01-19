@@ -56,8 +56,6 @@ export type PublicContent = {
   contactPhone: string;
   whatsappLink: string;
   giftLink: string;
-  bankHolder: string;
-  bankIban: string;
   prebodaEyebrow: string;
   prebodaTitle: string;
   prebodaDescription: string;
@@ -158,8 +156,6 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   contactPhone: "+34 600 000 000",
   whatsappLink: "https://wa.me/34600000000",
   giftLink: "",
-  bankHolder: "Alba Fernández & Guillermo García",
-  bankIban: "ES00 0000 0000 0000 0000 0000",
   prebodaEyebrow: "Preboda",
   prebodaTitle: "Nos vemos el día antes en el Casino Rooftop",
   prebodaDescription:
@@ -288,9 +284,9 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   giftsRegistryDescription:
     "Seleccionamos algunos detalles para nuestro nuevo hogar. ¡Gracias por ayudarnos a elegir!",
   giftsRegistryCtaLabel: "Ver mesa online",
-  giftsBankTitle: "Transferencia bancaria",
+  giftsBankTitle: "Regalo en privado",
   giftsBankDescription:
-    "Si prefieres hacer un regalo en efectivo, déjanos tu cariño en nuestra cuenta.",
+    "Si quieres hacernos un regalo, escríbenos por WhatsApp y te contamos cómo hacerlo.",
   rsvpEyebrow: "Confirmar asistencia",
   rsvpTitle: "Confirma tu asistencia",
   rsvpDescription:
@@ -341,9 +337,8 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     "© {year} {brandName}. Todos los derechos reservados.",
   footerMadeWith: "Hecho con amor usando Next.js, Vercel y Firebase.",
   heroBackgroundImages: [
-    "/photos/hero/01.webp",
-    "/photos/hero/02.webp",
-    "/photos/hero/03.webp",
+    "/photos/hero/boda1.jpeg",
+    "/photos/hero/boda2.jpg",
   ],
   heroBackgroundIntervalMs: "8000",
 };
@@ -611,14 +606,6 @@ export function normalizePublicContent(
     giftLink: normalizeString(
       data.giftLink,
       DEFAULT_PUBLIC_CONTENT.giftLink,
-    ),
-    bankHolder: normalizeString(
-      data.bankHolder,
-      DEFAULT_PUBLIC_CONTENT.bankHolder,
-    ),
-    bankIban: normalizeString(
-      data.bankIban,
-      DEFAULT_PUBLIC_CONTENT.bankIban,
     ),
     prebodaEyebrow: normalizeString(
       data.prebodaEyebrow,

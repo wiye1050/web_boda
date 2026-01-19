@@ -64,8 +64,6 @@ const FIELD_LIMITS: Record<string, number> = {
   contactPhone: 40,
   whatsappLink: 200,
   giftLink: 200,
-  bankHolder: 200,
-  bankIban: 40,
   prebodaEyebrow: 120,
   prebodaTitle: 200,
   prebodaDescription: 800,
@@ -165,8 +163,6 @@ const FIELD_LABELS: Record<string, string> = {
   contactPhone: "Teléfono de contacto",
   whatsappLink: "Enlace de WhatsApp",
   giftLink: "Enlace regalos",
-  bankHolder: "Titular banco",
-  bankIban: "IBAN",
   prebodaEyebrow: "Preboda: texto superior",
   prebodaTitle: "Preboda: título",
   prebodaDescription: "Preboda: descripción",
@@ -203,8 +199,8 @@ const FIELD_LABELS: Record<string, string> = {
   giftsRegistryTitle: "Regalos: mesa título",
   giftsRegistryDescription: "Regalos: mesa descripción",
   giftsRegistryCtaLabel: "Regalos: mesa botón",
-  giftsBankTitle: "Regalos: banco título",
-  giftsBankDescription: "Regalos: banco descripción",
+  giftsBankTitle: "Regalos: privado título",
+  giftsBankDescription: "Regalos: privado descripción",
   rsvpEyebrow: "Confirmar asistencia: texto superior",
   rsvpTitle: "Confirmar asistencia: título",
   rsvpDescription: "Confirmar asistencia: descripción",
@@ -442,7 +438,7 @@ export function ConfigView() {
     try {
       const db = getFirestoreDb();
       const payload = serializePublicContent(nextConfig);
-      await setDoc(doc(db, "config", "general"), payload, { merge: true });
+      await setDoc(doc(db, "config", "general"), payload);
       setConfig(nextConfig);
       setSavedConfig(nextConfig);
       syncJsonFields(nextConfig);
@@ -1196,29 +1192,17 @@ export function ConfigView() {
             maxLength={FIELD_LIMITS.giftLink}
           />
           <InputField
-            label="Título transferencia"
+            label="Título regalo privado"
             value={config.giftsBankTitle}
             onChange={(value) => updateField("giftsBankTitle", value)}
             maxLength={FIELD_LIMITS.giftsBankTitle}
           />
           <TextAreaField
-            label="Descripción transferencia"
+            label="Descripción regalo privado"
             value={config.giftsBankDescription}
             onChange={(value) => updateField("giftsBankDescription", value)}
             rows={3}
             maxLength={FIELD_LIMITS.giftsBankDescription}
-          />
-          <InputField
-            label="Titulares cuenta bancaria"
-            value={config.bankHolder}
-            onChange={(value) => updateField("bankHolder", value)}
-            maxLength={FIELD_LIMITS.bankHolder}
-          />
-          <InputField
-            label="IBAN"
-            value={config.bankIban}
-            onChange={(value) => updateField("bankIban", value)}
-            maxLength={FIELD_LIMITS.bankIban}
           />
         </Fieldset>
 
