@@ -17,7 +17,7 @@ const DEFAULT_NAV_ITEMS: NavItem[] = [
   { label: "Cronograma", href: "#cronograma" },
   { label: "Alojamiento", href: "#alojamiento" },
   { label: "Regalos", href: "#regalos" },
-  { label: "RSVP", href: "#rsvp" },
+  { label: "Confirmar asistencia", href: "#asistencia" },
 ];
 
 export function Header({
@@ -45,7 +45,7 @@ export function Header({
             </Link>
           ))}
         </nav>
-        <CTAButton href="#rsvp" className="hidden sm:inline-flex">
+        <CTAButton href="#asistencia" className="hidden sm:inline-flex">
           {ctaLabel}
         </CTAButton>
       </div>

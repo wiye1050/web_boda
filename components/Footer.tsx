@@ -45,7 +45,7 @@ export function Footer({
               {title}
             </h3>
           </div>
-          <CTAButton href="#rsvp" variant="outline">
+          <CTAButton href="#asistencia" variant="outline">
             {ctaLabel}
           </CTAButton>
         </div>

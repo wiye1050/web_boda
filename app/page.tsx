@@ -152,7 +152,7 @@ export default async function Home() {
               {config.heroDescription}
             </p>
             <div className="flex flex-wrap gap-4">
-              <CTAButton href="#rsvp">{config.heroPrimaryCtaLabel}</CTAButton>
+              <CTAButton href="#asistencia">{config.heroPrimaryCtaLabel}</CTAButton>
               <CTAButton href="#cronograma" variant="outline">
                 {config.heroSecondaryCtaLabel}
               </CTAButton>
@@ -304,7 +304,7 @@ export default async function Home() {
         </Section>
 
         <Section
-          id="rsvp"
+          id="asistencia"
           eyebrow={config.rsvpEyebrow}
           title={config.rsvpTitle}
           description={config.rsvpDescription}
