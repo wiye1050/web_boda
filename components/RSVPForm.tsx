@@ -50,7 +50,6 @@ export function RSVPForm({
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [status, setStatus] = useState<RSVPStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [showAdvanced, setShowAdvanced] = useState(false);
   const [botField, setBotField] = useState("");
   const startedAt = useRef(Date.now());
   const radioBaseClasses =
@@ -129,7 +128,6 @@ export function RSVPForm({
           next.preboda = "no";
           next.needsTransport = "no";
           next.transportSeats = "";
-          setShowAdvanced(false);
         }
         if (attendingValue === "si" && next.guests === "0") {
           next.guests = "";
@@ -386,39 +384,10 @@ export function RSVPForm({
         </div>
       )}
       {attending && (
-        <div className="flex items-center justify-center">
-          <button
-            type="button"
-            onClick={() => setShowAdvanced((prev) => !prev)}
-            aria-expanded={showAdvanced}
-            aria-controls="rsvp-advanced"
-            className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-          >
-            <span>
-              {showAdvanced ? copy.advancedToggleHide : copy.advancedToggleShow}
-            </span>
-            <span
-              className={[
-                "text-[0.7rem] transition",
-                showAdvanced ? "rotate-180 text-primary" : "",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              ▾
-            </span>
-          </button>
-        </div>
-      )}
-
-      {attending && showAdvanced && (
         <div
           id="rsvp-advanced"
           className="grid gap-6 rounded-[24px] border border-border/80 bg-surface/90 p-6 md:grid-cols-2"
         >
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted md:col-span-2">
-            {copy.advancedSectionTitle}
-          </p>
           <label className="flex flex-col gap-2 text-left">
             <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
               {copy.guestNamesLabel}

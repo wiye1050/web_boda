@@ -43,9 +43,6 @@ export type RsvpFormCopy = {
   guestsError: string;
   guestNamesLabel: string;
   guestNamesPlaceholder: string;
-  advancedToggleShow: string;
-  advancedToggleHide: string;
-  advancedSectionTitle: string;
   prebodaLegend: string;
   prebodaYesLabel: string;
   prebodaNoLabel: string;
@@ -409,9 +406,6 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     guestsError: "Indica un número válido de asistentes.",
     guestNamesLabel: "Nombres de acompañantes (opcional)",
     guestNamesPlaceholder: "Ej: Marta (pareja), Juan (colega)",
-    advancedToggleShow: "Añadir más detalles",
-    advancedToggleHide: "Ocultar detalles",
-    advancedSectionTitle: "Detalles opcionales",
     prebodaLegend: "¿Nos acompañas a la preboda (11 de septiembre)?",
     prebodaYesLabel: "¡Claro!",
     prebodaNoLabel: "No podré ir",
