@@ -24,6 +24,59 @@ export type FaqItem = {
   answer: string;
 };
 
+export type RsvpFormCopy = {
+  fullNameLabel: string;
+  fullNamePlaceholder: string;
+  emailLabel: string;
+  emailPlaceholder: string;
+  emailError: string;
+  phoneLabel: string;
+  phonePlaceholder: string;
+  phoneError: string;
+  attendanceLegend: string;
+  attendanceYesLabel: string;
+  attendanceNoLabel: string;
+  guestsLabel: string;
+  guestsPlaceholderYes: string;
+  guestsPlaceholderNo: string;
+  guestsHelper: string;
+  guestsError: string;
+  guestNamesLabel: string;
+  guestNamesPlaceholder: string;
+  prebodaLegend: string;
+  prebodaYesLabel: string;
+  prebodaNoLabel: string;
+  prebodaNote: string;
+  transportLegend: string;
+  transportYesLabel: string;
+  transportNoLabel: string;
+  transportNote: string;
+  transportSeatsLabel: string;
+  transportSeatsPlaceholder: string;
+  transportSeatsError: string;
+  requestsLabel: string;
+  requestsPlaceholder: string;
+  submitLabel: string;
+  submitLoadingLabel: string;
+  successMessage: string;
+};
+
+export type MobileBarCopy = {
+  confirmLabel: string;
+  mapsLabel: string;
+};
+
+export type MapsModalCopy = {
+  title: string;
+  subtitle: string;
+  weddingLabel: string;
+  weddingNote: string;
+  prebodaLabel: string;
+  prebodaNote: string;
+  prebodaWarning: string;
+  closeLabel: string;
+};
+
 export type SectionConfig = {
   id: string;
   label: string;
@@ -68,6 +121,7 @@ export type PublicContent = {
   prebodaTitle: string;
   prebodaDescription: string;
   prebodaCardOneLabel: string;
+  prebodaCardOneDescription: string;
   prebodaCardOneCtaLabel: string;
   prebodaCardTwoLabel: string;
   prebodaCardTwoTitle: string;
@@ -100,6 +154,8 @@ export type PublicContent = {
   giftsRegistryTitle: string;
   giftsRegistryDescription: string;
   giftsRegistryCtaLabel: string;
+  giftsContactWhatsappLabel: string;
+  giftsContactPhoneLabel: string;
   giftsBankTitle: string;
   giftsBankDescription: string;
   rsvpEyebrow: string;
@@ -109,6 +165,7 @@ export type PublicContent = {
   rsvpContactWhatsappLead: string;
   rsvpImportantTitle: string;
   rsvpImportantNotes: string[];
+  rsvpForm: RsvpFormCopy;
   faqEyebrow: string;
   faqTitle: string;
   faqDescription: string;
@@ -133,6 +190,8 @@ export type PublicContent = {
   footerMadeWith: string;
   heroBackgroundImages: string[];
   heroBackgroundIntervalMs: string;
+  mobileBar: MobileBarCopy;
+  mapsModal: MapsModalCopy;
   sections: SectionConfig[];
 };
 
@@ -186,6 +245,8 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   prebodaDescription:
     "Nos encantaría brindar contigo la víspera de la boda. Será un encuentro relajado para recibir a quienes llegan antes y ponernos al día.",
   prebodaCardOneLabel: "Cuándo y dónde",
+  prebodaCardOneDescription:
+    "Confirma tu asistencia en el formulario para que sepamos cuántos brindaremos en el rooftop.",
   prebodaCardOneCtaLabel: "Ver ubicación",
   prebodaCardTwoLabel: "Qué te espera",
   prebodaCardTwoTitle: "Brindis informal entre amigos",
@@ -309,6 +370,8 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   giftsRegistryDescription:
     "Seleccionamos algunos detalles para nuestro nuevo hogar. ¡Gracias por ayudarnos a elegir!",
   giftsRegistryCtaLabel: "Ver mesa online",
+  giftsContactWhatsappLabel: "Escribir por WhatsApp",
+  giftsContactPhoneLabel: "Llamar por teléfono",
   giftsBankTitle: "Regalo en privado",
   giftsBankDescription:
     "Si quieres hacernos un regalo, escríbenos por WhatsApp y te contamos cómo hacerlo.",
@@ -324,6 +387,45 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     "Si tienes alergias o intolerancias, cuéntanoslo para coordinarlo con el equipo de cocina.",
     "Confirmaciones abiertas hasta el 15 de agosto. Después intentaremos acomodar cambios pero no podemos garantizarlo.",
   ],
+  rsvpForm: {
+    fullNameLabel: "Nombre completo",
+    fullNamePlaceholder: "¿Quién confirma?",
+    emailLabel: "Email",
+    emailPlaceholder: "Opcional",
+    emailError: "Revisa el email (ej. nombre@email.com).",
+    phoneLabel: "Teléfono de contacto",
+    phonePlaceholder: "+34 600 000 000",
+    phoneError: "Revisa el número (8-15 dígitos).",
+    attendanceLegend: "¿Vas a venir?",
+    attendanceYesLabel: "Sí, ahí estaré",
+    attendanceNoLabel: "No podré ir",
+    guestsLabel: "¿Cuántos adultos vienen?",
+    guestsPlaceholderYes: "Incluyéndote",
+    guestsPlaceholderNo: "Selecciona tu asistencia primero",
+    guestsHelper: "Máximo 6 adultos por invitación. Si sois más, cuéntanoslo abajo.",
+    guestsError: "Indica un número válido de asistentes.",
+    guestNamesLabel: "Nombres de acompañantes (opcional)",
+    guestNamesPlaceholder: "Ej: Marta (pareja), Juan (colega)",
+    prebodaLegend: "¿Nos acompañas a la preboda (11 de septiembre)?",
+    prebodaYesLabel: "¡Claro!",
+    prebodaNoLabel: "No podré ir",
+    prebodaNote: "Viernes 11/09 · 19:30 · Casino Rooftop Ponferrada.",
+    transportLegend: "¿Necesitas traslado?",
+    transportYesLabel: "Sí, avísenme los horarios",
+    transportNoLabel: "No, iremos por nuestra cuenta",
+    transportNote:
+      "Organizaremos bus desde Ponferrada si hay suficientes plazas.",
+    transportSeatsLabel: "¿Cuántas plazas de bus necesitáis?",
+    transportSeatsPlaceholder: "Ej: 2",
+    transportSeatsError: "Indica un número de plazas válido (≤ asistentes).",
+    requestsLabel: "Comentarios o necesidades especiales",
+    requestsPlaceholder:
+      "Intolerancias, alergias, canciones que no pueden faltar...",
+    submitLabel: "Enviar respuesta",
+    submitLoadingLabel: "Guardando...",
+    successMessage:
+      "¡Gracias! Recibimos tu confirmación. Te escribiremos pronto con más detalles.",
+  },
   faqEyebrow: "FAQ",
   faqTitle: "Preguntas frecuentes",
   faqDescription:
@@ -370,6 +472,20 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     "/photos/hero/boda2.jpg",
   ],
   heroBackgroundIntervalMs: "8000",
+  mobileBar: {
+    confirmLabel: "Confirmar",
+    mapsLabel: "Maps",
+  },
+  mapsModal: {
+    title: "Abrir ubicación en Maps",
+    subtitle: "Elige el evento. La boda es en la ubicación principal.",
+    weddingLabel: "Boda (principal)",
+    weddingNote: "Ceremonia y banquete",
+    prebodaLabel: "Preboda",
+    prebodaNote: "Evento del viernes",
+    prebodaWarning: "No es la ubicación de la boda",
+    closeLabel: "Cerrar",
+  },
   sections: DEFAULT_SECTIONS,
 };
 
@@ -533,6 +649,21 @@ export function parseSections(raw: unknown): SectionConfig[] {
     .filter((item) => item.id.length > 0);
 
   return cleaned.length > 0 ? cleaned : DEFAULT_PUBLIC_CONTENT.sections;
+}
+
+function normalizeStringMap<T extends Record<string, string>>(
+  raw: unknown,
+  defaults: T,
+): T {
+  if (!raw || typeof raw !== "object") {
+    return { ...defaults };
+  }
+  const record = raw as Record<string, unknown>;
+  const next: Record<string, string> = {};
+  Object.keys(defaults).forEach((key) => {
+    next[key] = normalizeString(record[key], defaults[key]);
+  });
+  return next as T;
 }
 
 export function mergeSections(
@@ -713,6 +844,10 @@ export function normalizePublicContent(
       data.prebodaCardOneLabel,
       DEFAULT_PUBLIC_CONTENT.prebodaCardOneLabel,
     ),
+    prebodaCardOneDescription: normalizeString(
+      data.prebodaCardOneDescription,
+      DEFAULT_PUBLIC_CONTENT.prebodaCardOneDescription,
+    ),
     prebodaCardOneCtaLabel: normalizeString(
       data.prebodaCardOneCtaLabel,
       DEFAULT_PUBLIC_CONTENT.prebodaCardOneCtaLabel,
@@ -832,6 +967,14 @@ export function normalizePublicContent(
       data.giftsRegistryCtaLabel,
       DEFAULT_PUBLIC_CONTENT.giftsRegistryCtaLabel,
     ),
+    giftsContactWhatsappLabel: normalizeString(
+      data.giftsContactWhatsappLabel,
+      DEFAULT_PUBLIC_CONTENT.giftsContactWhatsappLabel,
+    ),
+    giftsContactPhoneLabel: normalizeString(
+      data.giftsContactPhoneLabel,
+      DEFAULT_PUBLIC_CONTENT.giftsContactPhoneLabel,
+    ),
     giftsBankTitle: normalizeString(
       data.giftsBankTitle,
       DEFAULT_PUBLIC_CONTENT.giftsBankTitle,
@@ -865,6 +1008,10 @@ export function normalizePublicContent(
       DEFAULT_PUBLIC_CONTENT.rsvpImportantTitle,
     ),
     rsvpImportantNotes: parseStringList(data.rsvpImportantNotes),
+    rsvpForm: normalizeStringMap(
+      data.rsvpForm,
+      DEFAULT_PUBLIC_CONTENT.rsvpForm,
+    ),
     faqEyebrow: normalizeString(
       data.faqEyebrow,
       DEFAULT_PUBLIC_CONTENT.faqEyebrow,
@@ -954,6 +1101,14 @@ export function normalizePublicContent(
     heroBackgroundIntervalMs: normalizeString(
       data.heroBackgroundIntervalMs,
       DEFAULT_PUBLIC_CONTENT.heroBackgroundIntervalMs,
+    ),
+    mobileBar: normalizeStringMap(
+      data.mobileBar,
+      DEFAULT_PUBLIC_CONTENT.mobileBar,
+    ),
+    mapsModal: normalizeStringMap(
+      data.mapsModal,
+      DEFAULT_PUBLIC_CONTENT.mapsModal,
     ),
     sections: mergeSections(
       DEFAULT_PUBLIC_CONTENT.sections,

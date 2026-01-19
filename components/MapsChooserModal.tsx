@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { DEFAULT_PUBLIC_CONTENT, type MapsModalCopy } from "@/lib/publicContent";
 
 type LocationOption = {
   name: string;
@@ -13,6 +14,7 @@ type MapsChooserModalProps = {
   wedding: LocationOption | null;
   preboda: LocationOption | null;
   weddingVenueName?: string;
+  copy?: MapsModalCopy;
 };
 
 export function MapsChooserModal({
@@ -21,6 +23,7 @@ export function MapsChooserModal({
   wedding,
   preboda,
   weddingVenueName,
+  copy = DEFAULT_PUBLIC_CONTENT.mapsModal,
 }: MapsChooserModalProps) {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -81,10 +84,10 @@ export function MapsChooserModal({
               id="maps-modal-title"
               className="text-base font-semibold uppercase tracking-[0.3em] text-foreground"
             >
-              Abrir ubicación en Maps
+              {copy.title}
             </h2>
             <p className="mt-2 text-sm text-muted">
-              Elige el evento. La boda es en la ubicación principal.
+              {copy.subtitle}
             </p>
           </div>
           <button
@@ -93,7 +96,7 @@ export function MapsChooserModal({
             onClick={onClose}
             className="rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
           >
-            Cerrar
+            {copy.closeLabel}
           </button>
         </div>
 
@@ -107,9 +110,9 @@ export function MapsChooserModal({
               className="flex flex-col gap-2 rounded-[20px] border border-primary/40 bg-primary/10 px-4 py-4 text-left transition hover:border-primary/70 hover:bg-primary/15"
             >
               <span className="text-sm font-semibold uppercase tracking-[0.3em] text-foreground">
-                Boda (principal)
+                {copy.weddingLabel}
               </span>
-              <span className="text-sm text-muted">Ceremonia y banquete</span>
+              <span className="text-sm text-muted">{copy.weddingNote}</span>
               {weddingVenueName && (
                 <span className="text-xs text-muted">{weddingVenueName}</span>
               )}
@@ -124,11 +127,11 @@ export function MapsChooserModal({
               className="flex flex-col gap-2 rounded-[20px] border border-border/80 bg-surface/80 px-4 py-4 text-left transition hover:border-primary/60"
             >
               <span className="text-sm font-semibold uppercase tracking-[0.3em] text-foreground">
-                Preboda
+                {copy.prebodaLabel}
               </span>
-              <span className="text-sm text-muted">Evento del viernes</span>
+              <span className="text-sm text-muted">{copy.prebodaNote}</span>
               <span className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">
-                No es la ubicación de la boda
+                {copy.prebodaWarning}
               </span>
               {preboda.name && (
                 <span className="text-xs text-muted">{preboda.name}</span>

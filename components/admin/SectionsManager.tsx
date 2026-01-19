@@ -167,6 +167,36 @@ export function SectionsManager() {
     setContent((prev) => ({ ...prev, [key]: value }));
   }
 
+  function updateRsvpForm(
+    key: keyof PublicContent["rsvpForm"],
+    value: string,
+  ) {
+    setContent((prev) => ({
+      ...prev,
+      rsvpForm: { ...prev.rsvpForm, [key]: value },
+    }));
+  }
+
+  function updateMobileBar(
+    key: keyof PublicContent["mobileBar"],
+    value: string,
+  ) {
+    setContent((prev) => ({
+      ...prev,
+      mobileBar: { ...prev.mobileBar, [key]: value },
+    }));
+  }
+
+  function updateMapsModal(
+    key: keyof PublicContent["mapsModal"],
+    value: string,
+  ) {
+    setContent((prev) => ({
+      ...prev,
+      mapsModal: { ...prev.mapsModal, [key]: value },
+    }));
+  }
+
   function parseLineList(raw: string) {
     return raw
       .split("\n")
@@ -723,6 +753,13 @@ export function SectionsManager() {
                             updateField("prebodaCardOneLabel", value)
                           }
                         />
+                        <TextAreaField
+                          label="Descripción tarjeta 1"
+                          value={content.prebodaCardOneDescription}
+                          onChange={(value) =>
+                            updateField("prebodaCardOneDescription", value)
+                          }
+                        />
                         <InputField
                           label="Botón tarjeta 1"
                           value={content.prebodaCardOneCtaLabel}
@@ -1098,6 +1135,20 @@ export function SectionsManager() {
                           onChange={(value) => updateField("giftLink", value)}
                         />
                         <InputField
+                          label="CTA contacto WhatsApp"
+                          value={content.giftsContactWhatsappLabel}
+                          onChange={(value) =>
+                            updateField("giftsContactWhatsappLabel", value)
+                          }
+                        />
+                        <InputField
+                          label="CTA contacto teléfono"
+                          value={content.giftsContactPhoneLabel}
+                          onChange={(value) =>
+                            updateField("giftsContactPhoneLabel", value)
+                          }
+                        />
+                        <InputField
                           label="Regalo privado: título"
                           value={content.giftsBankTitle}
                           onChange={(value) => updateField("giftsBankTitle", value)}
@@ -1211,6 +1262,272 @@ export function SectionsManager() {
                             updateField("rsvpImportantTitle", value)
                           }
                         />
+                        <div className="grid gap-4 rounded-2xl border border-border/70 bg-surface/70 p-4">
+                          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                            Textos del formulario
+                          </p>
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <InputField
+                              label="Nombre: etiqueta"
+                              value={content.rsvpForm.fullNameLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("fullNameLabel", value)
+                              }
+                            />
+                            <InputField
+                              label="Nombre: placeholder"
+                              value={content.rsvpForm.fullNamePlaceholder}
+                              onChange={(value) =>
+                                updateRsvpForm("fullNamePlaceholder", value)
+                              }
+                            />
+                            <InputField
+                              label="Email: etiqueta"
+                              value={content.rsvpForm.emailLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("emailLabel", value)
+                              }
+                            />
+                            <InputField
+                              label="Email: placeholder"
+                              value={content.rsvpForm.emailPlaceholder}
+                              onChange={(value) =>
+                                updateRsvpForm("emailPlaceholder", value)
+                              }
+                            />
+                          </div>
+                          <InputField
+                            label="Email: error"
+                            value={content.rsvpForm.emailError}
+                            onChange={(value) =>
+                              updateRsvpForm("emailError", value)
+                            }
+                          />
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <InputField
+                              label="Teléfono: etiqueta"
+                              value={content.rsvpForm.phoneLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("phoneLabel", value)
+                              }
+                            />
+                            <InputField
+                              label="Teléfono: placeholder"
+                              value={content.rsvpForm.phonePlaceholder}
+                              onChange={(value) =>
+                                updateRsvpForm("phonePlaceholder", value)
+                              }
+                            />
+                          </div>
+                          <InputField
+                            label="Teléfono: error"
+                            value={content.rsvpForm.phoneError}
+                            onChange={(value) =>
+                              updateRsvpForm("phoneError", value)
+                            }
+                          />
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <InputField
+                              label="Asistencia: título"
+                              value={content.rsvpForm.attendanceLegend}
+                              onChange={(value) =>
+                                updateRsvpForm("attendanceLegend", value)
+                              }
+                            />
+                            <InputField
+                              label="Asistencia: sí"
+                              value={content.rsvpForm.attendanceYesLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("attendanceYesLabel", value)
+                              }
+                            />
+                            <InputField
+                              label="Asistencia: no"
+                              value={content.rsvpForm.attendanceNoLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("attendanceNoLabel", value)
+                              }
+                            />
+                          </div>
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <InputField
+                              label="Adultos: título"
+                              value={content.rsvpForm.guestsLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("guestsLabel", value)
+                              }
+                            />
+                            <InputField
+                              label="Adultos: placeholder (sí)"
+                              value={content.rsvpForm.guestsPlaceholderYes}
+                              onChange={(value) =>
+                                updateRsvpForm("guestsPlaceholderYes", value)
+                              }
+                            />
+                            <InputField
+                              label="Adultos: placeholder (no)"
+                              value={content.rsvpForm.guestsPlaceholderNo}
+                              onChange={(value) =>
+                                updateRsvpForm("guestsPlaceholderNo", value)
+                              }
+                            />
+                          </div>
+                          <TextAreaField
+                            label="Adultos: ayuda"
+                            value={content.rsvpForm.guestsHelper}
+                            onChange={(value) =>
+                              updateRsvpForm("guestsHelper", value)
+                            }
+                          />
+                          <InputField
+                            label="Adultos: error"
+                            value={content.rsvpForm.guestsError}
+                            onChange={(value) =>
+                              updateRsvpForm("guestsError", value)
+                            }
+                          />
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <InputField
+                              label="Acompañantes: etiqueta"
+                              value={content.rsvpForm.guestNamesLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("guestNamesLabel", value)
+                              }
+                            />
+                            <InputField
+                              label="Acompañantes: placeholder"
+                              value={content.rsvpForm.guestNamesPlaceholder}
+                              onChange={(value) =>
+                                updateRsvpForm("guestNamesPlaceholder", value)
+                              }
+                            />
+                          </div>
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <InputField
+                              label="Preboda: título"
+                              value={content.rsvpForm.prebodaLegend}
+                              onChange={(value) =>
+                                updateRsvpForm("prebodaLegend", value)
+                              }
+                            />
+                            <InputField
+                              label="Preboda: sí"
+                              value={content.rsvpForm.prebodaYesLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("prebodaYesLabel", value)
+                              }
+                            />
+                            <InputField
+                              label="Preboda: no"
+                              value={content.rsvpForm.prebodaNoLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("prebodaNoLabel", value)
+                              }
+                            />
+                          </div>
+                          <InputField
+                            label="Preboda: nota"
+                            value={content.rsvpForm.prebodaNote}
+                            onChange={(value) =>
+                              updateRsvpForm("prebodaNote", value)
+                            }
+                          />
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <InputField
+                              label="Transporte: título"
+                              value={content.rsvpForm.transportLegend}
+                              onChange={(value) =>
+                                updateRsvpForm("transportLegend", value)
+                              }
+                            />
+                            <InputField
+                              label="Transporte: sí"
+                              value={content.rsvpForm.transportYesLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("transportYesLabel", value)
+                              }
+                            />
+                            <InputField
+                              label="Transporte: no"
+                              value={content.rsvpForm.transportNoLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("transportNoLabel", value)
+                              }
+                            />
+                          </div>
+                          <TextAreaField
+                            label="Transporte: nota"
+                            value={content.rsvpForm.transportNote}
+                            onChange={(value) =>
+                              updateRsvpForm("transportNote", value)
+                            }
+                          />
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <InputField
+                              label="Bus: título"
+                              value={content.rsvpForm.transportSeatsLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("transportSeatsLabel", value)
+                              }
+                            />
+                            <InputField
+                              label="Bus: placeholder"
+                              value={content.rsvpForm.transportSeatsPlaceholder}
+                              onChange={(value) =>
+                                updateRsvpForm(
+                                  "transportSeatsPlaceholder",
+                                  value,
+                                )
+                              }
+                            />
+                          </div>
+                          <InputField
+                            label="Bus: error"
+                            value={content.rsvpForm.transportSeatsError}
+                            onChange={(value) =>
+                              updateRsvpForm("transportSeatsError", value)
+                            }
+                          />
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <InputField
+                              label="Comentarios: etiqueta"
+                              value={content.rsvpForm.requestsLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("requestsLabel", value)
+                              }
+                            />
+                            <InputField
+                              label="Comentarios: placeholder"
+                              value={content.rsvpForm.requestsPlaceholder}
+                              onChange={(value) =>
+                                updateRsvpForm("requestsPlaceholder", value)
+                              }
+                            />
+                          </div>
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <InputField
+                              label="Botón enviar"
+                              value={content.rsvpForm.submitLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("submitLabel", value)
+                              }
+                            />
+                            <InputField
+                              label="Botón enviando"
+                              value={content.rsvpForm.submitLoadingLabel}
+                              onChange={(value) =>
+                                updateRsvpForm("submitLoadingLabel", value)
+                              }
+                            />
+                          </div>
+                          <TextAreaField
+                            label="Mensaje éxito"
+                            value={content.rsvpForm.successMessage}
+                            onChange={(value) =>
+                              updateRsvpForm("successMessage", value)
+                            }
+                          />
+                        </div>
                         <div className="grid gap-4">
                           {content.rsvpImportantNotes.map((note, index) => (
                             <div
@@ -1365,6 +1682,87 @@ export function SectionsManager() {
                             updateField("locationWhatsappActionLabel", value)
                           }
                         />
+                        <div className="grid gap-4 rounded-2xl border border-border/70 bg-surface/70 p-4">
+                          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                            Barra móvil + Maps
+                          </p>
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <InputField
+                              label="Barra móvil: botón confirmar"
+                              value={content.mobileBar.confirmLabel}
+                              onChange={(value) =>
+                                updateMobileBar("confirmLabel", value)
+                              }
+                            />
+                            <InputField
+                              label="Barra móvil: botón maps"
+                              value={content.mobileBar.mapsLabel}
+                              onChange={(value) =>
+                                updateMobileBar("mapsLabel", value)
+                              }
+                            />
+                          </div>
+                          <InputField
+                            label="Modal Maps: título"
+                            value={content.mapsModal.title}
+                            onChange={(value) =>
+                              updateMapsModal("title", value)
+                            }
+                          />
+                          <TextAreaField
+                            label="Modal Maps: subtítulo"
+                            value={content.mapsModal.subtitle}
+                            onChange={(value) =>
+                              updateMapsModal("subtitle", value)
+                            }
+                          />
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <InputField
+                              label="Modal Maps: boda (label)"
+                              value={content.mapsModal.weddingLabel}
+                              onChange={(value) =>
+                                updateMapsModal("weddingLabel", value)
+                              }
+                            />
+                            <InputField
+                              label="Modal Maps: boda (nota)"
+                              value={content.mapsModal.weddingNote}
+                              onChange={(value) =>
+                                updateMapsModal("weddingNote", value)
+                              }
+                            />
+                          </div>
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <InputField
+                              label="Modal Maps: preboda (label)"
+                              value={content.mapsModal.prebodaLabel}
+                              onChange={(value) =>
+                                updateMapsModal("prebodaLabel", value)
+                              }
+                            />
+                            <InputField
+                              label="Modal Maps: preboda (nota)"
+                              value={content.mapsModal.prebodaNote}
+                              onChange={(value) =>
+                                updateMapsModal("prebodaNote", value)
+                              }
+                            />
+                          </div>
+                          <InputField
+                            label="Modal Maps: aviso preboda"
+                            value={content.mapsModal.prebodaWarning}
+                            onChange={(value) =>
+                              updateMapsModal("prebodaWarning", value)
+                            }
+                          />
+                          <InputField
+                            label="Modal Maps: botón cerrar"
+                            value={content.mapsModal.closeLabel}
+                            onChange={(value) =>
+                              updateMapsModal("closeLabel", value)
+                            }
+                          />
+                        </div>
                       </div>
                     )}
                   </div>

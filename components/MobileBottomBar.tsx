@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { MapsChooserModal } from "@/components/MapsChooserModal";
+import { DEFAULT_PUBLIC_CONTENT, type MapsModalCopy } from "@/lib/publicContent";
 
 type LocationOption = {
   name: string;
@@ -13,6 +14,9 @@ type MobileBottomBarProps = {
   wedding: LocationOption | null;
   preboda: LocationOption | null;
   weddingVenueName?: string;
+  confirmLabel?: string;
+  mapsLabel?: string;
+  mapsModalCopy?: MapsModalCopy;
 };
 
 export function MobileBottomBar({
@@ -20,6 +24,9 @@ export function MobileBottomBar({
   wedding,
   preboda,
   weddingVenueName,
+  confirmLabel = DEFAULT_PUBLIC_CONTENT.mobileBar.confirmLabel,
+  mapsLabel = DEFAULT_PUBLIC_CONTENT.mobileBar.mapsLabel,
+  mapsModalCopy = DEFAULT_PUBLIC_CONTENT.mapsModal,
 }: MobileBottomBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const canOpen = Boolean(wedding?.url);
@@ -33,7 +40,7 @@ export function MobileBottomBar({
             href={confirmHref}
             className="flex min-h-[44px] flex-1 items-center justify-center rounded-full bg-primary px-4 text-xs font-semibold uppercase tracking-[0.3em] text-primary-foreground shadow-lg shadow-primary/30"
           >
-            Confirmar
+            {confirmLabel}
           </a>
           <button
             ref={mapsButtonRef}
@@ -42,7 +49,7 @@ export function MobileBottomBar({
             onClick={() => setIsOpen(true)}
             className="flex min-h-[44px] flex-1 items-center justify-center rounded-full border border-border/80 bg-surface px-4 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Maps
+            {mapsLabel}
           </button>
         </div>
       </div>
@@ -55,6 +62,7 @@ export function MobileBottomBar({
         wedding={wedding}
         preboda={preboda}
         weddingVenueName={weddingVenueName}
+        copy={mapsModalCopy}
       />
     </>
   );

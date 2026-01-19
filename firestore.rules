@@ -486,6 +486,7 @@ service cloud.firestore {
           "prebodaTitle",
           "prebodaDescription",
           "prebodaCardOneLabel",
+          "prebodaCardOneDescription",
           "prebodaCardOneCtaLabel",
           "prebodaCardTwoLabel",
           "prebodaCardTwoTitle",
@@ -518,6 +519,8 @@ service cloud.firestore {
           "giftsRegistryTitle",
           "giftsRegistryDescription",
           "giftsRegistryCtaLabel",
+          "giftsContactWhatsappLabel",
+          "giftsContactPhoneLabel",
           "giftsBankTitle",
           "giftsBankDescription",
           "rsvpEyebrow",
@@ -527,6 +530,7 @@ service cloud.firestore {
           "rsvpContactWhatsappLead",
           "rsvpImportantTitle",
           "rsvpImportantNotes",
+          "rsvpForm",
           "faqEyebrow",
           "faqTitle",
           "faqDescription",
@@ -546,6 +550,8 @@ service cloud.firestore {
           "footerMadeWith",
           "heroBackgroundImages",
           "heroBackgroundIntervalMs",
+          "mobileBar",
+          "mapsModal",
           "sections",
         ]);
     }

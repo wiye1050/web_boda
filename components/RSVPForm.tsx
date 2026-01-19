@@ -4,7 +4,7 @@
 import { useMemo, useRef, useState } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { firebaseClient } from "@/lib/firebase";
-import { DEFAULT_PUBLIC_CONTENT } from "@/lib/publicContent";
+import { DEFAULT_PUBLIC_CONTENT, type RsvpFormCopy } from "@/lib/publicContent";
 
 type RSVPStatus = "idle" | "loading" | "success" | "error";
 
@@ -39,11 +39,13 @@ const INITIAL_STATE: FormState = {
 type RSVPFormProps = {
   importantTitle?: string;
   importantNotes?: string[];
+  copy?: RsvpFormCopy;
 };
 
 export function RSVPForm({
   importantTitle = DEFAULT_PUBLIC_CONTENT.rsvpImportantTitle,
   importantNotes = DEFAULT_PUBLIC_CONTENT.rsvpImportantNotes,
+  copy = DEFAULT_PUBLIC_CONTENT.rsvpForm,
 }: RSVPFormProps) {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [status, setStatus] = useState<RSVPStatus>("idle");
@@ -256,7 +258,7 @@ export function RSVPForm({
       <div className="grid gap-6 md:grid-cols-2">
         <label className="flex flex-col gap-2 text-left">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            Nombre completo
+            {copy.fullNameLabel}
           </span>
           <input
             name="fullName"
@@ -264,14 +266,14 @@ export function RSVPForm({
             required
             value={form.fullName}
             onChange={(event) => handleChange("fullName", event.target.value)}
-            placeholder="¿Quién confirma?"
+            placeholder={copy.fullNamePlaceholder}
             className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
           />
         </label>
 
         <label className="flex flex-col gap-2 text-left">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            Email
+            {copy.emailLabel}
           </span>
           <input
             type="email"
@@ -279,12 +281,12 @@ export function RSVPForm({
             autoComplete="email"
             value={form.email}
             onChange={(event) => handleChange("email", event.target.value)}
-            placeholder="Opcional"
+            placeholder={copy.emailPlaceholder}
             className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
           />
           {!emailValid && form.email.length > 0 && (
             <span className="text-xs text-primary">
-              Revisa el email (ej. nombre@email.com).
+              {copy.emailError}
             </span>
           )}
         </label>
@@ -293,7 +295,7 @@ export function RSVPForm({
       <div className="grid gap-6 md:grid-cols-2">
         <label className="flex flex-col gap-2 text-left">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            Teléfono de contacto
+            {copy.phoneLabel}
           </span>
           <input
             type="tel"
@@ -302,19 +304,19 @@ export function RSVPForm({
             required
             value={form.phone}
             onChange={(event) => handleChange("phone", event.target.value)}
-            placeholder="+34 600 000 000"
+            placeholder={copy.phonePlaceholder}
             className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
           />
           {!phoneValid && form.phone.length > 0 && (
             <span className="text-xs text-primary">
-              Revisa el número (8-15 dígitos).
+              {copy.phoneError}
             </span>
           )}
         </label>
 
         <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-left shadow-sm">
           <legend className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            ¿Vas a venir?
+            {copy.attendanceLegend}
           </legend>
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             {["si", "no"].map((value) => (
@@ -343,7 +345,9 @@ export function RSVPForm({
                     )
                   }
                 />
-                {value === "si" ? "Sí, ahí estaré" : "No podré ir"}
+                {value === "si"
+                  ? copy.attendanceYesLabel
+                  : copy.attendanceNoLabel}
               </label>
             ))}
           </div>
@@ -353,7 +357,7 @@ export function RSVPForm({
       <div className="grid gap-6 md:grid-cols-2">
         <label className="flex flex-col gap-2 text-left">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            ¿Cuántos adultos vienen?
+            {copy.guestsLabel}
           </span>
           <input
             name="guests"
@@ -363,31 +367,29 @@ export function RSVPForm({
             value={form.guests}
             onChange={(event) => handleChange("guests", event.target.value)}
             placeholder={
-              attending ? "Incluyéndote" : "Selecciona tu asistencia primero"
+              attending ? copy.guestsPlaceholderYes : copy.guestsPlaceholderNo
             }
             className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
             disabled={!attending}
           />
-          <span className="text-xs text-muted">
-            Máximo 6 adultos por invitación. Si sois más, cuéntanoslo abajo.
-          </span>
+          <span className="text-xs text-muted">{copy.guestsHelper}</span>
           {showGuestError && (
             <span className="text-xs text-primary">
-              Indica un número válido de asistentes.
+              {copy.guestsError}
             </span>
           )}
         </label>
 
         <label className="flex flex-col gap-2 text-left">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            Nombres de acompañantes (opcional)
+            {copy.guestNamesLabel}
           </span>
           <textarea
             name="guestNames"
             value={form.guestNames}
             onChange={(event) => handleChange("guestNames", event.target.value)}
             rows={3}
-            placeholder="Ej: Marta (pareja), Juan (colega)"
+            placeholder={copy.guestNamesPlaceholder}
             className="min-h-[100px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
             disabled={!attending}
           />
@@ -397,7 +399,7 @@ export function RSVPForm({
       <div className="grid gap-6 md:grid-cols-2">
         <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-left shadow-sm">
           <legend className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            ¿Nos acompañas a la preboda (11 de septiembre)?
+            {copy.prebodaLegend}
           </legend>
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             {["si", "no"].map((value) => (
@@ -426,18 +428,16 @@ export function RSVPForm({
                     )
                   }
                 />
-                {value === "si" ? "¡Claro!" : "No podré ir"}
+                {value === "si" ? copy.prebodaYesLabel : copy.prebodaNoLabel}
               </label>
             ))}
           </div>
-          <p className="text-xs text-muted">
-            Viernes 11/09 · 19:30 · Casino Rooftop Ponferrada.
-          </p>
+          <p className="text-xs text-muted">{copy.prebodaNote}</p>
         </fieldset>
 
         <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-left shadow-sm">
           <legend className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            ¿Necesitas traslado?
+            {copy.transportLegend}
           </legend>
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             {["no", "si"].map((value) => (
@@ -467,21 +467,19 @@ export function RSVPForm({
                   }
                 />
                 {value === "si"
-                  ? "Sí, avísenme los horarios"
-                  : "No, iremos por nuestra cuenta"}
+                  ? copy.transportYesLabel
+                  : copy.transportNoLabel}
               </label>
             ))}
           </div>
-          <p className="text-xs text-muted">
-            Organizaremos bus desde Ponferrada si hay suficientes plazas.
-          </p>
+          <p className="text-xs text-muted">{copy.transportNote}</p>
         </fieldset>
       </div>
 
       {form.needsTransport === "si" && (
         <label className="flex flex-col gap-2 text-left">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            ¿Cuántas plazas de bus necesitáis?
+            {copy.transportSeatsLabel}
           </span>
           <input
             name="transportSeats"
@@ -493,12 +491,12 @@ export function RSVPForm({
             onChange={(event) =>
               handleChange("transportSeats", event.target.value)
             }
-            placeholder="Ej: 2"
+            placeholder={copy.transportSeatsPlaceholder}
             className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
           />
           {showSeatsError && (
             <span className="text-xs text-primary">
-              Indica un número de plazas válido (≤ asistentes).
+              {copy.transportSeatsError}
             </span>
           )}
         </label>
@@ -506,14 +504,14 @@ export function RSVPForm({
 
       <label className="flex flex-col gap-2 text-left">
         <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-          Comentarios o necesidades especiales
+          {copy.requestsLabel}
         </span>
         <textarea
           name="requests"
           value={form.requests}
           onChange={(event) => handleChange("requests", event.target.value)}
           rows={4}
-          placeholder="Intolerancias, alergias, canciones que no pueden faltar..."
+          placeholder={copy.requestsPlaceholder}
           className="min-h-[160px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
         />
       </label>
@@ -524,13 +522,10 @@ export function RSVPForm({
           disabled={!isValid || status === "loading"}
           className="inline-flex w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary-foreground transition hover:translate-y-[-1px] hover:shadow-lg hover:shadow-primary/30 disabled:cursor-not-allowed disabled:opacity-60 md:w-auto sm:tracking-[0.25em]"
         >
-          {status === "loading" ? "Guardando..." : "Enviar respuesta"}
+          {status === "loading" ? copy.submitLoadingLabel : copy.submitLabel}
         </button>
         {status === "success" && (
-          <p className="text-sm text-foreground">
-            ¡Gracias! Recibimos tu confirmación. Te escribiremos pronto con más
-            detalles.
-          </p>
+          <p className="text-sm text-foreground">{copy.successMessage}</p>
         )}
         {status === "error" && errorMessage && (
           <p className="text-sm text-primary">{errorMessage}</p>

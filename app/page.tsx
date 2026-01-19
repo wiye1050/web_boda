@@ -180,8 +180,8 @@ export default async function Home() {
       : "";
   const giftContactLabel =
     config.whatsappLink.trim().length > 0
-      ? "Escribir por WhatsApp"
-      : "Llamar por teléfono";
+      ? config.giftsContactWhatsappLabel
+      : config.giftsContactPhoneLabel;
 
   const giftOptions: GiftOption[] = [
     {
@@ -323,8 +323,7 @@ export default async function Home() {
                   {config.prebodaTime}
                 </h3>
                 <p className="mt-3 text-sm text-muted">
-                  {config.prebodaPlace}. Confirma tu asistencia en el formulario
-                  para que sepamos cuántos brindaremos en el rooftop.
+                  {config.prebodaPlace}. {config.prebodaCardOneDescription}
                 </p>
                 {prebodaMapUrl && (
                   <CTAButton
@@ -461,6 +460,7 @@ export default async function Home() {
               <RSVPForm
                 importantTitle={config.rsvpImportantTitle}
                 importantNotes={config.rsvpImportantNotes}
+                copy={config.rsvpForm}
               />
               <p className="mx-auto mt-2 max-w-2xl text-sm text-muted">
                 {config.rsvpContactLead}{" "}
@@ -576,6 +576,9 @@ export default async function Home() {
             : null
         }
         weddingVenueName={config.weddingVenueName.trim()}
+        confirmLabel={config.mobileBar.confirmLabel}
+        mapsLabel={config.mobileBar.mapsLabel}
+        mapsModalCopy={config.mapsModal}
       />
     </div>
   );
