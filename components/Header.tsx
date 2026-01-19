@@ -13,11 +13,14 @@ type HeaderProps = {
 };
 
 const DEFAULT_NAV_ITEMS: NavItem[] = [
+  { label: "Preboda", href: "#preboda" },
   { label: "La boda", href: "#ceremonia" },
+  { label: "Detalles", href: "#detalles" },
   { label: "Cronograma", href: "#cronograma" },
   { label: "Alojamiento", href: "#alojamiento" },
   { label: "Regalos", href: "#regalos" },
   { label: "Confirmar asistencia", href: "#asistencia" },
+  { label: "Ubicación", href: "#ubicacion" },
 ];
 
 export function Header({

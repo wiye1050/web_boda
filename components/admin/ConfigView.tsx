@@ -7,6 +7,9 @@ import { getFirestoreDb } from "@/lib/firebase";
 import {
   DEFAULT_PUBLIC_CONTENT,
   normalizePublicContent,
+  parseFaqItems,
+  parsePracticalItems,
+  parseStringArray,
   serializePublicContent,
   type PublicContent,
   type StayOption,
@@ -82,6 +85,10 @@ const FIELD_LIMITS: Record<string, number> = {
   timelineTitle: 200,
   timelineDescription: 800,
   timelineItems: 8000,
+  practicalEyebrow: 120,
+  practicalTitle: 200,
+  practicalDescription: 800,
+  practicalItems: 8000,
   stayEyebrow: 120,
   stayTitle: 200,
   stayDescription: 800,
@@ -102,6 +109,10 @@ const FIELD_LIMITS: Record<string, number> = {
   rsvpContactWhatsappLead: 200,
   rsvpImportantTitle: 160,
   rsvpImportantNotes: 4000,
+  faqEyebrow: 120,
+  faqTitle: 200,
+  faqDescription: 800,
+  faqItems: 8000,
   locationEyebrow: 120,
   locationTitle: 200,
   locationDescription: 800,
@@ -115,6 +126,8 @@ const FIELD_LIMITS: Record<string, number> = {
   footerCtaLabel: 120,
   footerCopyright: 240,
   footerMadeWith: 200,
+  heroBackgroundImages: 8000,
+  heroBackgroundIntervalMs: 10,
 };
 
 const FIELD_LABELS: Record<string, string> = {
@@ -171,6 +184,10 @@ const FIELD_LABELS: Record<string, string> = {
   timelineTitle: "Cronograma: título",
   timelineDescription: "Cronograma: descripción",
   timelineItems: "Cronograma: lista",
+  practicalEyebrow: "Detalles: texto superior",
+  practicalTitle: "Detalles: título",
+  practicalDescription: "Detalles: descripción",
+  practicalItems: "Detalles: lista",
   stayEyebrow: "Alojamiento: texto superior",
   stayTitle: "Alojamiento: título",
   stayDescription: "Alojamiento: descripción",
@@ -191,6 +208,10 @@ const FIELD_LABELS: Record<string, string> = {
   rsvpContactWhatsappLead: "Confirmar asistencia: texto WhatsApp",
   rsvpImportantTitle: "Confirmar asistencia: título importante",
   rsvpImportantNotes: "Confirmar asistencia: notas importantes",
+  faqEyebrow: "FAQ: texto superior",
+  faqTitle: "FAQ: título",
+  faqDescription: "FAQ: descripción",
+  faqItems: "FAQ: lista",
   locationEyebrow: "Ubicación: texto superior",
   locationTitle: "Ubicación: título",
   locationDescription: "Ubicación: descripción",
@@ -204,6 +225,8 @@ const FIELD_LABELS: Record<string, string> = {
   footerCtaLabel: "Footer: botón",
   footerCopyright: "Footer: copyright",
   footerMadeWith: "Footer: texto final",
+  heroBackgroundImages: "Hero: imágenes de fondo",
+  heroBackgroundIntervalMs: "Hero: intervalo de fondo",
 };
 
 type ValidationIssue = {
@@ -235,6 +258,29 @@ export function ConfigView() {
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [practicalItemsRaw, setPracticalItemsRaw] = useState(
+    JSON.stringify(DEFAULT_PUBLIC_CONTENT.practicalItems, null, 2),
+  );
+  const [faqItemsRaw, setFaqItemsRaw] = useState(
+    JSON.stringify(DEFAULT_PUBLIC_CONTENT.faqItems, null, 2),
+  );
+  const [heroImagesRaw, setHeroImagesRaw] = useState(
+    JSON.stringify(DEFAULT_PUBLIC_CONTENT.heroBackgroundImages, null, 2),
+  );
+  const [practicalItemsError, setPracticalItemsError] = useState<string | null>(
+    null,
+  );
+  const [faqItemsError, setFaqItemsError] = useState<string | null>(null);
+  const [heroImagesError, setHeroImagesError] = useState<string | null>(null);
+
+  function syncJsonFields(nextConfig: PublicContent) {
+    setPracticalItemsRaw(JSON.stringify(nextConfig.practicalItems, null, 2));
+    setFaqItemsRaw(JSON.stringify(nextConfig.faqItems, null, 2));
+    setHeroImagesRaw(JSON.stringify(nextConfig.heroBackgroundImages, null, 2));
+    setPracticalItemsError(null);
+    setFaqItemsError(null);
+    setHeroImagesError(null);
+  }
 
   useEffect(() => {
     async function fetchConfig() {
@@ -247,9 +293,11 @@ export function ConfigView() {
           const normalized = normalizePublicContent(data);
           setConfig(normalized);
           setSavedConfig(normalized);
+          syncJsonFields(normalized);
         } else {
           setConfig(DEFAULT_PUBLIC_CONTENT);
           setSavedConfig(DEFAULT_PUBLIC_CONTENT);
+          syncJsonFields(DEFAULT_PUBLIC_CONTENT);
         }
       } catch (err) {
         console.error(err);
@@ -262,6 +310,69 @@ export function ConfigView() {
     fetchConfig();
   }, []);
 
+  function parseJsonArrayInput(raw: string) {
+    const trimmed = raw.trim();
+    if (!trimmed) {
+      return { value: [] as unknown[] };
+    }
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (!Array.isArray(parsed)) {
+        return { error: "Debe ser un array JSON." };
+      }
+      return { value: parsed };
+    } catch {
+      return { error: "JSON inválido." };
+    }
+  }
+
+  function handlePracticalItemsChange(value: string) {
+    setPracticalItemsRaw(value);
+    const parsed = parseJsonArrayInput(value);
+    if (parsed.error) {
+      setPracticalItemsError(parsed.error);
+      return;
+    }
+    setPracticalItemsError(null);
+    setConfig((prev) => ({
+      ...prev,
+      practicalItems: parsePracticalItems(parsed.value),
+    }));
+  }
+
+  function handleFaqItemsChange(value: string) {
+    setFaqItemsRaw(value);
+    const parsed = parseJsonArrayInput(value);
+    if (parsed.error) {
+      setFaqItemsError(parsed.error);
+      return;
+    }
+    setFaqItemsError(null);
+    setConfig((prev) => ({
+      ...prev,
+      faqItems: parseFaqItems(parsed.value),
+    }));
+  }
+
+  function handleHeroImagesChange(value: string) {
+    setHeroImagesRaw(value);
+    const parsed = parseJsonArrayInput(value);
+    if (parsed.error) {
+      setHeroImagesError(parsed.error);
+      return;
+    }
+    const hasInvalid = parsed.value.some((item) => typeof item !== "string");
+    if (hasInvalid) {
+      setHeroImagesError("Solo se permiten strings en la lista.");
+      return;
+    }
+    setHeroImagesError(null);
+    setConfig((prev) => ({
+      ...prev,
+      heroBackgroundImages: parseStringArray(parsed.value, [], true),
+    }));
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (isSaving) return;
@@ -269,7 +380,38 @@ export function ConfigView() {
     setMessage(null);
     setError(null);
 
-    const validationErrors = validateConfig(config);
+    const practicalParsed = parseJsonArrayInput(practicalItemsRaw);
+    if (practicalParsed.error) {
+      setError(`Detalles prácticos: ${practicalParsed.error}`);
+      setIsSaving(false);
+      return;
+    }
+    const faqParsed = parseJsonArrayInput(faqItemsRaw);
+    if (faqParsed.error) {
+      setError(`FAQ: ${faqParsed.error}`);
+      setIsSaving(false);
+      return;
+    }
+    const heroParsed = parseJsonArrayInput(heroImagesRaw);
+    if (heroParsed.error) {
+      setError(`Hero imágenes: ${heroParsed.error}`);
+      setIsSaving(false);
+      return;
+    }
+    if (heroParsed.value.some((item) => typeof item !== "string")) {
+      setError("Hero imágenes: solo se permiten strings en la lista.");
+      setIsSaving(false);
+      return;
+    }
+
+    const nextConfig: PublicContent = {
+      ...config,
+      practicalItems: parsePracticalItems(practicalParsed.value),
+      faqItems: parseFaqItems(faqParsed.value),
+      heroBackgroundImages: parseStringArray(heroParsed.value, [], true),
+    };
+
+    const validationErrors = validateConfig(nextConfig);
     if (validationErrors.length > 0) {
       const visibleErrors = validationErrors.slice(0, 3);
       const extraCount = validationErrors.length - visibleErrors.length;
@@ -286,9 +428,11 @@ export function ConfigView() {
 
     try {
       const db = getFirestoreDb();
-      const payload = serializePublicContent(config);
+      const payload = serializePublicContent(nextConfig);
       await setDoc(doc(db, "config", "general"), payload, { merge: true });
-      setSavedConfig(config);
+      setConfig(nextConfig);
+      setSavedConfig(nextConfig);
+      syncJsonFields(nextConfig);
       setMessage("Contenido guardado correctamente.");
     } catch (err) {
       console.error(err);
@@ -306,15 +450,38 @@ export function ConfigView() {
     }
   }
 
-  const hasUnsavedChanges = useMemo(
-    () => JSON.stringify(config) !== JSON.stringify(savedConfig),
-    [config, savedConfig],
+  const savedJson = useMemo(
+    () => ({
+      practicalItems: JSON.stringify(savedConfig.practicalItems, null, 2),
+      faqItems: JSON.stringify(savedConfig.faqItems, null, 2),
+      heroImages: JSON.stringify(savedConfig.heroBackgroundImages, null, 2),
+    }),
+    [savedConfig],
   );
+
+  const hasUnsavedChanges = useMemo(() => {
+    return (
+      JSON.stringify(config) !== JSON.stringify(savedConfig) ||
+      practicalItemsRaw !== savedJson.practicalItems ||
+      faqItemsRaw !== savedJson.faqItems ||
+      heroImagesRaw !== savedJson.heroImages
+    );
+  }, [
+    config,
+    faqItemsRaw,
+    heroImagesRaw,
+    practicalItemsRaw,
+    savedConfig,
+    savedJson,
+  ]);
   const listLengths = useMemo(
     () => ({
       timelineItems: JSON.stringify(config.timelineItems).length,
+      practicalItems: JSON.stringify(config.practicalItems).length,
       stayOptions: JSON.stringify(config.stayOptions).length,
       rsvpImportantNotes: JSON.stringify(config.rsvpImportantNotes).length,
+      faqItems: JSON.stringify(config.faqItems).length,
+      heroBackgroundImages: JSON.stringify(config.heroBackgroundImages).length,
     }),
     [config],
   );
@@ -410,6 +577,13 @@ export function ConfigView() {
     });
   }
 
+  function handleRestoreDefaults() {
+    setConfig(DEFAULT_PUBLIC_CONTENT);
+    syncJsonFields(DEFAULT_PUBLIC_CONTENT);
+    setMessage(null);
+    setError(null);
+  }
+
   if (isLoading) {
     return (
       <div className="flex min-h-[40vh] items-center justify-center">
@@ -487,6 +661,12 @@ export function ConfigView() {
             onChange={(value) => updateField("navGiftsLabel", value)}
             maxLength={FIELD_LIMITS.navGiftsLabel}
           />
+          <InputField
+            label="Menú: Confirmar asistencia"
+            value={config.navRsvpLabel}
+            onChange={(value) => updateField("navRsvpLabel", value)}
+            maxLength={FIELD_LIMITS.navRsvpLabel}
+          />
         </Fieldset>
 
         <Fieldset title="Portada">
@@ -526,6 +706,31 @@ export function ConfigView() {
             value={config.heroMapCtaLabel}
             onChange={(value) => updateField("heroMapCtaLabel", value)}
             maxLength={FIELD_LIMITS.heroMapCtaLabel}
+          />
+        </Fieldset>
+
+        <Fieldset
+          title="Hero: fondo dinámico"
+          meta={`${listLengths.heroBackgroundImages}/${FIELD_LIMITS.heroBackgroundImages}`}
+        >
+          <TextAreaField
+            label="Imágenes (JSON)"
+            value={heroImagesRaw}
+            onChange={handleHeroImagesChange}
+            rows={5}
+            maxLength={FIELD_LIMITS.heroBackgroundImages}
+          />
+          <p className="text-xs text-muted">
+            Usa rutas de /public. Ejemplo: ["\/photos\/hero\/01.webp"].
+          </p>
+          {heroImagesError && (
+            <p className="text-xs text-primary">{heroImagesError}</p>
+          )}
+          <InputField
+            label="Intervalo (ms)"
+            value={config.heroBackgroundIntervalMs}
+            onChange={(value) => updateField("heroBackgroundIntervalMs", value)}
+            maxLength={FIELD_LIMITS.heroBackgroundIntervalMs}
           />
         </Fieldset>
 
@@ -725,6 +930,44 @@ export function ConfigView() {
             rows={3}
             maxLength={FIELD_LIMITS.ceremonyCardTwoDescription}
           />
+        </Fieldset>
+
+        <Fieldset
+          title="Detalles prácticos"
+          meta={`${listLengths.practicalItems}/${FIELD_LIMITS.practicalItems}`}
+        >
+          <InputField
+            label="Eyebrow"
+            value={config.practicalEyebrow}
+            onChange={(value) => updateField("practicalEyebrow", value)}
+            maxLength={FIELD_LIMITS.practicalEyebrow}
+          />
+          <InputField
+            label="Título"
+            value={config.practicalTitle}
+            onChange={(value) => updateField("practicalTitle", value)}
+            maxLength={FIELD_LIMITS.practicalTitle}
+          />
+          <TextAreaField
+            label="Descripción"
+            value={config.practicalDescription}
+            onChange={(value) => updateField("practicalDescription", value)}
+            rows={3}
+            maxLength={FIELD_LIMITS.practicalDescription}
+          />
+          <TextAreaField
+            label="Lista de detalles (JSON)"
+            value={practicalItemsRaw}
+            onChange={handlePracticalItemsChange}
+            rows={6}
+            maxLength={FIELD_LIMITS.practicalItems}
+          />
+          <p className="text-xs text-muted">
+            Formato: [{"{"}"icon":"🕒","title":"Llegada","description":"..."{"}"}].
+          </p>
+          {practicalItemsError && (
+            <p className="text-xs text-primary">{practicalItemsError}</p>
+          )}
         </Fieldset>
 
         <Fieldset
@@ -1023,6 +1266,44 @@ export function ConfigView() {
           </button>
         </Fieldset>
 
+        <Fieldset
+          title="FAQ"
+          meta={`${listLengths.faqItems}/${FIELD_LIMITS.faqItems}`}
+        >
+          <InputField
+            label="Eyebrow"
+            value={config.faqEyebrow}
+            onChange={(value) => updateField("faqEyebrow", value)}
+            maxLength={FIELD_LIMITS.faqEyebrow}
+          />
+          <InputField
+            label="Título"
+            value={config.faqTitle}
+            onChange={(value) => updateField("faqTitle", value)}
+            maxLength={FIELD_LIMITS.faqTitle}
+          />
+          <TextAreaField
+            label="Descripción"
+            value={config.faqDescription}
+            onChange={(value) => updateField("faqDescription", value)}
+            rows={3}
+            maxLength={FIELD_LIMITS.faqDescription}
+          />
+          <TextAreaField
+            label="Preguntas (JSON)"
+            value={faqItemsRaw}
+            onChange={handleFaqItemsChange}
+            rows={6}
+            maxLength={FIELD_LIMITS.faqItems}
+          />
+          <p className="text-xs text-muted">
+            Formato: [{"{"}"question":"...?","answer":"..."{"}"}].
+          </p>
+          {faqItemsError && (
+            <p className="text-xs text-primary">{faqItemsError}</p>
+          )}
+        </Fieldset>
+
         <Fieldset title="Contacto">
           <InputField
             label="Email de contacto"
@@ -1137,7 +1418,7 @@ export function ConfigView() {
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
             <button
               type="button"
-              onClick={() => setConfig(DEFAULT_PUBLIC_CONTENT)}
+              onClick={handleRestoreDefaults}
               className="rounded-full border border-border px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
             >
               Restaurar valores base

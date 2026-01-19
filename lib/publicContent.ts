@@ -13,6 +13,17 @@ export type StayOption = {
   link: string;
 };
 
+export type PracticalItem = {
+  icon: string;
+  title: string;
+  description: string;
+};
+
+export type FaqItem = {
+  question: string;
+  answer: string;
+};
+
 export type PublicContent = {
   brandName: string;
   headerCtaLabel: string;
@@ -66,6 +77,10 @@ export type PublicContent = {
   timelineTitle: string;
   timelineDescription: string;
   timelineItems: TimelineItem[];
+  practicalEyebrow: string;
+  practicalTitle: string;
+  practicalDescription: string;
+  practicalItems: PracticalItem[];
   stayEyebrow: string;
   stayTitle: string;
   stayDescription: string;
@@ -86,6 +101,10 @@ export type PublicContent = {
   rsvpContactWhatsappLead: string;
   rsvpImportantTitle: string;
   rsvpImportantNotes: string[];
+  faqEyebrow: string;
+  faqTitle: string;
+  faqDescription: string;
+  faqItems: FaqItem[];
   locationEyebrow: string;
   locationTitle: string;
   locationDescription: string;
@@ -100,6 +119,8 @@ export type PublicContent = {
   footerCtaLabel: string;
   footerCopyright: string;
   footerMadeWith: string;
+  heroBackgroundImages: string[];
+  heroBackgroundIntervalMs: string;
 };
 
 export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
@@ -203,6 +224,30 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
       icon: "🌙",
     },
   ],
+  practicalEyebrow: "Detalles prácticos",
+  practicalTitle: "Lo esencial para llegar con calma",
+  practicalDescription:
+    "Te dejamos la información clave para organizar traslados, horarios y recomendaciones importantes antes del gran día.",
+  practicalItems: [
+    {
+      icon: "🕒",
+      title: "Llegada con tiempo",
+      description:
+        "Aconsejamos llegar 20 minutos antes de la ceremonia para aparcar y encontrar tu sitio con tranquilidad.",
+    },
+    {
+      icon: "🚌",
+      title: "Transporte disponible",
+      description:
+        "Si necesitas bus, indícalo en el formulario de confirmación para reservar plazas de ida y vuelta.",
+    },
+    {
+      icon: "🍽️",
+      title: "Alergias y menús",
+      description:
+        "Cuéntanos cualquier intolerancia alimentaria en el formulario para adaptarlo con el catering.",
+    },
+  ],
   stayEyebrow: "Planifica tu viaje",
   stayTitle: "Opciones de alojamiento recomendadas",
   stayDescription:
@@ -254,6 +299,27 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     "Si tienes alergias o intolerancias, cuéntanoslo para coordinarlo con el equipo de cocina.",
     "Confirmaciones abiertas hasta el 15 de agosto. Después intentaremos acomodar cambios pero no podemos garantizarlo.",
   ],
+  faqEyebrow: "FAQ",
+  faqTitle: "Preguntas frecuentes",
+  faqDescription:
+    "Resolvemos las dudas más habituales para que solo tengas que disfrutar.",
+  faqItems: [
+    {
+      question: "¿Hay dress code?",
+      answer:
+        "Queremos un look elegante pero cómodo. Evita tonos blancos o marfil reservados para la novia.",
+    },
+    {
+      question: "¿Puedo ir con niños?",
+      answer:
+        "La celebración está pensada para adultos. Si necesitas ayuda con el cuidado de peques, escríbenos.",
+    },
+    {
+      question: "¿Hasta cuándo puedo confirmar?",
+      answer:
+        "Necesitamos confirmaciones antes del 15 de agosto para cerrar catering y transporte.",
+    },
+  ],
   locationEyebrow: "Cómo llegar",
   locationTitle: "Ubicación y contacto",
   locationDescription:
@@ -270,6 +336,12 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   footerCopyright:
     "© {year} {brandName}. Todos los derechos reservados.",
   footerMadeWith: "Hecho con amor usando Next.js, Vercel y Firebase.",
+  heroBackgroundImages: [
+    "/photos/hero/01.webp",
+    "/photos/hero/02.webp",
+    "/photos/hero/03.webp",
+  ],
+  heroBackgroundIntervalMs: "8000",
 };
 
 function normalizeString(value: unknown, fallback: string) {
@@ -339,10 +411,14 @@ export function parseStayOptions(raw: unknown): StayOption[] {
   return cleaned.length > 0 ? cleaned : DEFAULT_PUBLIC_CONTENT.stayOptions;
 }
 
-export function parseStringList(raw: unknown): string[] {
+export function parseStringArray(
+  raw: unknown,
+  fallback: string[],
+  allowEmpty = false,
+): string[] {
   const parsed = Array.isArray(raw) ? raw : safeJsonParse(raw);
   if (!Array.isArray(parsed)) {
-    return DEFAULT_PUBLIC_CONTENT.rsvpImportantNotes;
+    return fallback;
   }
 
   const cleaned = parsed
@@ -350,7 +426,55 @@ export function parseStringList(raw: unknown): string[] {
     .map((item) => item.trim())
     .filter(Boolean);
 
-  return cleaned.length > 0 ? cleaned : DEFAULT_PUBLIC_CONTENT.rsvpImportantNotes;
+  if (cleaned.length > 0) {
+    return cleaned;
+  }
+  return allowEmpty ? [] : fallback;
+}
+
+export function parseStringList(raw: unknown): string[] {
+  return parseStringArray(raw, DEFAULT_PUBLIC_CONTENT.rsvpImportantNotes);
+}
+
+export function parsePracticalItems(raw: unknown): PracticalItem[] {
+  const parsed = Array.isArray(raw) ? raw : safeJsonParse(raw);
+  if (!Array.isArray(parsed)) {
+    return DEFAULT_PUBLIC_CONTENT.practicalItems;
+  }
+
+  const cleaned = parsed
+    .map((item) => (item && typeof item === "object" ? item : {}))
+    .map((item) => {
+      const record = item as Record<string, unknown>;
+      return {
+        icon: normalizeString(record.icon, ""),
+        title: normalizeString(record.title, ""),
+        description: normalizeString(record.description, ""),
+      };
+    })
+    .filter((item) => item.icon || item.title || item.description);
+
+  return cleaned.length > 0 ? cleaned : DEFAULT_PUBLIC_CONTENT.practicalItems;
+}
+
+export function parseFaqItems(raw: unknown): FaqItem[] {
+  const parsed = Array.isArray(raw) ? raw : safeJsonParse(raw);
+  if (!Array.isArray(parsed)) {
+    return DEFAULT_PUBLIC_CONTENT.faqItems;
+  }
+
+  const cleaned = parsed
+    .map((item) => (item && typeof item === "object" ? item : {}))
+    .map((item) => {
+      const record = item as Record<string, unknown>;
+      return {
+        question: normalizeString(record.question, ""),
+        answer: normalizeString(record.answer, ""),
+      };
+    })
+    .filter((item) => item.question || item.answer);
+
+  return cleaned.length > 0 ? cleaned : DEFAULT_PUBLIC_CONTENT.faqItems;
 }
 
 export function normalizePublicContent(
@@ -559,6 +683,19 @@ export function normalizePublicContent(
       DEFAULT_PUBLIC_CONTENT.timelineDescription,
     ),
     timelineItems: parseTimelineItems(data.timelineItems),
+    practicalEyebrow: normalizeString(
+      data.practicalEyebrow,
+      DEFAULT_PUBLIC_CONTENT.practicalEyebrow,
+    ),
+    practicalTitle: normalizeString(
+      data.practicalTitle,
+      DEFAULT_PUBLIC_CONTENT.practicalTitle,
+    ),
+    practicalDescription: normalizeString(
+      data.practicalDescription,
+      DEFAULT_PUBLIC_CONTENT.practicalDescription,
+    ),
+    practicalItems: parsePracticalItems(data.practicalItems),
     stayEyebrow: normalizeString(
       data.stayEyebrow,
       DEFAULT_PUBLIC_CONTENT.stayEyebrow,
@@ -633,6 +770,16 @@ export function normalizePublicContent(
       DEFAULT_PUBLIC_CONTENT.rsvpImportantTitle,
     ),
     rsvpImportantNotes: parseStringList(data.rsvpImportantNotes),
+    faqEyebrow: normalizeString(
+      data.faqEyebrow,
+      DEFAULT_PUBLIC_CONTENT.faqEyebrow,
+    ),
+    faqTitle: normalizeString(data.faqTitle, DEFAULT_PUBLIC_CONTENT.faqTitle),
+    faqDescription: normalizeString(
+      data.faqDescription,
+      DEFAULT_PUBLIC_CONTENT.faqDescription,
+    ),
+    faqItems: parseFaqItems(data.faqItems),
     locationEyebrow: normalizeString(
       data.locationEyebrow,
       DEFAULT_PUBLIC_CONTENT.locationEyebrow,
@@ -689,6 +836,14 @@ export function normalizePublicContent(
       data.footerMadeWith,
       DEFAULT_PUBLIC_CONTENT.footerMadeWith,
     ),
+    heroBackgroundImages:
+      Object.prototype.hasOwnProperty.call(data, "heroBackgroundImages")
+        ? parseStringArray(data.heroBackgroundImages, [], true)
+        : DEFAULT_PUBLIC_CONTENT.heroBackgroundImages,
+    heroBackgroundIntervalMs: normalizeString(
+      data.heroBackgroundIntervalMs,
+      DEFAULT_PUBLIC_CONTENT.heroBackgroundIntervalMs,
+    ),
   };
 }
 
@@ -696,7 +851,10 @@ export function serializePublicContent(content: PublicContent) {
   return {
     ...content,
     timelineItems: JSON.stringify(content.timelineItems),
+    practicalItems: JSON.stringify(content.practicalItems),
     stayOptions: JSON.stringify(content.stayOptions),
     rsvpImportantNotes: JSON.stringify(content.rsvpImportantNotes),
+    faqItems: JSON.stringify(content.faqItems),
+    heroBackgroundImages: JSON.stringify(content.heroBackgroundImages),
   };
 }

@@ -91,7 +91,7 @@ service cloud.firestore {
 
     function baseRsvpChecks(data) {
       return stringField(data.fullName, 2, 150) &&
-        stringField(data.email, 3, 150) &&
+        stringField(data.email, 0, 150) &&
         stringField(data.phone, 8, 25) &&
         data.attendance in ["si", "no"] &&
         data.preboda in ["si", "no"] &&
@@ -499,6 +499,10 @@ service cloud.firestore {
           "timelineTitle",
           "timelineDescription",
           "timelineItems",
+          "practicalEyebrow",
+          "practicalTitle",
+          "practicalDescription",
+          "practicalItems",
           "stayEyebrow",
           "stayTitle",
           "stayDescription",
@@ -519,6 +523,10 @@ service cloud.firestore {
           "rsvpContactWhatsappLead",
           "rsvpImportantTitle",
           "rsvpImportantNotes",
+          "faqEyebrow",
+          "faqTitle",
+          "faqDescription",
+          "faqItems",
           "locationEyebrow",
           "locationTitle",
           "locationDescription",
@@ -532,6 +540,8 @@ service cloud.firestore {
           "footerCtaLabel",
           "footerCopyright",
           "footerMadeWith",
+          "heroBackgroundImages",
+          "heroBackgroundIntervalMs",
         ]) &&
         optionalString(request.resource.data, "brandName", 0, 120) &&
         optionalString(request.resource.data, "headerCtaLabel", 0, 60) &&
@@ -586,6 +596,10 @@ service cloud.firestore {
         optionalString(request.resource.data, "timelineTitle", 0, 200) &&
         optionalString(request.resource.data, "timelineDescription", 0, 800) &&
         optionalString(request.resource.data, "timelineItems", 0, 8000) &&
+        optionalString(request.resource.data, "practicalEyebrow", 0, 120) &&
+        optionalString(request.resource.data, "practicalTitle", 0, 200) &&
+        optionalString(request.resource.data, "practicalDescription", 0, 800) &&
+        optionalString(request.resource.data, "practicalItems", 0, 8000) &&
         optionalString(request.resource.data, "stayEyebrow", 0, 120) &&
         optionalString(request.resource.data, "stayTitle", 0, 200) &&
         optionalString(request.resource.data, "stayDescription", 0, 800) &&
@@ -606,6 +620,10 @@ service cloud.firestore {
         optionalString(request.resource.data, "rsvpContactWhatsappLead", 0, 200) &&
         optionalString(request.resource.data, "rsvpImportantTitle", 0, 160) &&
         optionalString(request.resource.data, "rsvpImportantNotes", 0, 4000) &&
+        optionalString(request.resource.data, "faqEyebrow", 0, 120) &&
+        optionalString(request.resource.data, "faqTitle", 0, 200) &&
+        optionalString(request.resource.data, "faqDescription", 0, 800) &&
+        optionalString(request.resource.data, "faqItems", 0, 8000) &&
         optionalString(request.resource.data, "locationEyebrow", 0, 120) &&
         optionalString(request.resource.data, "locationTitle", 0, 200) &&
         optionalString(request.resource.data, "locationDescription", 0, 800) &&
@@ -618,7 +636,9 @@ service cloud.firestore {
         optionalString(request.resource.data, "footerTitle", 0, 220) &&
         optionalString(request.resource.data, "footerCtaLabel", 0, 120) &&
         optionalString(request.resource.data, "footerCopyright", 0, 240) &&
-        optionalString(request.resource.data, "footerMadeWith", 0, 200);
+        optionalString(request.resource.data, "footerMadeWith", 0, 200) &&
+        optionalString(request.resource.data, "heroBackgroundImages", 0, 8000) &&
+        optionalString(request.resource.data, "heroBackgroundIntervalMs", 0, 20);
     }
 
     match /{document=**} {

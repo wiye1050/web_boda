@@ -56,6 +56,9 @@ export function RSVPForm({
   const attending = form.attendance === "si";
   const guestsNumber = Number.parseInt(form.guests, 10);
   const seatsRequested = Number.parseInt(form.transportSeats, 10);
+  const emailValue = form.email.trim();
+  const emailValid =
+    emailValue.length === 0 || /^[^@]+@[^@]+\.[^@]+$/.test(emailValue);
 
   const guestsValid = useMemo(() => {
     if (form.attendance === null) return false;
@@ -89,7 +92,7 @@ export function RSVPForm({
 
   const isValid =
     form.fullName.trim().length > 2 &&
-    /^[^@]+@[^@]+\.[^@]+$/.test(form.email.trim()) &&
+    emailValid &&
     phoneValid &&
     guestsValid &&
     seatsValid &&
@@ -120,6 +123,7 @@ export function RSVPForm({
         if (attendingValue === "no") {
           next.guests = "0";
           next.guestNames = "";
+          next.preboda = "no";
           next.needsTransport = "no";
           next.transportSeats = "";
         }
@@ -272,12 +276,16 @@ export function RSVPForm({
             type="email"
             name="email"
             autoComplete="email"
-            required
             value={form.email}
             onChange={(event) => handleChange("email", event.target.value)}
-            placeholder="Te enviaremos recordatorios"
+            placeholder="Opcional"
             className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
           />
+          {!emailValid && form.email.length > 0 && (
+            <span className="text-xs text-primary">
+              Revisa el email (ej. nombre@email.com).
+            </span>
+          )}
         </label>
       </div>
 

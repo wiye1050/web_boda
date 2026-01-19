@@ -1,16 +1,23 @@
 import { CTAButton } from "@/components/CTAButton";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { Section } from "@/components/Section";
 import { RSVPForm } from "@/components/RSVPForm";
 import { getPublicConfig } from "@/lib/getPublicConfig";
-import type { StayOption, TimelineItem } from "@/lib/publicContent";
+import type {
+  FaqItem,
+  PracticalItem,
+  StayOption,
+  TimelineItem,
+} from "@/lib/publicContent";
 
 type GiftOption = {
   title: string;
   description: string;
   action?: { label: string; href: string };
   details?: string[];
+  hideDetails?: boolean;
 };
 
 function Timeline({ items }: { items: TimelineItem[] }) {
@@ -83,13 +90,25 @@ function GiftList({ gifts }: { gifts: GiftOption[] }) {
         >
           <h3 className="text-xl font-semibold">{gift.title}</h3>
           <p className="text-sm text-muted">{gift.description}</p>
-          {gift.details && (
-            <ul className="space-y-2 rounded-xl bg-accent/80 p-4 text-sm text-foreground/90">
-              {gift.details.map((detail) => (
-                <li key={detail}>{detail}</li>
-              ))}
-            </ul>
-          )}
+          {gift.details &&
+            (gift.hideDetails ? (
+              <details className="rounded-xl border border-border/70 bg-accent/40 px-4 py-3 text-sm text-foreground/90">
+                <summary className="cursor-pointer font-semibold uppercase tracking-[0.2em] text-muted">
+                  Ver datos bancarios
+                </summary>
+                <ul className="mt-3 space-y-2">
+                  {gift.details.map((detail) => (
+                    <li key={detail}>{detail}</li>
+                  ))}
+                </ul>
+              </details>
+            ) : (
+              <ul className="space-y-2 rounded-xl bg-accent/80 p-4 text-sm text-foreground/90">
+                {gift.details.map((detail) => (
+                  <li key={detail}>{detail}</li>
+                ))}
+              </ul>
+            ))}
           {gift.action && (
             <CTAButton href={gift.action.href} variant="outline" prefetch={false}>
               {gift.action.label}
@@ -101,9 +120,55 @@ function GiftList({ gifts }: { gifts: GiftOption[] }) {
   );
 }
 
+function PracticalList({ items }: { items: PracticalItem[] }) {
+  return (
+    <div className="grid gap-6 md:grid-cols-3">
+      {items.map((item, index) => (
+        <article
+          key={`${item.title}-${index}`}
+          className="flex h-full flex-col gap-3 rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6 shadow-[var(--shadow-soft)]"
+        >
+          <span className="text-2xl" role="img" aria-hidden>
+            {item.icon}
+          </span>
+          <h3 className="text-lg font-semibold">{item.title}</h3>
+          <p className="text-sm text-muted">{item.description}</p>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function FaqList({ items }: { items: FaqItem[] }) {
+  return (
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
+      {items.map((item, index) => (
+        <details
+          key={`${item.question}-${index}`}
+          className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-5 shadow-[var(--shadow-soft)]"
+        >
+          <summary className="cursor-pointer text-sm font-semibold uppercase tracking-[0.25em] text-muted">
+            {item.question}
+          </summary>
+          <p className="mt-3 text-sm text-muted">{item.answer}</p>
+        </details>
+      ))}
+    </div>
+  );
+}
+
 export default async function Home() {
   const config = await getPublicConfig();
   const prebodaMapUrl = config.prebodaMapUrl || config.locationMapUrl;
+  const heroImages = (config.heroBackgroundImages ?? []).filter(
+    (src) => typeof src === "string" && src.trim().length > 0,
+  );
+  const intervalMs = Number.parseInt(
+    config.heroBackgroundIntervalMs ?? "8000",
+    10,
+  );
+  const heroInterval = Number.isFinite(intervalMs) ? intervalMs : 8000;
+  const prebodaLabel = config.prebodaEyebrow?.trim() || "Preboda";
 
   const giftOptions: GiftOption[] = [
     {
@@ -121,14 +186,19 @@ export default async function Home() {
         `Titulares: ${config.bankHolder}`,
         `IBAN: ${config.bankIban}`,
       ],
+      hideDetails: true,
     },
   ];
 
   const navItems = [
+    { label: prebodaLabel, href: "#preboda" },
     { label: config.navWeddingLabel, href: "#ceremonia" },
+    { label: "Detalles", href: "#detalles" },
     { label: config.navTimelineLabel, href: "#cronograma" },
     { label: config.navStayLabel, href: "#alojamiento" },
     { label: config.navGiftsLabel, href: "#regalos" },
+    { label: config.navRsvpLabel, href: "#asistencia" },
+    { label: "Ubicación", href: "#ubicacion" },
   ];
 
   return (
@@ -140,7 +210,11 @@ export default async function Home() {
       />
       <main className="flex-1">
         <section className="relative">
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,_rgba(183,110,121,0.25),_transparent_55%),radial-gradient(circle_at_80%_10%,_rgba(241,223,215,0.8),_transparent_60%)]" />
+          {heroImages.length > 0 ? (
+            <HeroSlideshow images={heroImages} intervalMs={heroInterval} />
+          ) : (
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,_rgba(183,110,121,0.25),_transparent_55%),radial-gradient(circle_at_80%_10%,_rgba(241,223,215,0.8),_transparent_60%)]" />
+          )}
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-[calc(var(--spacing-section)*1.2)] sm:px-8">
             <span className="text-xs font-semibold uppercase tracking-[0.6em] text-muted">
               {config.heroEyebrow}
@@ -274,6 +348,15 @@ export default async function Home() {
         </Section>
 
         <Section
+          id="detalles"
+          eyebrow={config.practicalEyebrow}
+          title={config.practicalTitle}
+          description={config.practicalDescription}
+        >
+          <PracticalList items={config.practicalItems} />
+        </Section>
+
+        <Section
           id="cronograma"
           eyebrow={config.timelineEyebrow}
           title={config.timelineTitle}
@@ -301,6 +384,16 @@ export default async function Home() {
           align="center"
         >
           <GiftList gifts={giftOptions} />
+        </Section>
+
+        <Section
+          id="faq"
+          eyebrow={config.faqEyebrow}
+          title={config.faqTitle}
+          description={config.faqDescription}
+          align="center"
+        >
+          <FaqList items={config.faqItems} />
         </Section>
 
         <Section
