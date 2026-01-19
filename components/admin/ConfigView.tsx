@@ -361,6 +361,10 @@ export function ConfigView() {
       setHeroImagesError(parsed.error);
       return;
     }
+    if (!parsed.value) {
+      setHeroImagesError("JSON inválido.");
+      return;
+    }
     const hasInvalid = parsed.value.some((item) => typeof item !== "string");
     if (hasInvalid) {
       setHeroImagesError("Solo se permiten strings en la lista.");
