@@ -724,22 +724,26 @@ export function ConfigView() {
             label="Eyebrow"
             value={config.stayEyebrow}
             onChange={(value) => updateField("stayEyebrow", value)}
+            maxLength={FIELD_LIMITS.stayEyebrow}
           />
           <InputField
             label="Título"
             value={config.stayTitle}
             onChange={(value) => updateField("stayTitle", value)}
+            maxLength={FIELD_LIMITS.stayTitle}
           />
           <TextAreaField
             label="Descripción"
             value={config.stayDescription}
             onChange={(value) => updateField("stayDescription", value)}
             rows={3}
+            maxLength={FIELD_LIMITS.stayDescription}
           />
           <InputField
             label="Texto del botón"
             value={config.stayLinkLabel}
             onChange={(value) => updateField("stayLinkLabel", value)}
+            maxLength={FIELD_LIMITS.stayLinkLabel}
           />
           <div className="flex flex-col gap-4">
             {config.stayOptions.map((item, index) => (
@@ -1047,21 +1051,31 @@ function InputField({
   value,
   onChange,
   type = "text",
+  maxLength,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   type?: string;
+  maxLength?: number;
 }) {
+  const showCount = typeof maxLength === "number";
+  const length = value.length;
   return (
     <label className="flex flex-col gap-2 text-left">
-      <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-        {label}
+      <span className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+        <span>{label}</span>
+        {showCount && (
+          <span className="text-[0.65rem] tracking-[0.2em]">
+            {length}/{maxLength}
+          </span>
+        )}
       </span>
       <input
         type={type}
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        maxLength={maxLength}
         className="rounded-full border border-border/80 bg-background px-4 py-2.5 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
       />
     </label>
@@ -1073,21 +1087,31 @@ function TextAreaField({
   value,
   onChange,
   rows = 3,
+  maxLength,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   rows?: number;
+  maxLength?: number;
 }) {
+  const showCount = typeof maxLength === "number";
+  const length = value.length;
   return (
     <label className="flex flex-col gap-2 text-left">
-      <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-        {label}
+      <span className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+        <span>{label}</span>
+        {showCount && (
+          <span className="text-[0.65rem] tracking-[0.2em]">
+            {length}/{maxLength}
+          </span>
+        )}
       </span>
       <textarea
         rows={rows}
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        maxLength={maxLength}
         className="rounded-3xl border border-border/80 bg-background px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
       />
     </label>
