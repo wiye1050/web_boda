@@ -169,6 +169,8 @@ export default async function Home() {
   );
   const heroInterval = Number.isFinite(intervalMs) ? intervalMs : 8000;
   const prebodaLabel = config.prebodaEyebrow?.trim() || "Preboda";
+  const hasPracticalItems = config.practicalItems.length > 0;
+  const hasFaqItems = config.faqItems.length > 0;
 
   const giftOptions: GiftOption[] = [
     {
@@ -193,12 +195,14 @@ export default async function Home() {
   const navItems = [
     { label: prebodaLabel, href: "#preboda" },
     { label: config.navWeddingLabel, href: "#ceremonia" },
-    { label: "Detalles", href: "#detalles" },
+    ...(hasPracticalItems
+      ? [{ label: config.navDetailsLabel, href: "#detalles" }]
+      : []),
     { label: config.navTimelineLabel, href: "#cronograma" },
     { label: config.navStayLabel, href: "#alojamiento" },
     { label: config.navGiftsLabel, href: "#regalos" },
     { label: config.navRsvpLabel, href: "#asistencia" },
-    { label: "Ubicación", href: "#ubicacion" },
+    { label: config.navLocationLabel, href: "#ubicacion" },
   ];
 
   return (
@@ -347,14 +351,16 @@ export default async function Home() {
           </div>
         </Section>
 
-        <Section
-          id="detalles"
-          eyebrow={config.practicalEyebrow}
-          title={config.practicalTitle}
-          description={config.practicalDescription}
-        >
-          <PracticalList items={config.practicalItems} />
-        </Section>
+        {hasPracticalItems && (
+          <Section
+            id="detalles"
+            eyebrow={config.practicalEyebrow}
+            title={config.practicalTitle}
+            description={config.practicalDescription}
+          >
+            <PracticalList items={config.practicalItems} />
+          </Section>
+        )}
 
         <Section
           id="cronograma"
@@ -386,15 +392,17 @@ export default async function Home() {
           <GiftList gifts={giftOptions} />
         </Section>
 
-        <Section
-          id="faq"
-          eyebrow={config.faqEyebrow}
-          title={config.faqTitle}
-          description={config.faqDescription}
-          align="center"
-        >
-          <FaqList items={config.faqItems} />
-        </Section>
+        {hasFaqItems && (
+          <Section
+            id="faq"
+            eyebrow={config.faqEyebrow}
+            title={config.faqTitle}
+            description={config.faqDescription}
+            align="center"
+          >
+            <FaqList items={config.faqItems} />
+          </Section>
+        )}
 
         <Section
           id="asistencia"

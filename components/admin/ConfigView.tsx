@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useState, type ReactNode } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 import { getFirestoreDb } from "@/lib/firebase";
@@ -39,6 +39,8 @@ const FIELD_LIMITS: Record<string, number> = {
   navStayLabel: 60,
   navGiftsLabel: 60,
   navRsvpLabel: 60,
+  navDetailsLabel: 60,
+  navLocationLabel: 60,
   heroEyebrow: 120,
   heroTitle: 140,
   heroDescription: 800,
@@ -138,6 +140,8 @@ const FIELD_LABELS: Record<string, string> = {
   navStayLabel: "Menú: Alojamiento",
   navGiftsLabel: "Menú: Regalos",
   navRsvpLabel: "Menú: Confirmar asistencia",
+  navDetailsLabel: "Menú: Detalles",
+  navLocationLabel: "Menú: Ubicación",
   heroEyebrow: "Texto superior",
   heroTitle: "Título principal",
   heroDescription: "Descripción principal",
@@ -675,6 +679,18 @@ export function ConfigView() {
             value={config.navRsvpLabel}
             onChange={(value) => updateField("navRsvpLabel", value)}
             maxLength={FIELD_LIMITS.navRsvpLabel}
+          />
+          <InputField
+            label="Menú: Detalles"
+            value={config.navDetailsLabel}
+            onChange={(value) => updateField("navDetailsLabel", value)}
+            maxLength={FIELD_LIMITS.navDetailsLabel}
+          />
+          <InputField
+            label="Menú: Ubicación"
+            value={config.navLocationLabel}
+            onChange={(value) => updateField("navLocationLabel", value)}
+            maxLength={FIELD_LIMITS.navLocationLabel}
           />
         </Fieldset>
 
@@ -1483,6 +1499,7 @@ function InputField({
   type?: string;
   maxLength?: number;
 }) {
+  const inputId = useId();
   const showCount = typeof maxLength === "number";
   const length = value.length;
   return (
@@ -1496,6 +1513,8 @@ function InputField({
         )}
       </span>
       <input
+        id={inputId}
+        name={inputId}
         type={type}
         value={value}
         onChange={(event) => onChange(event.target.value)}
@@ -1519,6 +1538,7 @@ function TextAreaField({
   rows?: number;
   maxLength?: number;
 }) {
+  const textareaId = useId();
   const showCount = typeof maxLength === "number";
   const length = value.length;
   return (
@@ -1532,6 +1552,8 @@ function TextAreaField({
         )}
       </span>
       <textarea
+        id={textareaId}
+        name={textareaId}
         rows={rows}
         value={value}
         onChange={(event) => onChange(event.target.value)}

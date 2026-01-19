@@ -93,12 +93,11 @@ export function HeroSlideshow({
   return (
     <div
       className={[
-        "absolute inset-0 z-0 overflow-hidden bg-cover bg-center pointer-events-none",
+        "absolute inset-0 z-0 overflow-hidden pointer-events-none",
         className ?? "",
       ]
         .filter(Boolean)
         .join(" ")}
-      style={{ backgroundImage: `url(${currentImage})` }}
     >
       <img
         src={currentImage}

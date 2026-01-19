@@ -453,6 +453,8 @@ service cloud.firestore {
           "navStayLabel",
           "navGiftsLabel",
           "navRsvpLabel",
+          "navDetailsLabel",
+          "navLocationLabel",
           "heroEyebrow",
           "heroTitle",
           "heroDescription",
@@ -542,103 +544,7 @@ service cloud.firestore {
           "footerMadeWith",
           "heroBackgroundImages",
           "heroBackgroundIntervalMs",
-        ]) &&
-        optionalString(request.resource.data, "brandName", 0, 120) &&
-        optionalString(request.resource.data, "headerCtaLabel", 0, 60) &&
-        optionalString(request.resource.data, "navWeddingLabel", 0, 60) &&
-        optionalString(request.resource.data, "navTimelineLabel", 0, 60) &&
-        optionalString(request.resource.data, "navStayLabel", 0, 60) &&
-        optionalString(request.resource.data, "navGiftsLabel", 0, 60) &&
-        optionalString(request.resource.data, "navRsvpLabel", 0, 60) &&
-        optionalString(request.resource.data, "heroEyebrow", 0, 120) &&
-        optionalString(request.resource.data, "heroTitle", 0, 140) &&
-        optionalString(request.resource.data, "heroDescription", 0, 800) &&
-        optionalString(request.resource.data, "heroPrimaryCtaLabel", 0, 80) &&
-        optionalString(request.resource.data, "heroSecondaryCtaLabel", 0, 80) &&
-        optionalString(request.resource.data, "heroMapCtaLabel", 0, 100) &&
-        optionalString(request.resource.data, "heroStatDateLabel", 0, 60) &&
-        optionalString(request.resource.data, "heroStatLocationLabel", 0, 60) &&
-        optionalString(request.resource.data, "heroStatTimeLabel", 0, 60) &&
-        optionalString(request.resource.data, "heroStatTimeNote", 0, 80) &&
-        optionalString(request.resource.data, "eventDate", 0, 80) &&
-        optionalString(request.resource.data, "eventTimeRange", 0, 60) &&
-        optionalString(request.resource.data, "locationName", 0, 160) &&
-        optionalString(request.resource.data, "locationAddress", 0, 200) &&
-        optionalString(request.resource.data, "locationMapUrl", 0, 300) &&
-        optionalString(request.resource.data, "locationMapLabel", 0, 80) &&
-        optionalString(request.resource.data, "prebodaPlace", 0, 160) &&
-        optionalString(request.resource.data, "prebodaTime", 0, 80) &&
-        optionalString(request.resource.data, "prebodaMapUrl", 0, 300) &&
-        optionalString(request.resource.data, "contactEmail", 0, 120) &&
-        optionalString(request.resource.data, "contactPhone", 0, 40) &&
-        optionalString(request.resource.data, "whatsappLink", 0, 200) &&
-        optionalString(request.resource.data, "giftLink", 0, 200) &&
-        optionalString(request.resource.data, "bankHolder", 0, 200) &&
-        optionalString(request.resource.data, "bankIban", 0, 40) &&
-        optionalString(request.resource.data, "prebodaEyebrow", 0, 120) &&
-        optionalString(request.resource.data, "prebodaTitle", 0, 200) &&
-        optionalString(request.resource.data, "prebodaDescription", 0, 800) &&
-        optionalString(request.resource.data, "prebodaCardOneLabel", 0, 120) &&
-        optionalString(request.resource.data, "prebodaCardOneCtaLabel", 0, 120) &&
-        optionalString(request.resource.data, "prebodaCardTwoLabel", 0, 120) &&
-        optionalString(request.resource.data, "prebodaCardTwoTitle", 0, 160) &&
-        optionalString(request.resource.data, "prebodaCardTwoDescription", 0, 800) &&
-        optionalString(request.resource.data, "ceremonyEyebrow", 0, 120) &&
-        optionalString(request.resource.data, "ceremonyTitle", 0, 200) &&
-        optionalString(request.resource.data, "ceremonyDescription", 0, 800) &&
-        optionalString(request.resource.data, "ceremonyCardOneLabel", 0, 120) &&
-        optionalString(request.resource.data, "ceremonyCardOneTitle", 0, 160) &&
-        optionalString(request.resource.data, "ceremonyCardOneDescription", 0, 800) &&
-        optionalString(request.resource.data, "ceremonyCardTwoLabel", 0, 120) &&
-        optionalString(request.resource.data, "ceremonyCardTwoTitle", 0, 160) &&
-        optionalString(request.resource.data, "ceremonyCardTwoDescription", 0, 800) &&
-        optionalString(request.resource.data, "timelineEyebrow", 0, 120) &&
-        optionalString(request.resource.data, "timelineTitle", 0, 200) &&
-        optionalString(request.resource.data, "timelineDescription", 0, 800) &&
-        optionalString(request.resource.data, "timelineItems", 0, 8000) &&
-        optionalString(request.resource.data, "practicalEyebrow", 0, 120) &&
-        optionalString(request.resource.data, "practicalTitle", 0, 200) &&
-        optionalString(request.resource.data, "practicalDescription", 0, 800) &&
-        optionalString(request.resource.data, "practicalItems", 0, 8000) &&
-        optionalString(request.resource.data, "stayEyebrow", 0, 120) &&
-        optionalString(request.resource.data, "stayTitle", 0, 200) &&
-        optionalString(request.resource.data, "stayDescription", 0, 800) &&
-        optionalString(request.resource.data, "stayLinkLabel", 0, 120) &&
-        optionalString(request.resource.data, "stayOptions", 0, 8000) &&
-        optionalString(request.resource.data, "giftsEyebrow", 0, 120) &&
-        optionalString(request.resource.data, "giftsTitle", 0, 200) &&
-        optionalString(request.resource.data, "giftsDescription", 0, 800) &&
-        optionalString(request.resource.data, "giftsRegistryTitle", 0, 160) &&
-        optionalString(request.resource.data, "giftsRegistryDescription", 0, 800) &&
-        optionalString(request.resource.data, "giftsRegistryCtaLabel", 0, 120) &&
-        optionalString(request.resource.data, "giftsBankTitle", 0, 160) &&
-        optionalString(request.resource.data, "giftsBankDescription", 0, 800) &&
-        optionalString(request.resource.data, "rsvpEyebrow", 0, 120) &&
-        optionalString(request.resource.data, "rsvpTitle", 0, 200) &&
-        optionalString(request.resource.data, "rsvpDescription", 0, 800) &&
-        optionalString(request.resource.data, "rsvpContactLead", 0, 200) &&
-        optionalString(request.resource.data, "rsvpContactWhatsappLead", 0, 200) &&
-        optionalString(request.resource.data, "rsvpImportantTitle", 0, 160) &&
-        optionalString(request.resource.data, "rsvpImportantNotes", 0, 4000) &&
-        optionalString(request.resource.data, "faqEyebrow", 0, 120) &&
-        optionalString(request.resource.data, "faqTitle", 0, 200) &&
-        optionalString(request.resource.data, "faqDescription", 0, 800) &&
-        optionalString(request.resource.data, "faqItems", 0, 8000) &&
-        optionalString(request.resource.data, "locationEyebrow", 0, 120) &&
-        optionalString(request.resource.data, "locationTitle", 0, 200) &&
-        optionalString(request.resource.data, "locationDescription", 0, 800) &&
-        optionalString(request.resource.data, "locationContactTitle", 0, 160) &&
-        optionalString(request.resource.data, "locationEmailLabel", 0, 80) &&
-        optionalString(request.resource.data, "locationPhoneLabel", 0, 80) &&
-        optionalString(request.resource.data, "locationWhatsappLabel", 0, 80) &&
-        optionalString(request.resource.data, "locationWhatsappActionLabel", 0, 120) &&
-        optionalString(request.resource.data, "footerEyebrow", 0, 160) &&
-        optionalString(request.resource.data, "footerTitle", 0, 220) &&
-        optionalString(request.resource.data, "footerCtaLabel", 0, 120) &&
-        optionalString(request.resource.data, "footerCopyright", 0, 240) &&
-        optionalString(request.resource.data, "footerMadeWith", 0, 200) &&
-        optionalString(request.resource.data, "heroBackgroundImages", 0, 8000) &&
-        optionalString(request.resource.data, "heroBackgroundIntervalMs", 0, 20);
+        ]);
     }
 
     match /{document=**} {

@@ -32,6 +32,8 @@ export type PublicContent = {
   navStayLabel: string;
   navGiftsLabel: string;
   navRsvpLabel: string;
+  navDetailsLabel: string;
+  navLocationLabel: string;
   heroEyebrow: string;
   heroTitle: string;
   heroDescription: string;
@@ -131,6 +133,8 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   navStayLabel: "Alojamiento",
   navGiftsLabel: "Regalos",
   navRsvpLabel: "Confirmar asistencia",
+  navDetailsLabel: "Detalles",
+  navLocationLabel: "Ubicación",
   heroEyebrow: "Ponferrada · 2025",
   heroTitle: "Alba & Guille",
   heroDescription:
@@ -441,6 +445,9 @@ export function parsePracticalItems(raw: unknown): PracticalItem[] {
   if (!Array.isArray(parsed)) {
     return DEFAULT_PUBLIC_CONTENT.practicalItems;
   }
+  if (parsed.length === 0) {
+    return [];
+  }
 
   const cleaned = parsed
     .map((item) => (item && typeof item === "object" ? item : {}))
@@ -461,6 +468,9 @@ export function parseFaqItems(raw: unknown): FaqItem[] {
   const parsed = Array.isArray(raw) ? raw : safeJsonParse(raw);
   if (!Array.isArray(parsed)) {
     return DEFAULT_PUBLIC_CONTENT.faqItems;
+  }
+  if (parsed.length === 0) {
+    return [];
   }
 
   const cleaned = parsed
@@ -505,6 +515,14 @@ export function normalizePublicContent(
     navRsvpLabel: normalizeString(
       data.navRsvpLabel,
       DEFAULT_PUBLIC_CONTENT.navRsvpLabel,
+    ),
+    navDetailsLabel: normalizeString(
+      data.navDetailsLabel,
+      DEFAULT_PUBLIC_CONTENT.navDetailsLabel,
+    ),
+    navLocationLabel: normalizeString(
+      data.navLocationLabel,
+      DEFAULT_PUBLIC_CONTENT.navLocationLabel,
     ),
     heroEyebrow: normalizeString(
       data.heroEyebrow,
