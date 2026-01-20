@@ -133,6 +133,7 @@ export function HeroSlideshow({
         aria-hidden
         loading="eager"
         fetchPriority={isInitialImage ? "high" : "auto"}
+        decoding="async"
         className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out"
         style={{ opacity: isFading ? 0 : 1 }}
         onError={() => handleImageError(currentImage)}
@@ -142,6 +143,8 @@ export function HeroSlideshow({
         alt=""
         aria-hidden
         loading="lazy"
+        fetchPriority="low"
+        decoding="async"
         className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out"
         style={{ opacity: isFading ? 1 : 0 }}
         onError={() => handleImageError(upcomingImage)}
