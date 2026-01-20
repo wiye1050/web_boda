@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { firebaseSignOut } from "@/lib/firebase-auth";
 import { useAuth } from "@/components/admin/AuthContext";
 
@@ -21,6 +21,36 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement | null>(null);
+  const drawerRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setIsMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+      if (event.key === "Tab" && drawerRef.current) {
+        const focusable = drawerRef.current.querySelectorAll<HTMLElement>(
+          "button, a, input, textarea, select, [tabindex]:not([tabindex='-1'])",
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isMenuOpen]);
 
   return (
     <div className="flex min-h-screen w-full bg-background text-foreground">
@@ -65,6 +95,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       <div className="flex-1">
         <header className="sticky top-0 z-20 flex items-center justify-between border-b border-border/80 bg-surface/90 px-5 py-4 backdrop-blur md:hidden">
           <button
+            ref={menuButtonRef}
             type="button"
             onClick={() => setIsMenuOpen(true)}
             className="rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
@@ -95,7 +126,10 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               onClick={() => setIsMenuOpen(false)}
               className="absolute inset-0 bg-black/45"
             />
-            <aside className="relative h-full w-72 max-w-[85vw] bg-surface px-5 py-6 shadow-xl">
+            <aside
+              ref={drawerRef}
+              className="relative h-full w-72 max-w-[85vw] bg-surface px-5 py-6 shadow-xl"
+            >
               <div className="mb-6 flex items-center justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.4em] text-muted">
@@ -103,14 +137,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                   </p>
                   <p className="mt-1 text-lg font-semibold">Panel</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-                >
-                  Cerrar
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+                  >
+                    Cerrar
+                  </button>
+                </div>
               <nav className="flex flex-col gap-2">
                 {NAV_LINKS.map((link) => {
                   const isActive =

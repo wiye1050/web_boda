@@ -37,6 +37,7 @@ export function MapsChooserModal({
     if (!open) return;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        event.preventDefault();
         onClose();
       }
       if (event.key === "Tab" && panelRef.current) {
