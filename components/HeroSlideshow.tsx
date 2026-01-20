@@ -146,10 +146,10 @@ export function HeroSlideshow({
         style={{ opacity: isFading ? 1 : 0 }}
         onError={() => handleImageError(upcomingImage)}
       />
-      <div className="absolute inset-0 bg-black/40 sm:bg-black/30" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(0,0,0,0.55),_transparent_55%),radial-gradient(circle_at_80%_20%,_rgba(0,0,0,0.25),_transparent_60%)] sm:bg-[radial-gradient(circle_at_20%_20%,_rgba(0,0,0,0.35),_transparent_55%),radial-gradient(circle_at_80%_20%,_rgba(0,0,0,0.15),_transparent_60%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(closest-side_at_10%_90%,_rgba(0,0,0,0.5),_transparent_70%),radial-gradient(closest-side_at_90%_10%,_rgba(0,0,0,0.35),_transparent_72%)] sm:bg-[radial-gradient(closest-side_at_10%_90%,_rgba(0,0,0,0.35),_transparent_70%),radial-gradient(closest-side_at_90%_10%,_rgba(0,0,0,0.25),_transparent_72%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(135deg,_rgba(0,0,0,0.35)_0%,_transparent_45%,_rgba(0,0,0,0.2)_100%)] sm:bg-[linear-gradient(135deg,_rgba(0,0,0,0.2)_0%,_transparent_45%,_rgba(0,0,0,0.12)_100%)]" />
+      <div className="absolute inset-0 bg-black/55 sm:bg-black/35" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,_rgba(0,0,0,0.75),_transparent_52%),radial-gradient(circle_at_82%_18%,_rgba(0,0,0,0.45),_transparent_58%)] sm:bg-[radial-gradient(circle_at_20%_20%,_rgba(0,0,0,0.45),_transparent_55%),radial-gradient(circle_at_80%_20%,_rgba(0,0,0,0.25),_transparent_60%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(closest-side_at_8%_92%,_rgba(0,0,0,0.7),_transparent_68%),radial-gradient(closest-side_at_92%_8%,_rgba(0,0,0,0.55),_transparent_70%)] sm:bg-[radial-gradient(closest-side_at_10%_90%,_rgba(0,0,0,0.45),_transparent_70%),radial-gradient(closest-side_at_90%_10%,_rgba(0,0,0,0.35),_transparent_72%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(135deg,_rgba(0,0,0,0.55)_0%,_transparent_42%,_rgba(0,0,0,0.35)_100%)] sm:bg-[linear-gradient(135deg,_rgba(0,0,0,0.3)_0%,_transparent_45%,_rgba(0,0,0,0.2)_100%)]" />
     </div>
   );
 }
