@@ -618,7 +618,7 @@ export function SectionsManager() {
       </section>
 
       <section className="overflow-hidden rounded-[24px] border border-border/70 bg-surface/95 shadow-[var(--shadow-soft)]">
-        <div className="grid grid-cols-[1.1fr_0.7fr_0.7fr_1fr_0.7fr] gap-4 border-b border-border/70 px-5 py-4 text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+        <div className="hidden grid-cols-[1.1fr_0.7fr_0.7fr_1fr_0.7fr] gap-4 border-b border-border/70 px-5 py-4 text-xs font-semibold uppercase tracking-[0.3em] text-muted md:grid">
           <span>Sección</span>
           <span>Visible</span>
           <span>Menú</span>
@@ -630,7 +630,7 @@ export function SectionsManager() {
             const isOpen = openSections.includes(section.id);
             return (
               <div key={section.id} className="px-5 py-4">
-                <div className="grid grid-cols-[1.1fr_0.7fr_0.7fr_1fr_0.7fr] items-center gap-4">
+                <div className="grid gap-4 md:grid-cols-[1.1fr_0.7fr_0.7fr_1fr_0.7fr] md:items-center">
                   <button
                     type="button"
                     onClick={() => toggleSection(section.id)}
@@ -657,7 +657,10 @@ export function SectionsManager() {
                       </p>
                     </span>
                   </button>
-                  <label className="inline-flex items-center gap-2 text-sm">
+                  <label className="inline-flex items-center gap-3 text-sm">
+                    <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted md:hidden">
+                      Visible
+                    </span>
                     <input
                       type="checkbox"
                       checked={section.enabled}
@@ -669,7 +672,10 @@ export function SectionsManager() {
                     />
                     <span>{section.enabled ? "Sí" : "No"}</span>
                   </label>
-                  <label className="inline-flex items-center gap-2 text-sm">
+                  <label className="inline-flex items-center gap-3 text-sm">
+                    <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted md:hidden">
+                      Menú
+                    </span>
                     <input
                       type="checkbox"
                       checked={section.nav}
@@ -681,15 +687,23 @@ export function SectionsManager() {
                     />
                     <span>{section.nav ? "Sí" : "No"}</span>
                   </label>
-                  <input
-                    value={section.label}
-                    onChange={(event) =>
-                      updateSection(section.id, { label: event.target.value })
-                    }
-                    className="rounded-full border border-border/80 bg-background px-4 py-2 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-                    placeholder="Texto del menú"
-                  />
-                  <div className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-muted">
+                  <label className="flex flex-col gap-2 md:block">
+                    <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted md:hidden">
+                      Texto menú
+                    </span>
+                    <input
+                      value={section.label}
+                      onChange={(event) =>
+                        updateSection(section.id, { label: event.target.value })
+                      }
+                      className="w-full rounded-full border border-border/80 bg-background px-4 py-2 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                      placeholder="Texto del menú"
+                    />
+                  </label>
+                  <div className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-muted md:justify-start">
+                    <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted md:hidden">
+                      Orden
+                    </span>
                     <button
                       type="button"
                       onClick={() => moveSection(section.id, "up")}
