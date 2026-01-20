@@ -102,9 +102,6 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           >
             Menú
           </button>
-          <h1 className="text-sm font-semibold uppercase tracking-[0.4em] text-muted">
-            Panel
-          </h1>
           <div className="flex items-center gap-2">
             <Link
               href="/"
