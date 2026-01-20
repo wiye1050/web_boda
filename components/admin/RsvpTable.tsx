@@ -77,136 +77,191 @@ export function RsvpTable({
           <span className="h-10 w-10 animate-spin rounded-full border-2 border-border border-t-primary" />
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-[20px] border border-border/70 bg-surface/95 shadow-[var(--shadow-soft)]">
-          <table className="w-full min-w-[1000px] divide-y divide-border/60 text-left text-sm">
-            <thead className="bg-accent/70 text-xs uppercase tracking-[0.3em] text-muted">
-              <tr>
-                <th className="px-4 py-3">Invitado</th>
-                <th className="px-4 py-3">Asistencia</th>
-                <th className="px-4 py-3">Estado</th>
-                <th className="px-4 py-3">Etiquetas</th>
-                <th className="px-4 py-3">Adultos</th>
-                <th className="px-4 py-3">Preboda</th>
-                <th className="px-4 py-3">Traslado</th>
-                <th className="px-4 py-3">Notas invitado</th>
-                <th className="px-4 py-3">Notas internas</th>
-                <th className="px-4 py-3">Registrado</th>
-                <th className="px-4 py-3">Actualizado</th>
-                {onSelectRecord && <th className="px-4 py-3 text-right">Acciones</th>}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/50">
-              {filteredRecords.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={onSelectRecord ? 12 : 11}
-                    className="px-4 py-8 text-center text-sm text-muted"
-                  >
-                    No hay registros que coincidan con el filtro seleccionado.
-                  </td>
-                </tr>
-              ) : (
-                filteredRecords.map((record, index) => (
-                  <tr
+        <>
+          {filteredRecords.length === 0 ? (
+            <div className="rounded-[20px] border border-border/70 bg-surface/95 px-4 py-6 text-center text-sm text-muted shadow-[var(--shadow-soft)]">
+              No hay registros que coincidan con el filtro seleccionado.
+            </div>
+          ) : (
+            <>
+              <div className="grid gap-4 md:hidden">
+                {filteredRecords.map((record) => (
+                  <article
                     key={record.id}
-                    className={[
-                      "transition-colors duration-150",
-                      index % 2 === 0 ? "bg-background/40" : "bg-background/60",
-                      "hover:bg-accent/40",
-                    ].join(" ")}
+                    className="rounded-[20px] border border-border/70 bg-surface/95 p-4 shadow-[var(--shadow-soft)]"
                   >
-                    <td className="px-4 py-4">
-                      <div className="flex flex-col">
-                        <span className="font-semibold text-foreground">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="font-semibold text-foreground">
                           {record.fullName}
-                        </span>
-                        <span className="text-xs text-muted">
+                        </p>
+                        <p className="text-xs text-muted">
                           {record.email} · {record.phone}
-                        </span>
-                        {record.guestNames && (
-                          <span className="mt-1 text-xs text-muted">
-                            {record.guestNames}
-                          </span>
-                        )}
+                        </p>
                       </div>
-                    </td>
-                    <td className="px-4 py-4">
                       <AttendanceBadge attending={record.attendance === "si"} />
-                    </td>
-                    <td className="px-4 py-4">
-                      <StatusDisplay
-                        status={record.status}
-                        processed={Boolean(record.processed)}
-                        updatedBy={record.updatedBy}
-                      />
-                    </td>
-                    <td className="px-4 py-4">
-                      <TagChips tags={record.tags} />
-                    </td>
-                    <td className="px-4 py-4">{record.guests}</td>
-                    <td className="px-4 py-4">
-                      <AttendanceBadge
-                        attending={record.preboda === "si"}
-                        trueLabel="Sí"
-                        falseLabel="No"
-                      />
-                    </td>
-                    <td className="px-4 py-4">
-                      {record.needsTransport === "si" ? (
-                        <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
-                          {record.transportSeats ?? 0} plazas
-                        </span>
-                      ) : (
-                        <span className="text-xs uppercase tracking-[0.3em] text-muted">
-                          No
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-4">
-                      {record.requests ? (
-                        <span className="text-xs text-muted">
-                          {record.requests}
-                        </span>
-                      ) : (
-                        <span className="text-xs uppercase tracking-[0.3em] text-muted">
-                          —
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-4">
-                      {record.notes ? (
-                        <span className="text-xs text-foreground">
-                          {record.notes}
-                        </span>
-                      ) : (
-                        <span className="text-xs uppercase tracking-[0.3em] text-muted">
-                          —
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-4 text-xs text-muted">
-                      {formatTimestamp(record.submittedAt)}
-                    </td>
-                    <td className="px-4 py-4 text-xs text-muted">
-                      {formatTimestamp(record.updatedAt)}
-                    </td>
-                    {onSelectRecord && (
-                      <td className="px-4 py-4 text-right">
-                        <button
-                          type="button"
-                          onClick={() => onSelectRecord(record)}
-                          className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-                        >
-                          Gestionar
-                        </button>
-                      </td>
+                    </div>
+                    <div className="mt-3 grid gap-2 text-xs text-muted">
+                      <span>Adultos: {record.guests}</span>
+                      <span>Preboda: {record.preboda === "si" ? "Sí" : "No"}</span>
+                      <span>
+                        Transporte:{" "}
+                        {record.needsTransport === "si"
+                          ? `${record.transportSeats ?? 0} plazas`
+                          : "No"}
+                      </span>
+                    </div>
+                    {(record.guestNames || record.requests) && (
+                      <div className="mt-3 text-xs text-muted">
+                        {record.guestNames && (
+                          <p>Acompañantes: {record.guestNames}</p>
+                        )}
+                        {record.requests && <p>Notas: {record.requests}</p>}
+                      </div>
                     )}
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                    <div className="mt-3 text-xs text-muted">
+                      <p>Estado: {record.status ?? "—"}</p>
+                      <p>Registrado: {formatTimestamp(record.submittedAt)}</p>
+                    </div>
+                    {onSelectRecord && (
+                      <button
+                        type="button"
+                        onClick={() => onSelectRecord(record)}
+                        className="mt-4 w-full rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+                      >
+                        Gestionar
+                      </button>
+                    )}
+                  </article>
+                ))}
+              </div>
+
+              <div className="hidden overflow-x-auto rounded-[20px] border border-border/70 bg-surface/95 shadow-[var(--shadow-soft)] md:block">
+                <table className="w-full min-w-[1000px] divide-y divide-border/60 text-left text-sm">
+                  <thead className="bg-accent/70 text-xs uppercase tracking-[0.3em] text-muted">
+                    <tr>
+                      <th className="px-4 py-3">Invitado</th>
+                      <th className="px-4 py-3">Asistencia</th>
+                      <th className="px-4 py-3">Estado</th>
+                      <th className="px-4 py-3">Etiquetas</th>
+                      <th className="px-4 py-3">Adultos</th>
+                      <th className="px-4 py-3">Preboda</th>
+                      <th className="px-4 py-3">Traslado</th>
+                      <th className="px-4 py-3">Notas invitado</th>
+                      <th className="px-4 py-3">Notas internas</th>
+                      <th className="px-4 py-3">Registrado</th>
+                      <th className="px-4 py-3">Actualizado</th>
+                      {onSelectRecord && (
+                        <th className="px-4 py-3 text-right">Acciones</th>
+                      )}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50">
+                    {filteredRecords.map((record, index) => (
+                      <tr
+                        key={record.id}
+                        className={[
+                          "transition-colors duration-150",
+                          index % 2 === 0 ? "bg-background/40" : "bg-background/60",
+                          "hover:bg-accent/40",
+                        ].join(" ")}
+                      >
+                        <td className="px-4 py-4">
+                          <div className="flex flex-col">
+                            <span className="font-semibold text-foreground">
+                              {record.fullName}
+                            </span>
+                            <span className="text-xs text-muted">
+                              {record.email} · {record.phone}
+                            </span>
+                            {record.guestNames && (
+                              <span className="mt-1 text-xs text-muted">
+                                {record.guestNames}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-4">
+                          <AttendanceBadge
+                            attending={record.attendance === "si"}
+                          />
+                        </td>
+                        <td className="px-4 py-4">
+                          <StatusDisplay
+                            status={record.status}
+                            processed={Boolean(record.processed)}
+                            updatedBy={record.updatedBy}
+                          />
+                        </td>
+                        <td className="px-4 py-4">
+                          <TagChips tags={record.tags} />
+                        </td>
+                        <td className="px-4 py-4">{record.guests}</td>
+                        <td className="px-4 py-4">
+                          <AttendanceBadge
+                            attending={record.preboda === "si"}
+                            trueLabel="Sí"
+                            falseLabel="No"
+                          />
+                        </td>
+                        <td className="px-4 py-4">
+                          {record.needsTransport === "si" ? (
+                            <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
+                              {record.transportSeats ?? 0} plazas
+                            </span>
+                          ) : (
+                            <span className="text-xs uppercase tracking-[0.3em] text-muted">
+                              No
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-4">
+                          {record.requests ? (
+                            <span className="text-xs text-muted">
+                              {record.requests}
+                            </span>
+                          ) : (
+                            <span className="text-xs uppercase tracking-[0.3em] text-muted">
+                              —
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-4">
+                          {record.notes ? (
+                            <span className="text-xs text-foreground">
+                              {record.notes}
+                            </span>
+                          ) : (
+                            <span className="text-xs uppercase tracking-[0.3em] text-muted">
+                              —
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-4 text-xs text-muted">
+                          {formatTimestamp(record.submittedAt)}
+                        </td>
+                        <td className="px-4 py-4 text-xs text-muted">
+                          {formatTimestamp(record.updatedAt)}
+                        </td>
+                        {onSelectRecord && (
+                          <td className="px-4 py-4 text-right">
+                            <button
+                              type="button"
+                              onClick={() => onSelectRecord(record)}
+                              className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+                            >
+                              Gestionar
+                            </button>
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </>
       )}
     </section>
   );

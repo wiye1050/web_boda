@@ -399,47 +399,85 @@ export function TransportView() {
                 Todavía no hay invitados asignados a esta ruta.
               </p>
             ) : (
-              <div className="overflow-x-auto rounded-[20px] border border-border/70 bg-surface/95 shadow-[var(--shadow-soft)]">
-                <table className="w-full min-w-[720px] divide-y divide-border/60 text-left text-sm">
-                  <thead className="bg-accent/70 text-xs uppercase tracking-[0.3em] text-muted">
-                    <tr>
-                      <th className="px-4 py-3">Invitado</th>
-                      <th className="px-4 py-3">Plazas</th>
-                      <th className="px-4 py-3">Asignado</th>
-                      <th className="px-4 py-3 text-right">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border/50">
-                    {currentAssignments.map((assignment) => (
-                      <tr key={assignment.id} className="bg-background/40">
-                        <td className="px-4 py-4 font-semibold text-foreground">
-                          {assignment.rsvpName}
-                        </td>
-                        <td className="px-4 py-4">{assignment.seats}</td>
-                        <td className="px-4 py-4 text-xs text-muted">
-                          {assignment.createdAt
-                            ? assignment.createdAt.toLocaleString("es-ES", {
-                                day: "2-digit",
-                                month: "short",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })
-                            : "—"}
-                        </td>
-                        <td className="px-4 py-4 text-right">
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveAssignment(assignment)}
-                            className="rounded-full border border-border px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-                          >
-                            Quitar
-                          </button>
-                        </td>
+              <>
+                <div className="grid gap-3 md:hidden">
+                  {currentAssignments.map((assignment) => (
+                    <article
+                      key={assignment.id}
+                      className="rounded-[20px] border border-border/70 bg-surface/95 p-4 shadow-[var(--shadow-soft)]"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="font-semibold text-foreground">
+                            {assignment.rsvpName}
+                          </p>
+                          <p className="text-xs text-muted">
+                            {assignment.createdAt
+                              ? assignment.createdAt.toLocaleString("es-ES", {
+                                  day: "2-digit",
+                                  month: "short",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })
+                              : "—"}
+                          </p>
+                        </div>
+                        <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
+                          {assignment.seats} plazas
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveAssignment(assignment)}
+                        className="mt-4 w-full rounded-full border border-border px-3 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+                      >
+                        Quitar
+                      </button>
+                    </article>
+                  ))}
+                </div>
+                <div className="hidden overflow-x-auto rounded-[20px] border border-border/70 bg-surface/95 shadow-[var(--shadow-soft)] md:block">
+                  <table className="w-full min-w-[720px] divide-y divide-border/60 text-left text-sm">
+                    <thead className="bg-accent/70 text-xs uppercase tracking-[0.3em] text-muted">
+                      <tr>
+                        <th className="px-4 py-3">Invitado</th>
+                        <th className="px-4 py-3">Plazas</th>
+                        <th className="px-4 py-3">Asignado</th>
+                        <th className="px-4 py-3 text-right">Acciones</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="divide-y divide-border/50">
+                      {currentAssignments.map((assignment) => (
+                        <tr key={assignment.id} className="bg-background/40">
+                          <td className="px-4 py-4 font-semibold text-foreground">
+                            {assignment.rsvpName}
+                          </td>
+                          <td className="px-4 py-4">{assignment.seats}</td>
+                          <td className="px-4 py-4 text-xs text-muted">
+                            {assignment.createdAt
+                              ? assignment.createdAt.toLocaleString("es-ES", {
+                                  day: "2-digit",
+                                  month: "short",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })
+                              : "—"}
+                          </td>
+                          <td className="px-4 py-4 text-right">
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveAssignment(assignment)}
+                              className="rounded-full border border-border px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+                            >
+                              Quitar
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </section>
 
