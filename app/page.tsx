@@ -27,7 +27,7 @@ function Timeline({ items }: { items: TimelineItem[] }) {
       {items.map((event) => (
         <li
           key={event.time}
-          className="rounded-[var(--radius-card)] border border-border/80 bg-surface/80 p-6 shadow-[var(--shadow-soft)]"
+          className="rounded-[var(--radius-card)] border border-border/80 bg-surface/80 p-4 shadow-[var(--shadow-soft)] sm:p-6"
         >
           <div className="flex items-center justify-between text-sm font-semibold uppercase tracking-[0.3em] text-muted">
         <span>{event.time} h</span>
@@ -58,7 +58,7 @@ function StayList({
       {items.map((stay) => (
         <article
           key={stay.name}
-          className="flex h-full flex-col rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6"
+          className="flex h-full flex-col rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 sm:p-6"
         >
           <header className="flex flex-col gap-2">
             <h3 className="text-xl font-semibold">{stay.name}</h3>
@@ -87,7 +87,7 @@ function GiftList({ gifts }: { gifts: GiftOption[] }) {
       {gifts.map((gift) => (
         <article
           key={gift.title}
-          className="flex flex-col gap-4 rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6"
+          className="flex flex-col gap-4 rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 sm:p-6"
         >
           <h3 className="text-xl font-semibold">{gift.title}</h3>
           <p className="text-sm text-muted">{gift.description}</p>
@@ -127,7 +127,7 @@ function PracticalList({ items }: { items: PracticalItem[] }) {
       {items.map((item, index) => (
         <article
           key={`${item.title}-${index}`}
-          className="flex h-full flex-col gap-3 rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6 shadow-[var(--shadow-soft)]"
+          className="flex h-full flex-col gap-3 rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 shadow-[var(--shadow-soft)] sm:p-6"
         >
           <span className="text-2xl" role="img" aria-hidden>
             {item.icon}
@@ -317,7 +317,7 @@ export default async function Home() {
             description={config.prebodaDescription}
           >
             <div className="grid gap-6 md:grid-cols-2">
-              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6 shadow-[var(--shadow-soft)]">
+              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 shadow-[var(--shadow-soft)] sm:p-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
                   {config.prebodaCardOneLabel}
                 </p>
@@ -338,7 +338,7 @@ export default async function Home() {
                   </CTAButton>
                 )}
               </article>
-              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6 shadow-[var(--shadow-soft)]">
+              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 shadow-[var(--shadow-soft)] sm:p-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
                   {config.prebodaCardTwoLabel}
                 </p>
@@ -361,7 +361,7 @@ export default async function Home() {
             description={config.ceremonyDescription}
           >
             <div className="grid gap-6 md:grid-cols-2">
-              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/80 p-6 shadow-[var(--shadow-soft)]">
+              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/80 p-4 shadow-[var(--shadow-soft)] sm:p-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
                   {config.ceremonyCardOneLabel}
                 </p>
@@ -372,7 +372,7 @@ export default async function Home() {
                   {config.ceremonyCardOneDescription}
                 </p>
               </article>
-              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/80 p-6 shadow-[var(--shadow-soft)]">
+              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/80 p-4 shadow-[var(--shadow-soft)] sm:p-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
                   {config.ceremonyCardTwoLabel}
                 </p>
@@ -494,7 +494,7 @@ export default async function Home() {
             background="surface"
           >
             <div className="grid gap-6 md:grid-cols-2">
-              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6 shadow-[var(--shadow-soft)]">
+              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 shadow-[var(--shadow-soft)] sm:p-6">
                 <h3 className="text-xl font-semibold">{config.locationName}</h3>
                 <p className="mt-3 text-sm text-muted">
                   {config.locationAddress}
@@ -511,7 +511,7 @@ export default async function Home() {
                   )}
                 </div>
               </article>
-              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-6 shadow-[var(--shadow-soft)]">
+              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 shadow-[var(--shadow-soft)] sm:p-6">
                 <h3 className="text-xl font-semibold">
                   {config.locationContactTitle}
                 </h3>
