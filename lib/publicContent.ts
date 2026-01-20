@@ -220,14 +220,14 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   heroEyebrow: "Ponferrada · 2025",
   heroTitle: "Alba & Guille",
   heroDescription:
-    "El 12 de septiembre · 2025 nos damos el sí en Finca El Casar · Ponferrada. La celebración empieza con el aperitivo del mediodía y se alarga hasta la madrugada. El día previo nos vemos en la preboda para brindar con vistas a Ponferrada.",
+    "El 12 de septiembre de 2025 nos casamos en Finca El Casar, Ponferrada. Nos encantará compartir el día contigo.",
   heroPrimaryCtaLabel: "Confirmar asistencia",
-  heroSecondaryCtaLabel: "Ver cronograma",
-  heroMapCtaLabel: "Ver ubicación de la finca",
+  heroSecondaryCtaLabel: "Ver horarios",
+  heroMapCtaLabel: "Ver ubicación",
   heroStatDateLabel: "Fecha",
   heroStatLocationLabel: "Lugar",
   heroStatTimeLabel: "Horario",
-  heroStatTimeNote: "adultos únicamente",
+  heroStatTimeNote: "solo adultos",
   eventDate: "12 de septiembre · 2025",
   eventTimeRange: "13:30 — 02:00",
   locationName: "Finca El Casar · Ponferrada",
@@ -241,33 +241,33 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   whatsappLink: "https://wa.me/34600000000",
   giftLink: "",
   prebodaEyebrow: "Preboda",
-  prebodaTitle: "Nos vemos el día antes en el Casino Rooftop",
+  prebodaTitle: "Nos vemos el día antes",
   prebodaDescription:
-    "Nos encantaría brindar contigo la víspera de la boda. Será un encuentro relajado para recibir a quienes llegan antes y ponernos al día.",
-  prebodaCardOneLabel: "Cuándo y dónde",
+    "Quedamos para brindar juntos la víspera. Un rato tranquilo para vernos con calma.",
+  prebodaCardOneLabel: "Lugar y hora",
   prebodaCardOneDescription:
-    "Confirma tu asistencia en el formulario para que sepamos cuántos brindaremos en el rooftop.",
+    "Confirma si vienes para contar contigo.",
   prebodaCardOneCtaLabel: "Ver ubicación",
-  prebodaCardTwoLabel: "Qué te espera",
-  prebodaCardTwoTitle: "Brindis informal entre amigos",
+  prebodaCardTwoLabel: "Qué haremos",
+  prebodaCardTwoTitle: "Brindis tranquilo",
   prebodaCardTwoDescription:
-    "Habrá cócteles, un picoteo ligero y buena música para empezar el fin de semana con energía. Igual que el gran día, será una noche solo para adultos.",
-  ceremonyEyebrow: "Ceremonia civil",
-  ceremonyTitle: "Todo lo que necesitas saber para acompañarnos",
+    "Unos vinos, algo de picoteo y buena conversación. También será solo para adultos.",
+  ceremonyEyebrow: "La boda",
+  ceremonyTitle: "Cómo será el día",
   ceremonyDescription:
-    "La finca abre sus portones a las 13:30 h. Tendremos ceremonia civil al aire libre, banquete con productos del Bierzo y una fiesta larga hasta las 02:00.",
+    "Abrimos puertas a las 13:30 h. Habrá ceremonia, banquete y fiesta hasta la madrugada.",
   ceremonyCardOneLabel: "Cómo llegar",
-  ceremonyCardOneTitle: "Accesos y traslados",
+  ceremonyCardOneTitle: "Accesos y parking",
   ceremonyCardOneDescription:
-    "La finca se encuentra a 10 minutos del centro de Ponferrada. Hay parking asfaltado dentro del recinto. Si prefieres transporte, dinos cuántas plazas necesitas y coordinamos un bus de ida y vuelta.",
+    "La finca está a 10 minutos del centro. Hay parking dentro del recinto.",
   ceremonyCardTwoLabel: "Solo adultos",
-  ceremonyCardTwoTitle: "Celebración para mayores de 18",
+  ceremonyCardTwoTitle: "Celebración para adultos",
   ceremonyCardTwoDescription:
-    "Queremos que disfrutes de un día sin prisas, por eso la boda será exclusivamente para adultos. Si necesitas ayuda con el cuidado de peques, avísanos y compartimos recomendaciones de confianza.",
+    "Queremos un día tranquilo, por eso será una celebración solo para adultos.",
   timelineEyebrow: "Cronograma",
-  timelineTitle: "Así será nuestro gran día",
+  timelineTitle: "Cronograma del día",
   timelineDescription:
-    "Unimos lo mejor de un día en el campo berciano: comida larga, sobremesa al atardecer y fiesta nocturna. Revisa los hitos para organizar traslados y descanso.",
+    "Estos son los momentos principales para que te organices con calma.",
   timelineItems: [
     {
       time: "13:30",
@@ -311,33 +311,33 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     },
   ],
   practicalEyebrow: "Detalles prácticos",
-  practicalTitle: "Lo esencial para llegar con calma",
+  practicalTitle: "Detalles prácticos",
   practicalDescription:
-    "Te dejamos la información clave para organizar traslados, horarios y recomendaciones importantes antes del gran día.",
+    "Lo esencial para venir tranquilo/a y disfrutar el día.",
   practicalItems: [
     {
       icon: "🕒",
       title: "Llegada con tiempo",
       description:
-        "Aconsejamos llegar 20 minutos antes de la ceremonia para aparcar y encontrar tu sitio con tranquilidad.",
+        "Llega 20 minutos antes para aparcar y acomodarte.",
     },
     {
       icon: "🚌",
       title: "Transporte disponible",
       description:
-        "Si necesitas bus, indícalo en el formulario de confirmación para reservar plazas de ida y vuelta.",
+        "Si necesitas bus, indícalo en el formulario.",
     },
     {
       icon: "🍽️",
       title: "Alergias y menús",
       description:
-        "Cuéntanos cualquier intolerancia alimentaria en el formulario para adaptarlo con el catering.",
+        "Cuéntanos alergias o intolerancias en el formulario.",
     },
   ],
-  stayEyebrow: "Planifica tu viaje",
-  stayTitle: "Opciones de alojamiento recomendadas",
+  stayEyebrow: "Alojamiento",
+  stayTitle: "Opciones cerca de la finca",
   stayDescription:
-    "Hemos bloqueado habitaciones con tarifa especial hasta 60 días antes. Llama indicando que asistes a la boda de Alba y Guille.",
+    "Te dejamos algunas opciones cercanas para dormir cómodamente.",
   stayLinkLabel: "Ver mapa",
   stayOptions: [
     {
@@ -362,26 +362,26 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
       link: "https://maps.app.goo.gl/",
     },
   ],
-  giftsEyebrow: "Celebrar con detalles",
-  giftsTitle: "Tu presencia es lo más importante",
+  giftsEyebrow: "Regalos",
+  giftsTitle: "Tu presencia es el mejor regalo",
   giftsDescription:
-    "Solo con tu presencia nos haces muy felices. Si aún así deseas tener un detalle con nosotros, aquí tienes algunas alternativas.",
+    "Si quieres tener un detalle, aquí tienes algunas opciones.",
   giftsRegistryTitle: "Mesa de regalos",
   giftsRegistryDescription:
-    "Seleccionamos algunos detalles para nuestro nuevo hogar. ¡Gracias por ayudarnos a elegir!",
-  giftsRegistryCtaLabel: "Ver mesa online",
+    "Una lista con algunas ideas para el nuevo hogar.",
+  giftsRegistryCtaLabel: "Ver lista",
   giftsContactWhatsappLabel: "Escribir por WhatsApp",
   giftsContactPhoneLabel: "Llamar por teléfono",
-  giftsBankTitle: "Regalo en privado",
+  giftsBankTitle: "Regalo privado",
   giftsBankDescription:
-    "Si quieres hacernos un regalo, escríbenos por WhatsApp y te contamos cómo hacerlo.",
+    "Si prefieres un detalle directo, escríbenos y te contamos.",
   rsvpEyebrow: "Confirmar asistencia",
   rsvpTitle: "Confirma tu asistencia",
   rsvpDescription:
-    "Queremos preparar todo a tu medida. Completa el formulario y cuéntanos si vienes con acompañantes, intolerancias alimentarias u otras necesidades.",
-  rsvpContactLead: "¿Prefieres otro canal? Escríbenos a",
+    "Completa el formulario para confirmar si vienes.",
+  rsvpContactLead: "Si prefieres, escríbenos a",
   rsvpContactWhatsappLead: "o por WhatsApp al",
-  rsvpImportantTitle: "Información importante",
+  rsvpImportantTitle: "Importante",
   rsvpImportantNotes: [
     "Evento solo para adultos (mayores de 18). Si necesitas referencias de canguros en Ponferrada, escríbenos y te ayudamos.",
     "Si tienes alergias o intolerancias, cuéntanoslo para coordinarlo con el equipo de cocina.",
@@ -402,7 +402,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     guestsLabel: "¿Cuántos adultos vienen?",
     guestsPlaceholderYes: "Incluyéndote",
     guestsPlaceholderNo: "Selecciona tu asistencia primero",
-    guestsHelper: "Máximo 6 adultos por invitación. Si sois más, cuéntanoslo abajo.",
+    guestsHelper: "Máximo 6 adultos por invitación. Si sois más, cuéntanoslo.",
     guestsError: "Indica un número válido de asistentes.",
     guestNamesLabel: "Nombres de acompañantes (opcional)",
     guestNamesPlaceholder: "Ej: Marta (pareja), Juan (colega)",
@@ -411,7 +411,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     prebodaNoLabel: "No podré ir",
     prebodaNote: "Viernes 11/09 · 19:30 · Casino Rooftop Ponferrada.",
     transportLegend: "¿Necesitas traslado?",
-    transportYesLabel: "Sí, avísenme los horarios",
+    transportYesLabel: "Sí, quiero bus",
     transportNoLabel: "No, iremos por nuestra cuenta",
     transportNote:
       "Organizaremos bus desde Ponferrada si hay suficientes plazas.",
@@ -420,7 +420,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     transportSeatsError: "Indica un número de plazas válido (≤ asistentes).",
     requestsLabel: "Comentarios o necesidades especiales",
     requestsPlaceholder:
-      "Intolerancias, alergias, canciones que no pueden faltar...",
+      "Intolerancias, alergias, algo a tener en cuenta...",
     submitLabel: "Enviar respuesta",
     submitLoadingLabel: "Guardando...",
     successMessage:
@@ -429,28 +429,28 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   faqEyebrow: "FAQ",
   faqTitle: "Preguntas frecuentes",
   faqDescription:
-    "Resolvemos las dudas más habituales para que solo tengas que disfrutar.",
+    "Resolvemos las dudas más comunes.",
   faqItems: [
     {
       question: "¿Hay dress code?",
       answer:
-        "Queremos un look elegante pero cómodo. Evita tonos blancos o marfil reservados para la novia.",
+        "Elegante y cómodo. Evita blanco o marfil.",
     },
     {
       question: "¿Puedo ir con niños?",
       answer:
-        "La celebración está pensada para adultos. Si necesitas ayuda con el cuidado de peques, escríbenos.",
+        "Será solo para adultos. Si necesitas ayuda, escríbenos.",
     },
     {
       question: "¿Hasta cuándo puedo confirmar?",
       answer:
-        "Necesitamos confirmaciones antes del 15 de agosto para cerrar catering y transporte.",
+        "Antes del 15 de agosto.",
     },
   ],
   locationEyebrow: "Cómo llegar",
   locationTitle: "Ubicación y contacto",
   locationDescription:
-    "La finca cuenta con aparcamiento propio. Si necesitas ayuda con rutas, transporte o recomendaciones, escríbenos y te echamos una mano.",
+    "Si necesitas ayuda con rutas o transporte, escríbenos.",
   locationMapLabel: "Abrir en Maps",
   weddingMapsUrl: "",
   prebodaMapsUrl: "",
@@ -462,11 +462,11 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   locationWhatsappLabel: "WhatsApp",
   locationWhatsappActionLabel: "Abrir chat",
   footerEyebrow: "Nos vemos en el gran día",
-  footerTitle: "Gracias por acompañarnos en esta celebración",
+  footerTitle: "Gracias por acompañarnos",
   footerCtaLabel: "Confirmar asistencia",
   footerCopyright:
     "© {year} {brandName}. Todos los derechos reservados.",
-  footerMadeWith: "Hecho con amor usando Next.js, Vercel y Firebase.",
+  footerMadeWith: "Hecho con amor.",
   heroBackgroundImages: [
     "/photos/hero/boda1.jpeg",
     "/photos/hero/boda2.jpg",
