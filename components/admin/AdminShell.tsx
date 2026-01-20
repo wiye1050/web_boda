@@ -23,14 +23,20 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const drawerRef = useRef<HTMLElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+    menuButtonRef.current?.focus();
+  };
 
   useEffect(() => {
     if (!isMenuOpen) return;
+    closeButtonRef.current?.focus();
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        setIsMenuOpen(false);
-        menuButtonRef.current?.focus();
+        closeMenu();
       }
       if (event.key === "Tab" && drawerRef.current) {
         const focusable = drawerRef.current.querySelectorAll<HTMLElement>(
@@ -98,6 +104,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             ref={menuButtonRef}
             type="button"
             onClick={() => setIsMenuOpen(true)}
+            aria-expanded={isMenuOpen}
+            aria-controls="admin-mobile-menu"
             className="rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
           >
             Menú
@@ -130,11 +138,12 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <button
               type="button"
               aria-label="Cerrar menú"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={closeMenu}
               className="absolute inset-0 bg-black/45"
             />
             <aside
               ref={drawerRef}
+              id="admin-mobile-menu"
               className="relative h-full w-72 max-w-[85vw] bg-surface px-5 py-6 shadow-xl"
             >
               <div className="mb-6 flex items-center justify-between">
@@ -144,13 +153,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                   </p>
                   <p className="mt-1 text-lg font-semibold">Panel</p>
                 </div>
-                  <button
-                    type="button"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-                  >
-                    Cerrar
-                  </button>
+                <button
+                  ref={closeButtonRef}
+                  type="button"
+                  onClick={closeMenu}
+                  className="rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+                >
+                  Cerrar
+                </button>
                 </div>
               <nav className="flex flex-col gap-2">
                 {NAV_LINKS.map((link) => {
@@ -162,7 +172,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                       key={link.href}
                       href={link.href}
                       aria-current={isActive ? "page" : undefined}
-                      onClick={() => setIsMenuOpen(false)}
+                      onClick={closeMenu}
                       className={[
                         "rounded-xl px-4 py-3 text-sm font-medium transition",
                         isActive
@@ -180,7 +190,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               <button
                 type="button"
                 onClick={() => {
-                  setIsMenuOpen(false);
+                  closeMenu();
                   firebaseSignOut();
                 }}
                 className="mt-6 w-full rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"

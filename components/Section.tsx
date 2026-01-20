@@ -47,7 +47,6 @@ export function Section({
       ]
         .filter(Boolean)
         .join(" ")}
-      style={{ contentVisibility: "auto", containIntrinsicSize: "1px 900px" }}
     >
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 sm:gap-10 sm:px-8">
         {(eyebrow || title || description) && (
