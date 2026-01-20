@@ -105,13 +105,23 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           <h1 className="text-sm font-semibold uppercase tracking-[0.4em] text-muted">
             Panel
           </h1>
-          <button
-            type="button"
-            onClick={() => firebaseSignOut()}
-            className="rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-          >
-            Salir
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+            >
+              Ver web
+            </Link>
+            <button
+              type="button"
+              onClick={() => firebaseSignOut()}
+              className="rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+            >
+              Salir
+            </button>
+          </div>
         </header>
         {isMenuOpen && (
           <div
@@ -193,13 +203,23 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 {user?.email ?? "Usuario sin correo"}
               </span>
             </div>
-            <button
-              type="button"
-              onClick={() => firebaseSignOut()}
-              className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-            >
-              Cerrar sesión
-            </button>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+              >
+                Ver web
+              </Link>
+              <button
+                type="button"
+                onClick={() => firebaseSignOut()}
+                className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+              >
+                Cerrar sesión
+              </button>
+            </div>
           </div>
         </div>
         <main className="mx-auto w-full max-w-6xl px-5 py-8">{children}</main>
