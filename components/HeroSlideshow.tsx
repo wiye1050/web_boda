@@ -146,8 +146,8 @@ export function HeroSlideshow({
         style={{ opacity: isFading ? 1 : 0 }}
         onError={() => handleImageError(upcomingImage)}
       />
-      <div className="absolute inset-0 bg-black/30" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(0,0,0,0.35),_transparent_55%),radial-gradient(circle_at_80%_20%,_rgba(0,0,0,0.15),_transparent_60%)]" />
+      <div className="absolute inset-0 bg-black/40 sm:bg-black/30" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(0,0,0,0.55),_transparent_55%),radial-gradient(circle_at_80%_20%,_rgba(0,0,0,0.25),_transparent_60%)] sm:bg-[radial-gradient(circle_at_20%_20%,_rgba(0,0,0,0.35),_transparent_55%),radial-gradient(circle_at_80%_20%,_rgba(0,0,0,0.15),_transparent_60%)]" />
     </div>
   );
 }
