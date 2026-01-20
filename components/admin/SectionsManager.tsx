@@ -629,8 +629,8 @@ export function SectionsManager() {
           {sortedSections.map((section) => {
             const isOpen = openSections.includes(section.id);
             return (
-              <div key={section.id} className="px-5 py-4">
-                <div className="grid gap-4 md:grid-cols-[1.1fr_0.7fr_0.7fr_1fr_0.7fr] md:items-center">
+              <div key={section.id} className="px-4 py-3 sm:px-5 sm:py-4">
+                <div className="grid gap-3 md:grid-cols-[1.1fr_0.7fr_0.7fr_1fr_0.7fr] md:items-center">
                   <button
                     type="button"
                     onClick={() => toggleSection(section.id)}
@@ -652,7 +652,7 @@ export function SectionsManager() {
                       <p className="text-sm font-semibold text-foreground">
                         {SECTION_LABELS[section.id] ?? section.id}
                       </p>
-                      <p className="text-xs uppercase tracking-[0.3em] text-muted">
+                      <p className="text-[0.65rem] uppercase tracking-[0.2em] text-muted">
                         {section.id}
                       </p>
                     </span>
@@ -687,20 +687,24 @@ export function SectionsManager() {
                     />
                     <span>{section.nav ? "Sí" : "No"}</span>
                   </label>
-                  <label className="flex flex-col gap-2 md:block">
-                    <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted md:hidden">
-                      Texto menú
-                    </span>
-                    <input
-                      value={section.label}
-                      onChange={(event) =>
-                        updateSection(section.id, { label: event.target.value })
-                      }
-                      className="w-full rounded-full border border-border/80 bg-background px-4 py-2 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-                      placeholder="Texto del menú"
-                    />
-                  </label>
-                  <div className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-muted md:justify-start">
+                  {section.nav && (
+                    <label className="flex flex-col gap-2 md:block">
+                      <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted md:hidden">
+                        Texto menú
+                      </span>
+                      <input
+                        value={section.label}
+                        onChange={(event) =>
+                          updateSection(section.id, {
+                            label: event.target.value,
+                          })
+                        }
+                        className="w-full rounded-full border border-border/80 bg-background px-4 py-2 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                        placeholder="Texto del menú"
+                      />
+                    </label>
+                  )}
+                  <div className="flex items-center gap-2 text-[0.65rem] uppercase tracking-[0.25em] text-muted md:justify-start">
                     <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted md:hidden">
                       Orden
                     </span>
@@ -725,7 +729,7 @@ export function SectionsManager() {
                 </div>
 
                 {isOpen && (
-                  <div className="mt-6 grid gap-6 rounded-[20px] border border-border/70 bg-background/60 p-5">
+                  <div className="mt-4 grid gap-5 rounded-[20px] border border-border/70 bg-background/60 p-4 sm:mt-6 sm:p-5">
                     {section.id === "preboda" && (
                       <div className="grid gap-4">
                         <InputField
