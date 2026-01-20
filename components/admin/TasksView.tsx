@@ -224,7 +224,7 @@ export function TasksView() {
           <div className="flex flex-col justify-end">
             <button
               type="submit"
-              className="rounded-full bg-primary px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.3em] text-primary-foreground transition hover:translate-y-[-1px] hover:shadow-lg hover:shadow-primary/30"
+              className="w-full rounded-full bg-primary px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.3em] text-primary-foreground transition hover:translate-y-[-1px] hover:shadow-lg hover:shadow-primary/30 md:w-auto"
             >
               Añadir
             </button>

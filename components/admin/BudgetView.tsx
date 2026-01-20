@@ -152,10 +152,10 @@ export function BudgetView() {
               className="rounded-full border border-border/80 bg-background px-4 py-2 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end md:justify-end">
             <button
               type="submit"
-              className="rounded-full bg-primary px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.3em] text-primary-foreground transition hover:translate-y-[-1px] hover:shadow-lg hover:shadow-primary/30"
+              className="w-full rounded-full bg-primary px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.3em] text-primary-foreground transition hover:translate-y-[-1px] hover:shadow-lg hover:shadow-primary/30 md:w-auto"
             >
               Añadir
             </button>
