@@ -672,21 +672,22 @@ export function SectionsManager() {
                     />
                     <span>{section.enabled ? "Sí" : "No"}</span>
                   </label>
-                  <label className="inline-flex items-center gap-3 text-sm">
-                    <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted md:hidden">
-                      Menú
-                    </span>
-                    <input
-                      type="checkbox"
-                      checked={section.nav}
-                      onChange={(event) =>
-                        updateSection(section.id, {
-                          nav: event.target.checked,
-                        })
-                      }
-                    />
-                    <span>{section.nav ? "Sí" : "No"}</span>
-                  </label>
+                  <div className="grid grid-cols-2 items-center gap-3 md:contents">
+                    <label className="inline-flex items-center gap-3 text-sm">
+                      <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted md:hidden">
+                        Menú
+                      </span>
+                      <input
+                        type="checkbox"
+                        checked={section.nav}
+                        onChange={(event) =>
+                          updateSection(section.id, {
+                            nav: event.target.checked,
+                          })
+                        }
+                      />
+                      <span>{section.nav ? "Sí" : "No"}</span>
+                    </label>
                   {section.nav && (
                     <label className="flex flex-col gap-2 md:block">
                       <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted md:hidden">
@@ -704,27 +705,28 @@ export function SectionsManager() {
                       />
                     </label>
                   )}
-                  <div className="flex items-center gap-2 text-[0.65rem] uppercase tracking-[0.25em] text-muted md:justify-start">
-                    <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted md:hidden">
-                      Orden
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => moveSection(section.id, "up")}
-                      className="rounded-full border border-border px-2 py-1 transition hover:border-primary/60 hover:text-primary"
-                      aria-label="Subir sección"
-                    >
-                      ↑
-                    </button>
-                    <span>{section.order}</span>
-                    <button
-                      type="button"
-                      onClick={() => moveSection(section.id, "down")}
-                      className="rounded-full border border-border px-2 py-1 transition hover:border-primary/60 hover:text-primary"
-                      aria-label="Bajar sección"
-                    >
-                      ↓
-                    </button>
+                    <div className="flex items-center gap-2 text-[0.65rem] uppercase tracking-[0.25em] text-muted md:justify-start">
+                      <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted md:hidden">
+                        Orden
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => moveSection(section.id, "up")}
+                        className="rounded-full border border-border px-2 py-1 transition hover:border-primary/60 hover:text-primary"
+                        aria-label="Subir sección"
+                      >
+                        ↑
+                      </button>
+                      <span>{section.order}</span>
+                      <button
+                        type="button"
+                        onClick={() => moveSection(section.id, "down")}
+                        className="rounded-full border border-border px-2 py-1 transition hover:border-primary/60 hover:text-primary"
+                        aria-label="Bajar sección"
+                      >
+                        ↓
+                      </button>
+                    </div>
                   </div>
                 </div>
 
