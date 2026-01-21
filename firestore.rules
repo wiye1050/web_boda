@@ -89,8 +89,7 @@ service cloud.firestore {
 
     function optionalStringList(data, key, maxItems) {
       return !data.keys().hasAny([key]) ||
-        (data[key] is list && data[key].size() <= maxItems &&
-         data[key].hasOnly((item) => item is string && item.size() >= 1 && item.size() <= 200));
+        (data[key] is list && data[key].size() <= maxItems);
     }
 
     function optionalTransportSeatsAssigned(data) {
