@@ -364,8 +364,11 @@ function AmountField({
   const [value, setValue] = useState(defaultValue != null ? String(defaultValue) : "");
 
   useEffect(() => {
-    setValue(defaultValue != null ? String(defaultValue) : "");
-  }, [defaultValue]);
+    const next = defaultValue != null ? String(defaultValue) : "";
+    if (value !== next) {
+      setValue(next);
+    }
+  }, [defaultValue, value]);
 
   return (
     <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted">

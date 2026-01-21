@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type HeroSlideshowProps = {
@@ -49,16 +50,25 @@ export function HeroSlideshow({
   );
 
   useEffect(() => {
-    setInvalidImages([]);
-  }, [normalizedImages]);
+    if (invalidImages.length > 0) {
+      setInvalidImages([]);
+    }
+  }, [normalizedImages, invalidImages.length]);
 
   useEffect(() => {
     if (availableImages.length === 0) return;
-    setCurrentIndex(0);
-    setNextIndex(availableImages.length > 1 ? 1 : 0);
-    setIsFading(false);
+    const nextSafe = availableImages.length > 1 ? 1 : 0;
+    if (currentIndex !== 0) {
+      setCurrentIndex(0);
+    }
+    if (nextIndex !== nextSafe) {
+      setNextIndex(nextSafe);
+    }
+    if (isFading) {
+      setIsFading(false);
+    }
     currentIndexRef.current = 0;
-  }, [availableImages.length]);
+  }, [availableImages.length, currentIndex, nextIndex, isFading]);
 
   useEffect(() => {
     currentIndexRef.current = currentIndex;
@@ -127,24 +137,24 @@ export function HeroSlideshow({
         .filter(Boolean)
         .join(" ")}
     >
-      <img
+      <Image
         src={currentImage}
         alt=""
         aria-hidden
-        loading="eager"
-        fetchPriority={isInitialImage ? "high" : "auto"}
-        decoding="async"
+        priority={isInitialImage}
+        fill
+        sizes="100vw"
         className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out"
         style={{ opacity: isFading ? 0 : 1 }}
         onError={() => handleImageError(currentImage)}
       />
-      <img
+      <Image
         src={upcomingImage}
         alt=""
         aria-hidden
         loading="lazy"
-        fetchPriority="low"
-        decoding="async"
+        fill
+        sizes="100vw"
         className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out"
         style={{ opacity: isFading ? 1 : 0 }}
         onError={() => handleImageError(upcomingImage)}

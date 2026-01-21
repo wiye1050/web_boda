@@ -33,10 +33,9 @@ export function RsvpView() {
     return Array.from(set.values()).sort((a, b) => a.localeCompare(b, "es"));
   }, [records]);
 
-  useEffect(() => {
-    if (selectedTag !== "all" && !availableTags.includes(selectedTag)) {
-      setSelectedTag("all");
-    }
+  const safeSelectedTag = useMemo(() => {
+    if (selectedTag === "all") return "all";
+    return availableTags.includes(selectedTag) ? selectedTag : "all";
   }, [availableTags, selectedTag]);
 
   const filtered = useMemo(() => {
@@ -78,8 +77,8 @@ export function RsvpView() {
       result = result.filter((record) => !record.processed);
     }
 
-    if (selectedTag !== "all") {
-      result = result.filter((record) => record.tags.includes(selectedTag));
+    if (safeSelectedTag !== "all") {
+      result = result.filter((record) => record.tags.includes(safeSelectedTag));
     }
 
     return result;
@@ -89,7 +88,7 @@ export function RsvpView() {
     onlyPreboda,
     onlyTransport,
     processedFilter,
-    selectedTag,
+    safeSelectedTag,
     records,
     search,
   ]);
@@ -119,7 +118,7 @@ export function RsvpView() {
       onlyPreboda ||
       onlyTransport ||
       processedFilter !== "all" ||
-      selectedTag !== "all" ||
+      safeSelectedTag !== "all" ||
       sortOption !== "date-desc"
     );
   }, [
@@ -128,7 +127,7 @@ export function RsvpView() {
     onlyTransport,
     processedFilter,
     search,
-    selectedTag,
+    safeSelectedTag,
     sortOption,
     statusFilter,
   ]);
@@ -328,7 +327,7 @@ export function RsvpView() {
               </label>
               <select
                 id="tags"
-                value={selectedTag}
+                value={safeSelectedTag}
                 onChange={(event) => setSelectedTag(event.target.value)}
                 className="rounded-full border border-border/80 bg-surface px-4 py-2 text-xs uppercase tracking-[0.3em] text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
               >

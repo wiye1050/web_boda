@@ -750,7 +750,7 @@ export function ConfigView() {
             maxLength={FIELD_LIMITS.heroBackgroundImages}
           />
           <p className="text-xs text-muted">
-            Usa rutas de /public. Ejemplo: ["\/photos\/hero\/01.webp"].
+            Usa rutas de /public. Ejemplo: <code>[&quot;/photos/hero/01.webp&quot;]</code>.
           </p>
           {heroImagesError && (
             <p className="text-xs text-primary">{heroImagesError}</p>
@@ -1016,7 +1016,7 @@ export function ConfigView() {
             maxLength={FIELD_LIMITS.practicalItems}
           />
           <p className="text-xs text-muted">
-            Formato: [{"{"}"icon":"🕒","title":"Llegada","description":"..."{"}"}].
+            Formato: <code>[{"{"}icon:&quot;🕒&quot;, title:&quot;Llegada&quot;, description:&quot;...&quot;{"}"}]</code>.
           </p>
           {practicalItemsError && (
             <p className="text-xs text-primary">{practicalItemsError}</p>
@@ -1338,7 +1338,7 @@ export function ConfigView() {
             maxLength={FIELD_LIMITS.faqItems}
           />
           <p className="text-xs text-muted">
-            Formato: [{"{"}"question":"...?","answer":"..."{"}"}].
+            Formato: <code>[{"{"}question:&quot;...?&quot;, answer:&quot;...&quot;{"}"}]</code>.
           </p>
           {faqItemsError && (
             <p className="text-xs text-primary">{faqItemsError}</p>

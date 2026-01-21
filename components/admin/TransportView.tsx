@@ -529,8 +529,11 @@ function AssignForm({
 
   useEffect(() => {
     if (!selectedRsvp) return;
-    setSeats(String(suggestedSeats));
-  }, [selectedRsvp, suggestedSeats]);
+    const next = String(suggestedSeats);
+    if (seats !== next) {
+      setSeats(next);
+    }
+  }, [selectedRsvp, suggestedSeats, seats]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

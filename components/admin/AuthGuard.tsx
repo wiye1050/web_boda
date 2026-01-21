@@ -38,7 +38,9 @@ export function AuthGuard({
     }
 
     if (allowedEmails.length === 0) {
-      setIsChecking(false);
+      if (isChecking) {
+        setIsChecking(false);
+      }
       return;
     }
 
@@ -54,8 +56,10 @@ export function AuthGuard({
       return;
     }
 
-    setIsChecking(false);
-  }, [isLoading, isAuthorized, pathname, redirectTo, router, user]);
+    if (isChecking) {
+      setIsChecking(false);
+    }
+  }, [isLoading, isAuthorized, pathname, redirectTo, router, user, isChecking]);
 
   if (isLoading || isChecking) {
     return (
