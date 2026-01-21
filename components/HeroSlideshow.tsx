@@ -114,7 +114,7 @@ export function HeroSlideshow({
 
   useEffect(() => {
     if (!upcomingImage) return;
-    const image = new Image();
+    const image = new window.Image();
     image.src = upcomingImage;
   }, [upcomingImage]);
 

@@ -3,16 +3,32 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function isAdmin() {
-      return request.auth != null &&
-        (
-          request.auth.uid in [
-            "Pes0MiUoP0TAKPabrIUGyxevsNX2",
-          ] ||
-          request.auth.token.email in [
-            "guillemenendez1050@gmail.com",
-            "varelamaciasalba@gmail.com",
-          ]
-        );
+      if (request.auth == null) return false;
+
+      // Lista fija como respaldo
+      if (
+        request.auth.uid in [
+          "Pes0MiUoP0TAKPabrIUGyxevsNX2",
+        ] ||
+        request.auth.token.email in [
+          "guillemenendez1050@gmail.com",
+          "varelamaciasalba@gmail.com",
+        ]
+      ) {
+        return true;
+      }
+
+      // Lista editable en private_config/general
+      let adminDoc = get(/databases/$(database)/documents/private_config/general);
+      let adminEmails = adminDoc.exists() && adminDoc.data.adminEmails is list
+        ? adminDoc.data.adminEmails
+        : [];
+      let adminUids = adminDoc.exists() && adminDoc.data.adminUids is list
+        ? adminDoc.data.adminUids
+        : [];
+
+      return (request.auth.token.email in adminEmails) ||
+        (request.auth.uid in adminUids);
     }
 
     function stringField(field, minLen, maxLen) {
@@ -69,6 +85,12 @@ service cloud.firestore {
       return !data.keys().hasAny(["transportRouteId"]) ||
         data.transportRouteId == null ||
         stringField(data.transportRouteId, 1, 200);
+    }
+
+    function optionalStringList(data, key, maxItems) {
+      return !data.keys().hasAny([key]) ||
+        (data[key] is list && data[key].size() <= maxItems &&
+         data[key].hasOnly((item) => item is string && item.size() >= 1 && item.size() <= 200));
     }
 
     function optionalTransportSeatsAssigned(data) {
@@ -529,35 +551,39 @@ service cloud.firestore {
           "rsvpContactLead",
           "rsvpContactWhatsappLead",
           "rsvpImportantTitle",
-          "rsvpImportantNotes",
-          "rsvpForm",
-          "faqEyebrow",
-          "faqTitle",
-          "faqDescription",
-          "faqItems",
-          "locationEyebrow",
-          "locationTitle",
-          "locationDescription",
-          "locationContactTitle",
-          "locationEmailLabel",
-          "locationPhoneLabel",
-          "locationWhatsappLabel",
-          "locationWhatsappActionLabel",
-          "footerEyebrow",
-          "footerTitle",
-          "footerCtaLabel",
-          "footerCopyright",
-          "footerMadeWith",
-          "heroBackgroundImages",
-          "heroBackgroundIntervalMs",
-          "mobileBar",
-          "mapsModal",
-          "sections",
-        ]);
+        "rsvpImportantNotes",
+        "rsvpForm",
+        "faqEyebrow",
+        "faqTitle",
+        "faqDescription",
+        "faqItems",
+        "locationEyebrow",
+        "locationTitle",
+        "locationDescription",
+        "locationContactTitle",
+        "locationEmailLabel",
+        "locationPhoneLabel",
+        "locationWhatsappLabel",
+        "locationWhatsappActionLabel",
+        "footerEyebrow",
+        "footerTitle",
+        "footerCtaLabel",
+        "footerCopyright",
+        "footerMadeWith",
+        "heroBackgroundImages",
+        "heroBackgroundIntervalMs",
+        "mobileBar",
+        "mapsModal",
+        "sections",
+      ]);
     }
 
     match /private_config/{docId} {
-      allow read, write: if isAdmin();
+      allow read, write: if isAdmin() &&
+        optionalString(request.resource.data, "bankHolder", 0, 200) &&
+        optionalString(request.resource.data, "bankIban", 0, 80) &&
+        optionalStringList(request.resource.data, "adminEmails", 50) &&
+        optionalStringList(request.resource.data, "adminUids", 50);
     }
 
     match /{document=**} {

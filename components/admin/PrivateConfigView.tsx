@@ -13,6 +13,8 @@ import {
 const FIELD_LIMITS = {
   bankHolder: 200,
   bankIban: 40,
+  adminEmails: 2000,
+  adminUids: 2000,
 };
 
 export function PrivateConfigView() {
@@ -57,6 +59,8 @@ export function PrivateConfigView() {
       await setDoc(doc(db, "private_config", "general"), {
         bankHolder: config.bankHolder.trim(),
         bankIban: config.bankIban.trim(),
+        adminEmails: config.adminEmails,
+        adminUids: config.adminUids,
       });
       setMessage("Datos privados guardados correctamente.");
     } catch (err) {
@@ -121,6 +125,34 @@ export function PrivateConfigView() {
           onChange={(value) => setConfig((prev) => ({ ...prev, bankIban: value }))}
           maxLength={FIELD_LIMITS.bankIban}
         />
+        <TextAreaField
+          label="Admins (emails separados por coma)"
+          value={config.adminEmails.join(", ")}
+          onChange={(value) =>
+            setConfig((prev) => ({
+              ...prev,
+              adminEmails: value
+                .split(",")
+                .map((item) => item.trim().toLowerCase())
+                .filter(Boolean),
+            }))
+          }
+          maxLength={FIELD_LIMITS.adminEmails}
+        />
+        <TextAreaField
+          label="Admins (UIDs opcionales, separados por coma)"
+          value={config.adminUids.join(", ")}
+          onChange={(value) =>
+            setConfig((prev) => ({
+              ...prev,
+              adminUids: value
+                .split(",")
+                .map((item) => item.trim())
+                .filter(Boolean),
+            }))
+          }
+          maxLength={FIELD_LIMITS.adminUids}
+        />
         <button
           type="submit"
           disabled={isSaving}
@@ -165,6 +197,44 @@ function InputField({
         onChange={(event) => onChange(event.target.value)}
         maxLength={maxLength}
         className="rounded-full border border-border/80 bg-background px-4 py-2.5 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+      />
+    </label>
+  );
+}
+
+function TextAreaField({
+  label,
+  value,
+  onChange,
+  maxLength,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  maxLength?: number;
+}) {
+  const inputId = useId();
+  const showCount = typeof maxLength === "number";
+  const length = value.length;
+
+  return (
+    <label className="flex flex-col gap-2 text-left">
+      <span className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+        <span>{label}</span>
+        {showCount && (
+          <span className="text-[0.65rem] tracking-[0.2em]">
+            {length}/{maxLength}
+          </span>
+        )}
+      </span>
+      <textarea
+        id={inputId}
+        name={inputId}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        maxLength={maxLength}
+        rows={3}
+        className="rounded-2xl border border-border/80 bg-background px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
       />
     </label>
   );
