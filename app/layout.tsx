@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: "Alba & Guille | Nuestra boda",
     images: [
       {
-        url: "/photos/hero/boda1.jpeg",
+        url: "/photos/hero/boda0.png",
         width: 1200,
         height: 630,
         alt: "Alba y Guille celebrando su boda",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     title: "Alba & Guille | Nuestra boda",
     description:
       "Horarios, ubicación y confirmación de asistencia para la boda de Alba y Guille en la finca El Casar (Ponferrada).",
-    images: ["/photos/hero/boda1.jpeg"],
+    images: ["/photos/hero/boda0.png"],
   },
 };
 
