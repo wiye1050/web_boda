@@ -38,9 +38,11 @@ export const metadata: Metadata = {
     images: [
       {
         url: "https://web-boda-delta.vercel.app/photos/hero/share-boda0.png",
+        secureUrl: "https://web-boda-delta.vercel.app/photos/hero/share-boda0.png",
         width: 1200,
         height: 630,
         alt: "Alba y Guille celebrando su boda",
+        type: "image/png",
       },
     ],
     locale: "es_ES",
