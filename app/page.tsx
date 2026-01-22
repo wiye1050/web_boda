@@ -257,7 +257,7 @@ export default async function Home() {
             <h1 className="font-display text-[clamp(2.6rem,9vw,4.2rem)] font-semibold leading-[1.05] drop-shadow-[0_2px_12px_rgba(0,0,0,0.35)] sm:text-[clamp(3.5rem,10vw,6rem)]">
               {config.heroTitle}
             </h1>
-            <p className="max-w-xl text-sm text-muted drop-shadow-[0_1px_8px_rgba(0,0,0,0.25)] sm:text-base">
+            <p className="max-w-xl text-base text-foreground/95 drop-shadow-[0_1px_10px_rgba(0,0,0,0.35)] sm:text-lg">
               {config.heroDescription}
             </p>
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
