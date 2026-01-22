@@ -58,6 +58,18 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isMenuOpen]);
 
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
+
   return (
     <div className="flex min-h-screen w-full bg-background text-foreground">
       <aside className="hidden w-64 flex-col bg-surface/95 px-6 py-8 shadow-lg shadow-black/5 md:flex">
