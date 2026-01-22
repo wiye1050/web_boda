@@ -1,7 +1,7 @@
 // Componente cliente porque interactúa con Firestore y maneja estado de UI.
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { firebaseClient } from "@/lib/firebase";
 import { DEFAULT_PUBLIC_CONTENT, type RsvpFormCopy } from "@/lib/publicContent";
@@ -42,6 +42,9 @@ type RSVPFormProps = {
   copy?: RsvpFormCopy;
 };
 
+const LOCAL_COOLDOWN_KEY = "rsvpLastSubmittedAt";
+const COOLDOWN_MS = 60_000;
+
 export function RSVPForm({
   importantTitle = DEFAULT_PUBLIC_CONTENT.rsvpImportantTitle,
   importantNotes = DEFAULT_PUBLIC_CONTENT.rsvpImportantNotes,
@@ -52,8 +55,20 @@ export function RSVPForm({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [botField, setBotField] = useState("");
   const startedAt = useRef(Date.now());
+  const lastSubmittedAt = useRef<number>(0);
   const radioBaseClasses =
     "inline-flex w-full items-center justify-center gap-2 rounded-full border px-4 py-3 text-sm uppercase tracking-[0.15em] transition focus-within:outline focus-within:outline-2 focus-within:outline-offset-[3px] focus-within:outline-primary sm:flex-1 sm:tracking-[0.2em]";
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const stored = window.localStorage.getItem(LOCAL_COOLDOWN_KEY);
+    if (stored) {
+      const parsed = Number.parseInt(stored, 10);
+      if (!Number.isNaN(parsed)) {
+        lastSubmittedAt.current = parsed;
+      }
+    }
+  }, []);
 
   const attending = form.attendance === "si";
   const guestsNumber = Number.parseInt(form.guests, 10);
@@ -192,6 +207,17 @@ export function RSVPForm({
       return;
     }
 
+    const now = Date.now();
+    if (now - lastSubmittedAt.current < COOLDOWN_MS) {
+      const remaining = Math.ceil((COOLDOWN_MS - (now - lastSubmittedAt.current)) / 1000);
+      setStatus("error");
+      setErrorMessage(
+        `Hemos recibido un envío reciente. Espera ${remaining} segundos antes de volver a intentarlo.`,
+      );
+      setTimeout(() => setStatus("idle"), 6000);
+      return;
+    }
+
     if (!isValid || status === "loading") {
       return;
     }
@@ -223,6 +249,13 @@ export function RSVPForm({
 
       setStatus("success");
       setForm(INITIAL_STATE);
+      lastSubmittedAt.current = Date.now();
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(
+          LOCAL_COOLDOWN_KEY,
+          String(lastSubmittedAt.current),
+        );
+      }
     } catch (error) {
       console.error("Error guardando RSVP", error);
       setStatus("error");
