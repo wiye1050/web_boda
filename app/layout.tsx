@@ -25,6 +25,34 @@ export const metadata: Metadata = {
   },
   description:
     "Detalles para celebrar con Alba y Guille en la finca El Casar (Ponferrada): horarios, ubicación, RSVP y logística del gran día.",
+  metadataBase: new URL("https://web-boda-delta.vercel.app"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Alba & Guille | Nuestra boda",
+    description:
+      "Horarios, ubicación y confirmación de asistencia para la boda de Alba y Guille en la finca El Casar (Ponferrada).",
+    url: "https://web-boda-delta.vercel.app/",
+    siteName: "Alba & Guille | Nuestra boda",
+    images: [
+      {
+        url: "/photos/hero/boda1.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "Alba y Guille celebrando su boda",
+      },
+    ],
+    locale: "es_ES",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Alba & Guille | Nuestra boda",
+    description:
+      "Horarios, ubicación y confirmación de asistencia para la boda de Alba y Guille en la finca El Casar (Ponferrada).",
+    images: ["/photos/hero/boda1.jpeg"],
+  },
 };
 
 export default function RootLayout({

@@ -7,6 +7,10 @@ export const metadata: Metadata = {
   title: "Panel de administración | Alba & Guille",
   description:
     "Gestiona invitados, RSVPs y logística del evento desde el panel privado de Alba y Guille.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function AdminLayout({
