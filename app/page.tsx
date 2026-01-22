@@ -313,6 +313,29 @@ export default async function Home() {
           <Divider />
         </div>
 
+        <div className="mx-auto w-full max-w-6xl px-6 pb-10 sm:px-8">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-5 shadow-[var(--shadow-soft)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                Cuándo
+              </p>
+              <p className="mt-3 text-lg font-semibold text-foreground">
+                {config.eventDate}
+              </p>
+              <p className="text-sm text-muted">{config.eventTimeRange}</p>
+            </article>
+            <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-5 shadow-[var(--shadow-soft)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                Dónde
+              </p>
+              <p className="mt-3 text-lg font-semibold text-foreground">
+                {config.locationName}
+              </p>
+              <p className="text-sm text-muted">{config.locationAddress}</p>
+            </article>
+          </div>
+        </div>
+
         {isSectionEnabled("preboda") && (
           <Section
             id="preboda"
