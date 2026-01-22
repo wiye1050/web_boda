@@ -48,7 +48,7 @@ export function Section({
         .filter(Boolean)
         .join(" ")}
     >
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 sm:gap-10 sm:px-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 sm:gap-10 sm:px-8">
         {(eyebrow || title || description) && (
           <header
             className={[
