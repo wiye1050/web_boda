@@ -3,6 +3,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { MobileBottomBar } from "@/components/MobileBottomBar";
+import { Divider } from "@/components/Divider";
 import { Section } from "@/components/Section";
 import { RSVPForm } from "@/components/RSVPForm";
 import { getPublicConfig } from "@/lib/getPublicConfig";
@@ -308,6 +309,9 @@ export default async function Home() {
             )}
           </div>
         </section>
+        <div className="py-6">
+          <Divider />
+        </div>
 
         {isSectionEnabled("preboda") && (
           <Section
@@ -398,6 +402,10 @@ export default async function Home() {
           </Section>
         )}
 
+        <div className="py-6">
+          <Divider />
+        </div>
+
         {isSectionEnabled("cronograma") && (
           <Section
             id="cronograma"
@@ -436,6 +444,10 @@ export default async function Home() {
             <GiftList gifts={giftOptions} />
           </Section>
         )}
+
+        <div className="py-6">
+          <Divider />
+        </div>
 
         {isSectionEnabled("faq") && (
           <Section
