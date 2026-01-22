@@ -57,18 +57,14 @@ export function HeroSlideshow({
 
   useEffect(() => {
     if (availableImages.length === 0) return;
-    const nextSafe = availableImages.length > 1 ? 1 : 0;
-    if (currentIndex !== 0) {
-      setCurrentIndex(0);
-    }
-    if (nextIndex !== nextSafe) {
-      setNextIndex(nextSafe);
-    }
-    if (isFading) {
-      setIsFading(false);
-    }
-    currentIndexRef.current = 0;
-  }, [availableImages.length, currentIndex, nextIndex, isFading]);
+    const clampedCurrent = Math.min(currentIndexRef.current, availableImages.length - 1);
+    const nextSafe =
+      availableImages.length > 1 ? (clampedCurrent + 1) % availableImages.length : 0;
+    setCurrentIndex(clampedCurrent);
+    setNextIndex(nextSafe);
+    setIsFading(false);
+    currentIndexRef.current = clampedCurrent;
+  }, [availableImages.length]);
 
   useEffect(() => {
     currentIndexRef.current = currentIndex;
