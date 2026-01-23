@@ -627,22 +627,61 @@ export default async function Home() {
                       )}
                     </div>
                   </li>
-                  {config.whatsappLink && (
-                    <li>
-                      {config.locationWhatsappLabel}:{" "}
-                      <a
-                        href={config.whatsappLink}
-                        className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
-                      >
-                        {config.locationWhatsappActionLabel}
-                      </a>
-                    </li>
-                  )}
-                </ul>
+              {config.whatsappLink && (
+                <li>
+                  {config.locationWhatsappLabel}:{" "}
+                  <a
+                    href={config.whatsappLink}
+                    className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
+                  >
+                    {config.locationWhatsappActionLabel}
+                  </a>
+                </li>
+              )}
+            </ul>
+          </article>
+        </div>
+
+        {(config.weddingMapsUrl || config.prebodaMapsUrl) && (
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            {config.weddingMapsUrl && (
+              <article className="flex flex-col gap-3 rounded-[var(--radius-card)] border border-primary/30 bg-primary/10 p-4 text-foreground">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">
+                  Boda (principal)
+                </p>
+                <p className="text-sm text-muted">Ceremonia y banquete</p>
+                <CTAButton
+                  href={config.weddingMapsUrl}
+                  variant="primary"
+                  className="w-full sm:w-auto"
+                  prefetch={false}
+                >
+                  Abrir mapa boda
+                </CTAButton>
               </article>
-            </div>
-          </Section>
+            )}
+            {config.prebodaMapsUrl && (
+              <article className="flex flex-col gap-3 rounded-[var(--radius-card)] border border-border/70 bg-surface/80 p-4 text-foreground">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                  Preboda
+                </p>
+                <p className="text-sm text-muted">
+                  Evento del día anterior (no es la ubicación de la boda)
+                </p>
+                <CTAButton
+                  href={config.prebodaMapsUrl}
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                  prefetch={false}
+                >
+                  Abrir mapa preboda
+                </CTAButton>
+              </article>
+            )}
+          </div>
         )}
+      </Section>
+    )}
       </main>
       <Footer
         eyebrow={config.footerEyebrow}
