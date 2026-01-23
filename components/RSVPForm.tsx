@@ -42,6 +42,15 @@ type RSVPFormProps = {
   copy?: RsvpFormCopy;
 };
 
+type SubmittedSummary = {
+  fullName: string;
+  email: string;
+  phone: string;
+  attendance: YesNo;
+  guests: number;
+  needsTransport: YesNo;
+};
+
 const LOCAL_COOLDOWN_KEY = "rsvpLastSubmittedAt";
 const COOLDOWN_MS = 60_000;
 
@@ -54,6 +63,9 @@ export function RSVPForm({
   const [status, setStatus] = useState<RSVPStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [botField, setBotField] = useState("");
+  const [submittedInfo, setSubmittedInfo] = useState<SubmittedSummary | null>(
+    null,
+  );
   const startedAt = useRef(Date.now());
   const lastSubmittedAt = useRef<number>(0);
   const radioBaseClasses =
@@ -228,6 +240,7 @@ export function RSVPForm({
     try {
       const db = firebaseClient.getFirestore();
       const phoneDigits = form.phone.replace(/\\D/g, "");
+      const editToken = Math.random().toString(36).slice(2, 10);
 
       await addDoc(collection(db, "rsvps"), {
         fullName: form.fullName.trim(),
@@ -243,11 +256,20 @@ export function RSVPForm({
             ? Math.min(seatsRequested, Math.max(guestsNumber, 1))
             : 0,
         requests: form.requests.trim(),
+        editToken,
         submittedAt: serverTimestamp(),
         source: "web",
       });
 
       setStatus("success");
+      setSubmittedInfo({
+        fullName: form.fullName.trim(),
+        email: form.email.trim(),
+        phone: phoneDigits,
+        attendance: form.attendance!,
+        guests: attending ? guestsNumber : 0,
+        needsTransport: form.needsTransport ?? "no",
+      });
       setForm(INITIAL_STATE);
       lastSubmittedAt.current = Date.now();
       if (typeof window !== "undefined") {
@@ -293,6 +315,42 @@ export function RSVPForm({
         />
       </label>
       <div className="grid gap-6 md:grid-cols-2">
+        {submittedInfo && status === "success" && (
+          <div className="md:col-span-2 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-4 text-sm text-emerald-100">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200">
+              Resumen enviado
+            </p>
+            <ul className="mt-2 space-y-1">
+              <li>
+                <span className="font-semibold">Nombre:</span>{" "}
+                {submittedInfo.fullName}
+              </li>
+              {submittedInfo.attendance === "si" && (
+                <li>
+                  <span className="font-semibold">Asistentes:</span>{" "}
+                  {submittedInfo.guests}
+                </li>
+              )}
+              <li>
+                <span className="font-semibold">Teléfono:</span>{" "}
+                {submittedInfo.phone}
+              </li>
+              {submittedInfo.email && (
+                <li>
+                  <span className="font-semibold">Email:</span>{" "}
+                  {submittedInfo.email}
+                </li>
+              )}
+              <li>
+                <span className="font-semibold">Transporte:</span>{" "}
+                {submittedInfo.needsTransport === "si" ? "Sí" : "No"}
+              </li>
+            </ul>
+            <p className="mt-3 text-xs text-emerald-200/80">
+              Gracias por confirmar. Si necesitas cambiar algo, avísanos.
+            </p>
+          </div>
+        )}
         <label className="flex flex-col gap-2 text-left">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
             {copy.fullNameLabel}

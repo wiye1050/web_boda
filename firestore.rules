@@ -133,7 +133,8 @@ service cloud.firestore {
         optionalTags(data) &&
         optionalTransportLink(data) &&
         optionalTransportSeatsAssigned(data) &&
-        (!data.keys().hasAny(["source"]) || stringField(data.source, 2, 40));
+        (!data.keys().hasAny(["source"]) || stringField(data.source, 2, 40)) &&
+        optionalString(data, "editToken", 0, 200);
     }
 
     function rsvpCreateKeys(data) {
@@ -150,6 +151,7 @@ service cloud.firestore {
         "requests",
         "submittedAt",
         "source",
+        "editToken",
       ]);
     }
 
@@ -175,6 +177,7 @@ service cloud.firestore {
         "tags",
         "transportRouteId",
         "transportAssignedSeats",
+        "editToken",
       ]);
     }
 
