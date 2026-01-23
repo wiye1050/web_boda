@@ -645,7 +645,7 @@ export function ConfigView() {
             Tienes cambios sin guardar
           </div>
         )}
-        <Fieldset title="Marca y navegación">
+        <Fieldset title="Marca y navegación" tone="rose">
           <InputField
             label="Nombre de la marca"
             value={config.brandName}
@@ -702,7 +702,7 @@ export function ConfigView() {
           />
         </Fieldset>
 
-        <Fieldset title="Portada">
+        <Fieldset title="Portada" tone="rose">
           <InputField
             label="Texto superior"
             value={config.heroEyebrow}
@@ -744,6 +744,7 @@ export function ConfigView() {
 
         <Fieldset
           title="Hero: fondo dinámico"
+          tone="rose"
           meta={`${listLengths.heroBackgroundImages}/${FIELD_LIMITS.heroBackgroundImages}`}
         >
           <TextAreaField
@@ -767,7 +768,7 @@ export function ConfigView() {
           />
         </Fieldset>
 
-        <Fieldset title="Datos del evento">
+        <Fieldset title="Datos del evento" tone="sand">
           <InputField
             label="Fecha"
             value={config.eventDate}
@@ -806,7 +807,7 @@ export function ConfigView() {
           />
         </Fieldset>
 
-        <Fieldset title="Ubicación principal">
+        <Fieldset title="Ubicación principal" tone="sand">
           <InputField
             label="Nombre del lugar"
             value={config.locationName}
@@ -858,7 +859,7 @@ export function ConfigView() {
           />
         </Fieldset>
 
-        <Fieldset title="Preboda">
+        <Fieldset title="Preboda" tone="slate">
           <InputField
             label="Eyebrow"
             value={config.prebodaEyebrow}
@@ -929,7 +930,7 @@ export function ConfigView() {
           />
         </Fieldset>
 
-        <Fieldset title="Ceremonia">
+        <Fieldset title="Ceremonia" tone="slate">
           <InputField
             label="Eyebrow"
             value={config.ceremonyEyebrow}
@@ -992,6 +993,7 @@ export function ConfigView() {
         <Fieldset
           title="Detalles prácticos"
           meta={`${listLengths.practicalItems}/${FIELD_LIMITS.practicalItems}`}
+          tone="accent"
         >
           <InputField
             label="Eyebrow"
@@ -1030,6 +1032,7 @@ export function ConfigView() {
         <Fieldset
           title="Cronograma"
           meta={`${listLengths.timelineItems}/${FIELD_LIMITS.timelineItems}`}
+          tone="accent"
         >
           <InputField
             label="Eyebrow"
@@ -1110,6 +1113,7 @@ export function ConfigView() {
         <Fieldset
           title="Alojamiento"
           meta={`${listLengths.stayOptions}/${FIELD_LIMITS.stayOptions}`}
+          tone="sand"
         >
           <InputField
             label="Eyebrow"
@@ -1182,7 +1186,7 @@ export function ConfigView() {
           </button>
         </Fieldset>
 
-        <Fieldset title="Regalos">
+        <Fieldset title="Regalos" tone="rose">
           <InputField
             label="Eyebrow"
             value={config.giftsEyebrow}
@@ -1203,31 +1207,6 @@ export function ConfigView() {
             maxLength={FIELD_LIMITS.giftsDescription}
           />
           <InputField
-            label="Título mesa de regalos"
-            value={config.giftsRegistryTitle}
-            onChange={(value) => updateField("giftsRegistryTitle", value)}
-            maxLength={FIELD_LIMITS.giftsRegistryTitle}
-          />
-          <TextAreaField
-            label="Descripción mesa de regalos"
-            value={config.giftsRegistryDescription}
-            onChange={(value) => updateField("giftsRegistryDescription", value)}
-            rows={3}
-            maxLength={FIELD_LIMITS.giftsRegistryDescription}
-          />
-          <InputField
-            label="Botón mesa de regalos"
-            value={config.giftsRegistryCtaLabel}
-            onChange={(value) => updateField("giftsRegistryCtaLabel", value)}
-            maxLength={FIELD_LIMITS.giftsRegistryCtaLabel}
-          />
-          <InputField
-            label="Link mesa de regalos"
-            value={config.giftLink}
-            onChange={(value) => updateField("giftLink", value)}
-            maxLength={FIELD_LIMITS.giftLink}
-          />
-          <InputField
             label="Título regalo privado"
             value={config.giftsBankTitle}
             onChange={(value) => updateField("giftsBankTitle", value)}
@@ -1245,6 +1224,7 @@ export function ConfigView() {
         <Fieldset
           title="Confirmar asistencia"
           meta={`${listLengths.rsvpImportantNotes}/${FIELD_LIMITS.rsvpImportantNotes}`}
+          tone="accent"
         >
           <InputField
             label="Eyebrow"
@@ -1314,6 +1294,7 @@ export function ConfigView() {
         <Fieldset
           title="FAQ"
           meta={`${listLengths.faqItems}/${FIELD_LIMITS.faqItems}`}
+          tone="accent"
         >
           <InputField
             label="Eyebrow"
@@ -1349,7 +1330,7 @@ export function ConfigView() {
           )}
         </Fieldset>
 
-        <Fieldset title="Contacto">
+        <Fieldset title="Contacto" tone="sand">
           <InputField
             label="Email de contacto"
             value={config.contactEmail}
@@ -1412,7 +1393,7 @@ export function ConfigView() {
           />
         </Fieldset>
 
-        <Fieldset title="Ubicación y contacto (sección final)">
+        <Fieldset title="Ubicación y contacto (sección final)" tone="sand">
           <InputField
             label="Eyebrow"
             value={config.locationEyebrow}
@@ -1502,18 +1483,43 @@ function Fieldset({
   children,
   title,
   meta,
+  tone = "default",
+  defaultOpen = true,
 }: {
   children: ReactNode;
   title: string;
   meta?: ReactNode;
+  tone?: "default" | "rose" | "sand" | "slate" | "accent";
+  defaultOpen?: boolean;
 }) {
+  const [open, setOpen] = useState(defaultOpen);
+  const toneClass =
+    tone === "rose"
+      ? "border-primary/20 bg-primary/5"
+      : tone === "sand"
+        ? "border-amber-200/40 bg-amber-50/10"
+        : tone === "slate"
+          ? "border-border/60 bg-background/60"
+          : tone === "accent"
+            ? "border-accent-strong/30 bg-accent/20"
+            : "border-border/70 bg-surface";
+
   return (
-    <fieldset className="flex flex-col gap-4 rounded-[24px] border border-border/70 bg-surface px-5 py-5 shadow-[var(--shadow-soft)]">
-      <legend className="flex w-full items-center justify-between text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+    <fieldset
+      className={`flex flex-col gap-4 rounded-[24px] border px-5 py-4 shadow-[var(--shadow-soft)] ${toneClass}`}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        className="flex w-full items-center justify-between text-left text-xs font-semibold uppercase tracking-[0.3em] text-muted"
+      >
         <span>{title}</span>
-        {meta && <span className="text-[0.65rem] tracking-[0.2em]">{meta}</span>}
-      </legend>
-      {children}
+        <span className="flex items-center gap-2 text-[0.65rem] tracking-[0.2em]">
+          {meta && <span>{meta}</span>}
+          <span className="text-base">{open ? "▾" : "▸"}</span>
+        </span>
+      </button>
+      {open && <div className="flex flex-col gap-4">{children}</div>}
     </fieldset>
   );
 }
