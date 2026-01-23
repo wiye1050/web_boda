@@ -21,6 +21,7 @@ type FormState = {
   needsTransport: YesNo | null;
   transportSeats: string;
   requests: string;
+  reminderOptIn: boolean;
 };
 
 const INITIAL_STATE: FormState = {
@@ -34,6 +35,7 @@ const INITIAL_STATE: FormState = {
   needsTransport: null,
   transportSeats: "",
   requests: "",
+  reminderOptIn: false,
 };
 
 type RSVPFormProps = {
@@ -256,6 +258,7 @@ export function RSVPForm({
             ? Math.min(seatsRequested, Math.max(guestsNumber, 1))
             : 0,
         requests: form.requests.trim(),
+        reminderOptIn: Boolean(form.reminderOptIn),
         editToken,
         submittedAt: serverTimestamp(),
         source: "web",
@@ -491,8 +494,20 @@ export function RSVPForm({
               placeholder={copy.guestNamesPlaceholder}
               className="min-h-[100px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
               disabled={!attending}
-            />
-          </label>
+          />
+        </label>
+
+        <label className="md:col-span-2 flex items-start gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-left text-sm text-foreground">
+          <input
+            type="checkbox"
+            className="mt-1 h-4 w-4 rounded border-border bg-background accent-primary"
+            checked={form.reminderOptIn}
+            onChange={(event) => handleChange("reminderOptIn", event.target.checked)}
+          />
+          <span>
+            Quiero recordatorio antes de la boda (usaremos tu teléfono o email).
+          </span>
+        </label>
           <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-left shadow-sm">
             <legend className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
               {copy.prebodaLegend}

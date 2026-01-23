@@ -134,7 +134,8 @@ service cloud.firestore {
         optionalTransportLink(data) &&
         optionalTransportSeatsAssigned(data) &&
         (!data.keys().hasAny(["source"]) || stringField(data.source, 2, 40)) &&
-        optionalString(data, "editToken", 0, 200);
+        optionalString(data, "editToken", 0, 200) &&
+        optionalBoolean(data, "reminderOptIn");
     }
 
     function rsvpCreateKeys(data) {
@@ -152,6 +153,7 @@ service cloud.firestore {
         "submittedAt",
         "source",
         "editToken",
+        "reminderOptIn",
       ]);
     }
 
@@ -178,6 +180,7 @@ service cloud.firestore {
         "transportRouteId",
         "transportAssignedSeats",
         "editToken",
+        "reminderOptIn",
       ]);
     }
 
