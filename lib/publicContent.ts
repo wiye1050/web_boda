@@ -115,6 +115,8 @@ export type PublicContent = {
   prebodaMapUrl: string;
   contactEmail: string;
   contactPhone: string;
+  contactEmail2: string;
+  contactPhone2: string;
   whatsappLink: string;
   giftLink: string;
   prebodaEyebrow: string;
@@ -237,7 +239,9 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   prebodaTime: "11 de septiembre · 19:30 h",
   prebodaMapUrl: "",
   contactEmail: "hola@nuestraboda.com",
+  contactEmail2: "",
   contactPhone: "+34 600 000 000",
+  contactPhone2: "",
   whatsappLink: "https://wa.me/34600000000",
   giftLink: "",
   prebodaEyebrow: "Preboda",
@@ -812,14 +816,6 @@ export function normalizePublicContent(
       data.prebodaMapUrl,
       DEFAULT_PUBLIC_CONTENT.prebodaMapUrl,
     ),
-    contactEmail: normalizeString(
-      data.contactEmail,
-      DEFAULT_PUBLIC_CONTENT.contactEmail,
-    ),
-    contactPhone: normalizeString(
-      data.contactPhone,
-      DEFAULT_PUBLIC_CONTENT.contactPhone,
-    ),
     whatsappLink: normalizeString(
       data.whatsappLink,
       DEFAULT_PUBLIC_CONTENT.whatsappLink,
@@ -1062,9 +1058,25 @@ export function normalizePublicContent(
       data.locationEmailLabel,
       DEFAULT_PUBLIC_CONTENT.locationEmailLabel,
     ),
+    contactEmail: normalizeString(
+      data.contactEmail,
+      DEFAULT_PUBLIC_CONTENT.contactEmail,
+    ),
+    contactEmail2: normalizeString(
+      data.contactEmail2,
+      DEFAULT_PUBLIC_CONTENT.contactEmail2,
+    ),
     locationPhoneLabel: normalizeString(
       data.locationPhoneLabel,
       DEFAULT_PUBLIC_CONTENT.locationPhoneLabel,
+    ),
+    contactPhone: normalizeString(
+      data.contactPhone,
+      DEFAULT_PUBLIC_CONTENT.contactPhone,
+    ),
+    contactPhone2: normalizeString(
+      data.contactPhone2,
+      DEFAULT_PUBLIC_CONTENT.contactPhone2,
     ),
     locationWhatsappLabel: normalizeString(
       data.locationWhatsappLabel,

@@ -65,7 +65,9 @@ const FIELD_LIMITS: Record<string, number> = {
   prebodaTime: 80,
   prebodaMapUrl: 300,
   contactEmail: 120,
+  contactEmail2: 120,
   contactPhone: 40,
+  contactPhone2: 40,
   whatsappLink: 200,
   giftLink: 200,
   prebodaEyebrow: 120,
@@ -168,7 +170,9 @@ const FIELD_LABELS: Record<string, string> = {
   prebodaTime: "Hora preboda",
   prebodaMapUrl: "Mapa preboda",
   contactEmail: "Email de contacto",
+  contactEmail2: "Email secundario",
   contactPhone: "Teléfono de contacto",
+  contactPhone2: "Teléfono secundario",
   whatsappLink: "Enlace de WhatsApp",
   giftLink: "Enlace regalos",
   prebodaEyebrow: "Preboda: texto superior",
@@ -1353,10 +1357,22 @@ export function ConfigView() {
             maxLength={FIELD_LIMITS.contactEmail}
           />
           <InputField
+            label="Email secundario"
+            value={config.contactEmail2}
+            onChange={(value) => updateField("contactEmail2", value)}
+            maxLength={FIELD_LIMITS.contactEmail2}
+          />
+          <InputField
             label="Teléfono de contacto"
             value={config.contactPhone}
             onChange={(value) => updateField("contactPhone", value)}
             maxLength={FIELD_LIMITS.contactPhone}
+          />
+          <InputField
+            label="Teléfono secundario"
+            value={config.contactPhone2}
+            onChange={(value) => updateField("contactPhone2", value)}
+            maxLength={FIELD_LIMITS.contactPhone2}
           />
           <InputField
             label="Link WhatsApp"

@@ -506,7 +506,18 @@ export default async function Home() {
                   className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
                 >
                   {config.contactEmail}
-                </a>{" "}
+                </a>
+                {config.contactEmail2 && (
+                  <>
+                    {" · "}
+                    <a
+                      href={`mailto:${config.contactEmail2}`}
+                      className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
+                    >
+                      {config.contactEmail2}
+                    </a>
+                  </>
+                )}{" "}
                 {config.rsvpContactWhatsappLead}{" "}
                 <a
                   href={config.whatsappLink || `tel:${config.contactPhone}`}
@@ -514,6 +525,17 @@ export default async function Home() {
                 >
                   {config.contactPhone}
                 </a>
+                {config.contactPhone2 && (
+                  <>
+                    {" · "}
+                    <a
+                      href={`tel:${config.contactPhone2}`}
+                      className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
+                    >
+                      {config.contactPhone2}
+                    </a>
+                  </>
+                )}
                 .
               </p>
             </div>
