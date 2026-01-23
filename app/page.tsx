@@ -573,23 +573,47 @@ export default async function Home() {
                   {config.locationContactTitle}
                 </h3>
                 <ul className="mt-3 space-y-2 text-sm text-muted">
-                  <li>
-                    {config.locationEmailLabel}:{" "}
-                    <a
-                      href={`mailto:${config.contactEmail}`}
-                      className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
-                    >
-                      {config.contactEmail}
-                    </a>
+                  <li className="flex flex-col gap-1">
+                    <span>{config.locationEmailLabel}:</span>
+                    <div className="flex flex-wrap gap-2">
+                      {config.contactEmail && (
+                        <a
+                          href={`mailto:${config.contactEmail}`}
+                          className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
+                        >
+                          {config.contactEmail}
+                        </a>
+                      )}
+                      {config.contactEmail2 && (
+                        <a
+                          href={`mailto:${config.contactEmail2}`}
+                          className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
+                        >
+                          {config.contactEmail2}
+                        </a>
+                      )}
+                    </div>
                   </li>
-                  <li>
-                    {config.locationPhoneLabel}:{" "}
-                    <a
-                      href={`tel:${config.contactPhone}`}
-                      className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
-                    >
-                      {config.contactPhone}
-                    </a>
+                  <li className="flex flex-col gap-1">
+                    <span>{config.locationPhoneLabel}:</span>
+                    <div className="flex flex-wrap gap-2">
+                      {config.contactPhone && (
+                        <a
+                          href={`tel:${config.contactPhone}`}
+                          className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
+                        >
+                          {config.contactPhone}
+                        </a>
+                      )}
+                      {config.contactPhone2 && (
+                        <a
+                          href={`tel:${config.contactPhone2}`}
+                          className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
+                        >
+                          {config.contactPhone2}
+                        </a>
+                      )}
+                    </div>
                   </li>
                   {config.whatsappLink && (
                     <li>
