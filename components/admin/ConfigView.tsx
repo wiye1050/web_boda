@@ -95,6 +95,7 @@ const FIELD_LIMITS: Record<string, number> = {
   practicalTitle: 200,
   practicalDescription: 800,
   practicalItems: 8000,
+  noticeText: 280,
   stayEyebrow: 120,
   stayTitle: 200,
   stayDescription: 800,
@@ -146,6 +147,7 @@ const FIELD_LABELS: Record<string, string> = {
   navRsvpLabel: "Menú: Confirmar asistencia",
   navDetailsLabel: "Menú: Detalles",
   navLocationLabel: "Menú: Ubicación",
+  noticeText: "Aviso destacado",
   heroEyebrow: "Texto superior",
   heroTitle: "Título principal",
   heroDescription: "Descripción principal",
@@ -645,6 +647,28 @@ export function ConfigView() {
             Tienes cambios sin guardar
           </div>
         )}
+        <Fieldset title="Aviso destacado" tone="accent">
+          <label className="flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.25em] text-muted">
+            <input
+              type="checkbox"
+              className="h-4 w-4 rounded border-border bg-background accent-primary"
+              checked={config.noticeEnabled}
+              onChange={(event) => updateField("noticeEnabled", event.target.checked)}
+            />
+            Mostrar aviso en la parte superior
+          </label>
+          <TextAreaField
+            label="Texto del aviso"
+            value={config.noticeText}
+            onChange={(value) => updateField("noticeText", value)}
+            rows={3}
+            maxLength={FIELD_LIMITS.noticeText}
+          />
+          <p className="text-xs text-muted">
+            Úsalo para avisos rápidos (ej. “Si llueve, traed paraguas”).
+          </p>
+        </Fieldset>
+
         <Fieldset title="Marca y navegación" tone="rose">
           <InputField
             label="Nombre de la marca"

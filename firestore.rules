@@ -476,6 +476,8 @@ service cloud.firestore {
           "navRsvpLabel",
           "navDetailsLabel",
           "navLocationLabel",
+          "noticeEnabled",
+          "noticeText",
           "heroEyebrow",
           "heroTitle",
           "heroDescription",

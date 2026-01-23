@@ -228,9 +228,21 @@ export default async function Home() {
       label: section.label.trim() || section.id,
       href: `#${section.id}`,
     }));
+  const showNotice =
+    config.noticeEnabled && config.noticeText.trim().length > 0;
 
   return (
     <div id="top" className="flex min-h-screen flex-col">
+      {showNotice && (
+        <div className="bg-amber-500/15 text-amber-50">
+          <div className="mx-auto flex w-full max-w-6xl items-center gap-3 px-6 py-3 text-sm sm:px-8">
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-200">
+              Aviso
+            </span>
+            <p className="text-amber-50/90">{config.noticeText}</p>
+          </div>
+        </div>
+      )}
       <Header
         brandName={config.brandName}
         navItems={navItems}

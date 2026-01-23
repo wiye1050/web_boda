@@ -86,6 +86,8 @@ export type SectionConfig = {
 };
 
 export type PublicContent = {
+  noticeEnabled: boolean;
+  noticeText: string;
   brandName: string;
   headerCtaLabel: string;
   navWeddingLabel: string;
@@ -210,6 +212,8 @@ export const DEFAULT_SECTIONS: SectionConfig[] = [
 ];
 
 export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
+  noticeEnabled: false,
+  noticeText: "",
   brandName: "Alba & Guille",
   headerCtaLabel: "Confirmar asistencia",
   navWeddingLabel: "La boda",
@@ -711,6 +715,14 @@ export function normalizePublicContent(
   data: Record<string, unknown>,
 ): PublicContent {
   return {
+    noticeEnabled:
+      typeof data.noticeEnabled === "boolean"
+        ? data.noticeEnabled
+        : DEFAULT_PUBLIC_CONTENT.noticeEnabled,
+    noticeText: normalizeString(
+      data.noticeText,
+      DEFAULT_PUBLIC_CONTENT.noticeText,
+    ),
     brandName: normalizeString(data.brandName, DEFAULT_PUBLIC_CONTENT.brandName),
     headerCtaLabel: normalizeString(
       data.headerCtaLabel,
