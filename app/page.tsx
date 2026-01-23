@@ -186,14 +186,6 @@ export default async function Home() {
 
   const giftOptions: GiftOption[] = [
     {
-      title: config.giftsRegistryTitle,
-      description: config.giftsRegistryDescription,
-      action:
-        config.giftLink.trim().length > 0
-          ? { label: config.giftsRegistryCtaLabel, href: config.giftLink }
-          : undefined,
-    },
-    {
       title: config.giftsBankTitle,
       description: config.giftsBankDescription,
       action: giftContactHref
