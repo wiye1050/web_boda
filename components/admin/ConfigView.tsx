@@ -96,6 +96,7 @@ const FIELD_LIMITS: Record<string, number> = {
   practicalDescription: 800,
   practicalItems: 8000,
   noticeText: 280,
+  noticeCountdownTarget: 40,
   stayEyebrow: 120,
   stayTitle: 200,
   stayDescription: 800,
@@ -148,6 +149,7 @@ const FIELD_LABELS: Record<string, string> = {
   navDetailsLabel: "Menú: Detalles",
   navLocationLabel: "Menú: Ubicación",
   noticeText: "Aviso destacado",
+  noticeCountdownTarget: "Cuenta atrás: fecha objetivo",
   heroEyebrow: "Texto superior",
   heroTitle: "Título principal",
   heroDescription: "Descripción principal",
@@ -663,6 +665,23 @@ export function ConfigView() {
             onChange={(value) => updateField("noticeText", value)}
             rows={3}
             maxLength={FIELD_LIMITS.noticeText}
+          />
+          <label className="flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.25em] text-muted">
+            <input
+              type="checkbox"
+              className="h-4 w-4 rounded border-border bg-background accent-primary"
+              checked={config.noticeCountdownEnabled}
+              onChange={(event) =>
+                updateField("noticeCountdownEnabled", event.target.checked)
+              }
+            />
+            Mostrar cuenta atrás
+          </label>
+          <InputField
+            label="Fecha objetivo (ej. 2025-09-12T13:30:00)"
+            value={config.noticeCountdownTarget}
+            onChange={(value) => updateField("noticeCountdownTarget", value)}
+            maxLength={FIELD_LIMITS.noticeCountdownTarget}
           />
           <p className="text-xs text-muted">
             Úsalo para avisos rápidos (ej. “Si llueve, traed paraguas”).

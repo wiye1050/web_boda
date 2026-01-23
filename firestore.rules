@@ -478,6 +478,8 @@ service cloud.firestore {
           "navLocationLabel",
           "noticeEnabled",
           "noticeText",
+          "noticeCountdownEnabled",
+          "noticeCountdownTarget",
           "heroEyebrow",
           "heroTitle",
           "heroDescription",

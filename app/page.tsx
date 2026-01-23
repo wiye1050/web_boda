@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { MobileBottomBar } from "@/components/MobileBottomBar";
 import { Divider } from "@/components/Divider";
+import { Countdown } from "@/components/Countdown";
 import { Section } from "@/components/Section";
 import { RSVPForm } from "@/components/RSVPForm";
 import { getPublicConfig } from "@/lib/getPublicConfig";
@@ -230,6 +231,10 @@ export default async function Home() {
     }));
   const showNotice =
     config.noticeEnabled && config.noticeText.trim().length > 0;
+  const showCountdown =
+    showNotice &&
+    config.noticeCountdownEnabled &&
+    config.noticeCountdownTarget.trim().length > 0;
 
   return (
     <div id="top" className="flex min-h-screen flex-col">
@@ -240,6 +245,9 @@ export default async function Home() {
               Aviso
             </span>
             <p className="text-amber-50/90">{config.noticeText}</p>
+            {showCountdown && (
+              <Countdown target={config.noticeCountdownTarget.trim()} />
+            )}
           </div>
         </div>
       )}

@@ -88,6 +88,8 @@ export type SectionConfig = {
 export type PublicContent = {
   noticeEnabled: boolean;
   noticeText: string;
+  noticeCountdownEnabled: boolean;
+  noticeCountdownTarget: string;
   brandName: string;
   headerCtaLabel: string;
   navWeddingLabel: string;
@@ -214,6 +216,8 @@ export const DEFAULT_SECTIONS: SectionConfig[] = [
 export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   noticeEnabled: false,
   noticeText: "",
+  noticeCountdownEnabled: false,
+  noticeCountdownTarget: "",
   brandName: "Alba & Guille",
   headerCtaLabel: "Confirmar asistencia",
   navWeddingLabel: "La boda",
@@ -722,6 +726,14 @@ export function normalizePublicContent(
     noticeText: normalizeString(
       data.noticeText,
       DEFAULT_PUBLIC_CONTENT.noticeText,
+    ),
+    noticeCountdownEnabled:
+      typeof data.noticeCountdownEnabled === "boolean"
+        ? data.noticeCountdownEnabled
+        : DEFAULT_PUBLIC_CONTENT.noticeCountdownEnabled,
+    noticeCountdownTarget: normalizeString(
+      data.noticeCountdownTarget,
+      DEFAULT_PUBLIC_CONTENT.noticeCountdownTarget,
     ),
     brandName: normalizeString(data.brandName, DEFAULT_PUBLIC_CONTENT.brandName),
     headerCtaLabel: normalizeString(
