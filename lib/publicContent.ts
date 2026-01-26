@@ -179,6 +179,7 @@ export type PublicContent = {
   locationEyebrow: string;
   locationTitle: string;
   locationDescription: string;
+  locationMapEmbedUrl: string;
   locationMapLabel: string;
   weddingMapsUrl: string;
   prebodaMapsUrl: string;
@@ -463,6 +464,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   locationTitle: "Ubicación y contacto",
   locationDescription:
     "Si necesitas ayuda con rutas o transporte, escríbenos.",
+  locationMapEmbedUrl: "",
   locationMapLabel: "Abrir en Maps",
   weddingMapsUrl: "",
   prebodaMapsUrl: "",
@@ -1053,6 +1055,10 @@ export function normalizePublicContent(
     locationDescription: normalizeString(
       data.locationDescription,
       DEFAULT_PUBLIC_CONTENT.locationDescription,
+    ),
+    locationMapEmbedUrl: normalizeString(
+      data.locationMapEmbedUrl,
+      DEFAULT_PUBLIC_CONTENT.locationMapEmbedUrl,
     ),
     locationMapLabel: normalizeString(
       data.locationMapLabel,

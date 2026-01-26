@@ -29,8 +29,8 @@ export function Header({
   ctaLabel = "Confirmar asistencia",
 }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-surface/95 shadow-sm backdrop-blur-lg sm:bg-surface/80 sm:shadow-none">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
+    <header className="sticky top-0 z-40 border-b border-border/60 bg-surface/80 backdrop-blur-lg">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 sm:px-8">
         <Link
           href="#top"
           className="font-display text-sm font-semibold uppercase tracking-[0.6em] text-foreground transition-colors hover:text-primary"
@@ -53,7 +53,7 @@ export function Header({
         </CTAButton>
       </div>
       <nav className="sm:hidden">
-        <div className="mx-auto flex w-full max-w-full flex-wrap justify-center gap-x-4 gap-y-2 px-5 pb-4 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-muted overflow-hidden">
+        <div className="mx-auto flex w-full max-w-6xl gap-5 overflow-x-auto px-6 pb-4 text-[0.65rem] font-semibold uppercase tracking-[0.4em] text-muted">
           {navItems.map((item) => (
             <Link
               key={item.href}

@@ -571,6 +571,7 @@ service cloud.firestore {
         "locationEyebrow",
         "locationTitle",
         "locationDescription",
+        "locationMapEmbedUrl",
         "locationContactTitle",
         "locationEmailLabel",
         "locationPhoneLabel",

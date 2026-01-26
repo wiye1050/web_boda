@@ -231,6 +231,7 @@ const FIELD_LABELS: Record<string, string> = {
   locationEyebrow: "Ubicación: texto superior",
   locationTitle: "Ubicación: título",
   locationDescription: "Ubicación: descripción",
+  locationMapEmbedUrl: "Ubicación: mapa embebido (iframe My Maps)",
   locationContactTitle: "Ubicación: título contacto",
   locationEmailLabel: "Ubicación: etiqueta email",
   locationPhoneLabel: "Ubicación: etiqueta teléfono",
@@ -868,6 +869,12 @@ export function ConfigView() {
             label="Link Google Maps"
             value={config.locationMapUrl}
             onChange={(value) => updateField("locationMapUrl", value)}
+            maxLength={FIELD_LIMITS.locationMapUrl}
+          />
+          <InputField
+            label="Mapa embebido (iframe My Maps)"
+            value={config.locationMapEmbedUrl}
+            onChange={(value) => updateField("locationMapEmbedUrl", value)}
             maxLength={FIELD_LIMITS.locationMapUrl}
           />
           <InputField

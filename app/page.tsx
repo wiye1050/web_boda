@@ -562,6 +562,17 @@ export default async function Home() {
             description={config.locationDescription}
             background="surface"
           >
+            {config.locationMapEmbedUrl && (
+              <div className="mb-6 overflow-hidden rounded-[var(--radius-card)] border border-border/80 shadow-[var(--shadow-soft)]">
+                <iframe
+                  src={config.locationMapEmbedUrl}
+                  className="h-[360px] w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  aria-label="Mapa con ubicaciones de la boda y preboda"
+                />
+              </div>
+            )}
             <div className="grid gap-6 md:grid-cols-2">
               <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 shadow-[var(--shadow-soft)] sm:p-6">
                 <h3 className="text-xl font-semibold">{config.locationName}</h3>
