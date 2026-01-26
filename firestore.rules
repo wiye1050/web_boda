@@ -500,6 +500,7 @@ service cloud.firestore {
           "eventTimeRange",
           "locationName",
           "locationAddress",
+          "locationMapEmbedUrl",
           "locationMapUrl",
           "locationMapLabel",
           "weddingMapsUrl",
