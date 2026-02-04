@@ -1,6 +1,6 @@
 import { CTAButton } from "@/components/CTAButton";
 import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
+
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { MobileBottomBar } from "@/components/MobileBottomBar";
 import { Divider } from "@/components/Divider";
