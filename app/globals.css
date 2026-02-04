@@ -23,8 +23,8 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-accent-strong: var(--accent-strong);
+  --font-sans: var(--font-lato);
   --font-display: var(--font-display);
   --spacing-section: clamp(3.5rem, 6vw, 7rem);
   --radius-card: 24px;

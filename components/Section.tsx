@@ -31,7 +31,7 @@ export function Section({
   title,
   description,
   background = "default",
-  align = "left",
+  align = "center",
   children,
 }: SectionProps) {
   const headingId = title && id ? `${id}-heading` : undefined;

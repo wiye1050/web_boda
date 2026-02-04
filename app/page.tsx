@@ -62,9 +62,8 @@ export default async function Home() {
     {
       title: config.giftsBankTitle,
       description: config.giftsBankDescription,
-      action: giftContactHref
-        ? { label: giftContactLabel, href: giftContactHref }
-        : undefined,
+      details: ["ES57 0081 5035 9900 0123 2724"],
+      hideDetails: false,
     },
   ];
 

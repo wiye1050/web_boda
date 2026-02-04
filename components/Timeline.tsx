@@ -19,20 +19,48 @@ type TimelineProps = {
   items: TimelineItem[];
 };
 
-// Map icon strings (emojis or keywords) to Lucide components
+import Image from "next/image";
+
+// Map icon strings (emojis or keywords) to icon image paths
 function getIcon(iconStr: string) {
   const lower = iconStr.toLowerCase();
   
-  if (lower.includes("ceremo") || lower.includes("💍")) return <Church className="h-5 w-5 text-primary" />;
-  if (lower.includes("cocktail") || lower.includes("còctel") || lower.includes("🍸")) return <GlassWater className="h-5 w-5 text-blue-500" />;
-  if (lower.includes("cena") || lower.includes("banquete") || lower.includes("🍽")) return <Utensils className="h-5 w-5 text-orange-500" />;
-  if (lower.includes("fiesta") || lower.includes("baile") || lower.includes("🎉")) return <Music className="h-5 w-5 text-purple-500" />;
-  if (lower.includes("bus") || lower.includes("transporte") || lower.includes("🚌")) return <Bus className="h-5 w-5 text-green-500" />;
-  if (lower.includes("fotos") || lower.includes("📸")) return <Camera className="h-5 w-5 text-pink-500" />;
-  if (lower.includes("noche") || lower.includes("🌙")) return <Moon className="h-5 w-5 text-indigo-500" />;
-  
-  // Default fallback
-  return <Heart className="h-5 w-5 text-primary" />; 
+  let iconSrc = "/icons/rings.png"; // default
+  let altText = "Icono";
+
+  if (lower.includes("ceremo") || lower.includes("💍") || lower.includes("sí") || lower.includes("si, eq")) {
+    iconSrc = "/icons/rings.png";
+    altText = "Anillos";
+  } else if (lower.includes("cocktail") || lower.includes("còctel") || lower.includes("🍸") || lower.includes("🍹") || lower.includes("aperitivo") || lower.includes("vermu") || lower.includes("vermú") || lower.includes("vino") || lower.includes("bienvenida")) {
+    iconSrc = "/icons/glasses.png";
+    altText = "Copas Brindis";
+  } else if (lower.includes("cena") || lower.includes("banquete") || lower.includes("🍽") || lower.includes("tierrina") || lower.includes("viñas") || lower.includes("comida") || lower.includes("almuerzo")) {
+    iconSrc = "/icons/plate.png";
+    altText = "Plato y Cubiertos";
+  } else if (lower.includes("fiesta") || lower.includes("baile") || lower.includes("🎉") || lower.includes("🕺") || lower.includes("barra") || lower.includes("libre") || lower.includes("dj")) {
+    iconSrc = "/icons/disco.png";
+    altText = "Bola de discoteca";
+  } else if (lower.includes("bus") || lower.includes("transporte") || lower.includes("🚌") || lower.includes("salida") || lower.includes("llegada")) {
+    iconSrc = "/icons/car-front.png";
+    altText = "Coche";
+  } else if (lower.includes("despedida") || lower.includes("fin") || lower.includes("recena") || lower.includes("🌙")) {
+     // TODO: Replace with "car back" when available. Using front for now as placeholder.
+     // User asked for "car back" for despedida.
+    iconSrc = "/icons/car-front.png";
+    altText = "Coche despedida";
+  }
+
+  return (
+    <div className="relative h-14 w-14">
+      <Image 
+        src={iconSrc} 
+        alt={altText} 
+        fill
+        className="object-contain p-2" 
+        sizes="56px"
+      />
+    </div>
+  );
 }
 
 export function Timeline({ items }: TimelineProps) {

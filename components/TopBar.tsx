@@ -60,15 +60,13 @@ export function TopBar({
           <div className="flex items-center gap-4 sm:gap-6">
             <Link
               href="#top"
-              className="font-display text-base font-semibold uppercase tracking-[0.2em] text-foreground shrink-0 transition-colors hover:text-primary hidden sm:block"
+              className="relative h-10 w-auto shrink-0 transition-opacity hover:opacity-80"
             >
-              {brandName}
-            </Link>
-             <Link
-              href="#top"
-              className="font-display text-sm font-semibold uppercase tracking-[0.2em] text-foreground shrink-0 transition-colors hover:text-primary sm:hidden"
-            >
-              A&G
+              <img 
+                 src="/logo-ag.png" 
+                 alt={brandName} 
+                 className="h-full w-auto object-contain"
+              />
             </Link>
 
             <div className="h-5 w-px bg-border/40 hidden sm:block" />

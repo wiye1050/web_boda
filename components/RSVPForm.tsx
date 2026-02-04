@@ -24,6 +24,7 @@ type FormState = {
   transportSeats: string;
   requests: string;
   songRequest: string;
+  hairMakeup?: boolean;
   reminderOptIn: boolean;
   acceptedTerms: boolean;
 };
@@ -40,6 +41,7 @@ const INITIAL_STATE: FormState = {
   transportSeats: "",
   requests: "",
   songRequest: "",
+  hairMakeup: false,
   reminderOptIn: false,
   acceptedTerms: false,
 };
@@ -270,6 +272,7 @@ export function RSVPForm({
             : 0,
         requests: form.requests.trim(),
         songRequest: form.songRequest.trim(),
+        hairMakeup: Boolean(form.hairMakeup),
         reminderOptIn: Boolean(form.reminderOptIn),
         editToken,
         submittedAt: serverTimestamp(),
@@ -668,18 +671,32 @@ export function RSVPForm({
       )}
 
       {attending && (
-        <label className="flex flex-col gap-2 text-left md:col-span-2">
-          <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            <span role="img" aria-hidden>🎵</span> Una canción que no puede faltar
-          </span>
-          <input
-            name="songRequest"
-            value={form.songRequest}
-            onChange={(event) => handleChange("songRequest", event.target.value)}
-            placeholder="Ej: Flying Free, Paquito el Chocolatero..."
-            className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
-          />
-        </label>
+        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+           <label className="flex items-start gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-left text-sm text-foreground md:flex-1">
+            <input
+              type="checkbox"
+              className="mt-1 h-4 w-4 rounded border-border bg-background accent-primary"
+              checked={form.hairMakeup || false}
+              onChange={(event) => handleChange("hairMakeup", event.target.checked)}
+            />
+            <span>
+              Me interesa el servicio de <span className="font-semibold text-primary">peluquería o maquillaje</span> (te contactaremos para darte detalles).
+            </span>
+          </label>
+           
+          <label className="flex flex-col gap-2 text-left md:flex-1">
+            <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+              <span role="img" aria-hidden>🎵</span> Una canción que no puede faltar
+            </span>
+            <input
+              name="songRequest"
+              value={form.songRequest}
+              onChange={(event) => handleChange("songRequest", event.target.value)}
+              placeholder="Ej: Flying Free, Paquito el Chocolatero..."
+              className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+            />
+          </label>
+        </div>
       )}
 
       <div className="flex flex-col items-center gap-4 text-center">

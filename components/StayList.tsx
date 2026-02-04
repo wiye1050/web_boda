@@ -8,7 +8,7 @@ type StayListProps = {
 
 export function StayList({ items, linkLabel }: StayListProps) {
   return (
-    <div className="grid gap-6 md:grid-cols-3">
+    <div className="grid gap-6 sm:grid-cols-2">
       {items.map((stay) => (
         <article
           key={stay.name}
