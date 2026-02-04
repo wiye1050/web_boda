@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import * as XLSX from "xlsx";
 import type { RsvpRecord, RsvpStatus } from "./useRsvpData";
 
 type FilterOption = "all" | "attending" | "notAttending";
@@ -38,6 +39,32 @@ export function RsvpTable({
     return records;
   }, [filter, records]);
 
+  function handleExport() {
+    const data = filteredRecords.map((record) => ({
+      Nombre: record.fullName,
+      Email: record.email,
+      Teléfono: record.phone,
+      Asistencia: record.attendance === "si" ? "Sí" : "No",
+      Adultos: record.guests,
+      Nombres_Acompañantes: record.guestNames,
+      Preboda: record.preboda === "si" ? "Sí" : "No",
+      Transporte: record.needsTransport === "si" ? "Sí" : "No",
+      Plazas_Bus: record.transportSeats,
+      Comentarios: record.requests,
+      Notas_Internas: record.notes,
+      Etiquetas: record.tags.join(", "),
+      Estado: STATUS_TEXT[record.status],
+      Procesado: record.processed ? "Sí" : "No",
+      Actualizado_Por: record.updatedBy,
+      Fecha_Registro: record.submittedAt?.toDate().toLocaleString() ?? "",
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Asistencia");
+    XLSX.writeFile(workbook, "Boda_RSVP.xlsx");
+  }
+
   return (
     <section className="flex flex-col gap-6">
       {showHeader && (
@@ -48,7 +75,7 @@ export function RsvpTable({
       )}
 
       {showFilters && (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <FilterButton
             label="Todos"
             isActive={filter === "all"}
@@ -64,6 +91,15 @@ export function RsvpTable({
             isActive={filter === "notAttending"}
             onClick={() => setFilter("notAttending")}
           />
+          <div className="ml-auto">
+            <button
+              type="button"
+              onClick={handleExport}
+              className="rounded-full border border-emerald-600/30 bg-emerald-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700 transition hover:bg-emerald-500/20 active:translate-y-[1px]"
+            >
+              Exportar Excel
+            </button>
+          </div>
         </div>
       )}
 
@@ -110,6 +146,9 @@ export function RsvpTable({
                           ? `${record.transportSeats ?? 0} plazas`
                           : "No"}
                       </span>
+                      <span>
+                        Términos: {record.acceptedTerms ? "✅" : "❌"}
+                      </span>
                     </div>
                     {(record.guestNames || record.requests) && (
                       <div className="mt-3 text-xs text-muted">
@@ -141,6 +180,7 @@ export function RsvpTable({
                   <thead className="bg-accent/70 text-xs uppercase tracking-[0.3em] text-muted">
                     <tr>
                       <th className="px-4 py-3">Invitado</th>
+                      <th className="px-4 py-3">Términos</th>
                       <th className="px-4 py-3">Asistencia</th>
                       <th className="px-4 py-3">Estado</th>
                       <th className="px-4 py-3">Etiquetas</th>
@@ -180,6 +220,11 @@ export function RsvpTable({
                               </span>
                             )}
                           </div>
+                        </td>
+                        <td className="px-4 py-4 text-center">
+                           <span title={record.acceptedTerms ? "Términos aceptados" : "Términos no aceptados"}>
+                            {record.acceptedTerms ? "✅" : "❌"}
+                           </span>
                         </td>
                         <td className="px-4 py-4">
                           <AttendanceBadge

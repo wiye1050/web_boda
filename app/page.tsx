@@ -7,6 +7,11 @@ import { Divider } from "@/components/Divider";
 import { Countdown } from "@/components/Countdown";
 import { Section } from "@/components/Section";
 import { RSVPForm } from "@/components/RSVPForm";
+import { HeroAnimation, HeroItem } from "@/components/HeroAnimation";
+import { FadeIn } from "@/components/FadeIn";
+import { Timeline } from "@/components/Timeline";
+import { AddToCalendar } from "@/components/AddToCalendar";
+import { TopBar } from "@/components/TopBar";
 import { getPublicConfig } from "@/lib/getPublicConfig";
 import type {
   FaqItem,
@@ -23,30 +28,7 @@ type GiftOption = {
   hideDetails?: boolean;
 };
 
-function Timeline({ items }: { items: TimelineItem[] }) {
-  return (
-    <ol className="grid gap-6 md:grid-cols-2">
-      {items.map((event) => (
-        <li
-          key={event.time}
-          className="rounded-[var(--radius-card)] border border-border/80 bg-surface/80 p-4 shadow-[var(--shadow-soft)] sm:p-6"
-        >
-          <div className="flex items-center justify-between text-sm font-semibold uppercase tracking-[0.3em] text-muted">
-        <span>{event.time} h</span>
-          <span role="img" aria-hidden>
-            {event.icon}
-          </span>
-          </div>
-          <h3 className="mt-4 text-2xl font-semibold">{event.title}</h3>
-          <p className="mt-3 text-sm text-muted">{event.description}</p>
-          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.3em] text-muted/80">
-            {event.location}
-          </p>
-        </li>
-      ))}
-    </ol>
-  );
-}
+
 
 function StayList({
   items,
@@ -161,7 +143,16 @@ function FaqList({ items }: { items: FaqItem[] }) {
 }
 
 export default async function Home() {
-  const config = await getPublicConfig();
+  let config;
+  try {
+    config = await getPublicConfig();
+  } catch (error) {
+    console.error("Critical error fetching public config:", error);
+    // Fallback to a safe default if the fetch fails completely
+    const { DEFAULT_PUBLIC_CONTENT } = await import("@/lib/publicContent");
+    config = DEFAULT_PUBLIC_CONTENT;
+  }
+
   const prebodaMapUrl = config.prebodaMapUrl || config.locationMapUrl;
   const heroImages = (config.heroBackgroundImages ?? []).filter(
     (src) => typeof src === "string" && src.trim().length > 0,
@@ -229,33 +220,25 @@ export default async function Home() {
       label: section.label.trim() || section.id,
       href: `#${section.id}`,
     }));
-  const showNotice =
-    config.noticeEnabled && config.noticeText.trim().length > 0;
+  const showNotice = true; // config.noticeEnabled && config.noticeText.trim().length > 0;
   const showCountdown =
     showNotice &&
-    config.noticeCountdownEnabled &&
-    config.noticeCountdownTarget.trim().length > 0;
+    true; // config.noticeCountdownEnabled &&
+    // config.noticeCountdownTarget.trim().length > 0;
 
   return (
     <div id="top" className="flex min-h-screen flex-col">
       {showNotice && (
-        <div className="bg-amber-500/15 text-amber-50">
-          <div className="mx-auto flex w-full max-w-6xl items-center gap-3 px-6 py-3 text-sm sm:px-8">
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-200">
-              Aviso
-            </span>
-            <p className="text-amber-50/90">{config.noticeText}</p>
-            {showCountdown && (
-              <Countdown target={config.noticeCountdownTarget.trim()} />
-            )}
-          </div>
-        </div>
+        <TopBar
+          brandName={config.brandName}
+          navItems={navItems}
+          ctaLabel={config.headerCtaLabel}
+          config={{
+            noticeText: config.noticeText,
+            noticeCountdownTarget: config.noticeCountdownTarget,
+          }}
+        />
       )}
-      <Header
-        brandName={config.brandName}
-        navItems={navItems}
-        ctaLabel={config.headerCtaLabel}
-      />
       <main className="flex-1 pb-[calc(env(safe-area-inset-bottom)_+_84px)] sm:pb-0">
         <section className="relative">
           {heroImages.length > 0 ? (
@@ -263,63 +246,75 @@ export default async function Home() {
           ) : (
             <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(183,110,121,0.25),_transparent_55%),radial-gradient(circle_at_80%_10%,_rgba(241,223,215,0.8),_transparent_60%)]" />
           )}
-          <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-[calc(var(--spacing-section)*0.75)] sm:gap-10 sm:px-8 sm:py-[calc(var(--spacing-section)*1.2)]">
-            <span className="text-[0.65rem] font-semibold uppercase tracking-[0.5em] text-muted sm:text-xs sm:tracking-[0.6em]">
-              {config.heroEyebrow}
-            </span>
-            <h1 className="font-display text-[clamp(2.6rem,9vw,4.2rem)] font-semibold leading-[1.05] drop-shadow-[0_2px_12px_rgba(0,0,0,0.35)] sm:text-[clamp(3.5rem,10vw,6rem)]">
-              {config.heroTitle}
-            </h1>
-            <p className="max-w-xl text-base text-foreground/95 drop-shadow-[0_1px_10px_rgba(0,0,0,0.35)] sm:text-lg">
-              {config.heroDescription}
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
-              <CTAButton href="#asistencia" className="w-full sm:w-auto">
-                {config.heroPrimaryCtaLabel}
-              </CTAButton>
-              <CTAButton href="#cronograma" variant="outline" className="w-full sm:w-auto">
-                {config.heroSecondaryCtaLabel}
-              </CTAButton>
-            </div>
-            <div className="mt-6 grid gap-6 rounded-[var(--radius-card)] border border-border/70 bg-surface/80 p-4 sm:grid-cols-3 sm:p-6">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                  {config.heroStatDateLabel}
-                </p>
-                <p className="mt-2 text-lg font-semibold">{config.eventDate}</p>
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                  {config.heroStatLocationLabel}
-                </p>
-                <p className="mt-2 text-lg font-semibold">
-                  {config.locationName}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                  {config.heroStatTimeLabel}
-                </p>
-                <p className="mt-2 text-lg font-semibold">
-                  {config.eventTimeRange}
-                  {config.heroStatTimeNote
-                    ? ` (${config.heroStatTimeNote})`
-                    : ""}
-                </p>
-              </div>
-            </div>
-            {config.locationMapUrl && (
-              <div className="flex flex-wrap gap-4">
-                <CTAButton
-                  href={config.locationMapUrl}
-                  variant="ghost"
-                  prefetch={false}
-                >
-                  {config.heroMapCtaLabel}
+          <HeroAnimation>
+            <HeroItem>
+              <span className="text-[0.65rem] font-semibold uppercase tracking-[0.5em] text-white/90 drop-shadow-md sm:text-xs sm:tracking-[0.6em]">
+                {config.heroEyebrow}
+              </span>
+            </HeroItem>
+            <HeroItem>
+              <h1 className="font-display text-[clamp(2.6rem,9vw,4.2rem)] font-semibold leading-[1.05] !text-white drop-shadow-lg sm:text-[clamp(3.5rem,10vw,6rem)]">
+                {config.heroTitle}
+              </h1>
+            </HeroItem>
+            <HeroItem>
+              <p className="max-w-xl text-base text-white/95 drop-shadow-md sm:text-lg">
+                {config.heroDescription}
+              </p>
+            </HeroItem>
+            <HeroItem>
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+                <CTAButton href="#asistencia" className="w-full sm:w-auto shadow-lg">
+                  {config.heroPrimaryCtaLabel}
+                </CTAButton>
+                <CTAButton href="#timeline" variant="outline" className="w-full sm:w-auto border-white/30 !text-white hover:bg-white/10 hover:border-white hover:!text-white">
+                  {config.heroSecondaryCtaLabel}
                 </CTAButton>
               </div>
+            </HeroItem>
+            <HeroItem>
+              <div className="mt-6 grid gap-6 rounded-[var(--radius-card)] border border-border/70 bg-surface/80 p-4 sm:grid-cols-3 sm:p-6">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                    {config.heroStatDateLabel}
+                  </p>
+                  <p className="mt-2 text-lg font-semibold">{config.eventDate}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                    {config.heroStatLocationLabel}
+                  </p>
+                  <p className="mt-2 text-lg font-semibold">
+                    {config.locationName}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                    {config.heroStatTimeLabel}
+                  </p>
+                  <p className="mt-2 text-lg font-semibold">
+                    {config.eventTimeRange}
+                    {config.heroStatTimeNote
+                      ? ` (${config.heroStatTimeNote})`
+                      : ""}
+                  </p>
+                </div>
+              </div>
+            </HeroItem>
+            {config.locationMapUrl && (
+              <HeroItem>
+                <div className="flex flex-wrap gap-4">
+                  <CTAButton
+                    href={config.locationMapUrl}
+                    variant="ghost"
+                    prefetch={false}
+                  >
+                    {config.heroMapCtaLabel}
+                  </CTAButton>
+                </div>
+              </HeroItem>
             )}
-          </div>
+          </HeroAnimation>
         </section>
         <div className="py-6">
           <Divider />
@@ -327,24 +322,40 @@ export default async function Home() {
 
         <div className="mx-auto w-full max-w-6xl px-6 pb-10 sm:px-8">
           <div className="grid gap-4 sm:grid-cols-2">
-            <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-5 shadow-[var(--shadow-soft)]">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                Cuándo
-              </p>
-              <p className="mt-3 text-lg font-semibold text-foreground">
-                {config.eventDate}
-              </p>
-              <p className="text-sm text-muted">{config.eventTimeRange}</p>
-            </article>
-            <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-5 shadow-[var(--shadow-soft)]">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                Dónde
-              </p>
-              <p className="mt-3 text-lg font-semibold text-foreground">
-                {config.locationName}
-              </p>
-              <p className="text-sm text-muted">{config.locationAddress}</p>
-            </article>
+            <FadeIn direction="left" delay={0.2} fullWidth>
+              <article className="h-full rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-5 shadow-[var(--shadow-soft)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                  Cuándo
+                </p>
+                <p className="mt-3 text-lg font-semibold text-foreground">
+                  {config.eventDate}
+                </p>
+                <p className="text-sm text-muted">{config.eventTimeRange}</p>
+                
+                <div className="mt-6">
+                  <AddToCalendar 
+                    event={{
+                      title: `${config.brandName || "Boda"}`,
+                      description: config.heroDescription,
+                      location: `${config.locationName}, ${config.locationAddress}`,
+                      start: new Date("2025-09-12T13:30:00"),
+                      end: new Date("2025-09-13T02:00:00"),
+                    }}
+                  />
+                </div>
+              </article>
+            </FadeIn>
+            <FadeIn direction="right" delay={0.4} fullWidth>
+              <article className="h-full rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-5 shadow-[var(--shadow-soft)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                  Dónde
+                </p>
+                <p className="mt-3 text-lg font-semibold text-foreground">
+                  {config.locationName}
+                </p>
+                <p className="text-sm text-muted">{config.locationAddress}</p>
+              </article>
+            </FadeIn>
           </div>
         </div>
 

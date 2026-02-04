@@ -155,7 +155,7 @@ export function HeroSlideshow({
         style={{ opacity: isFading ? 1 : 0 }}
         onError={() => handleImageError(upcomingImage)}
       />
-      <div className="absolute inset-0 bg-black/40 sm:bg-black/30" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent sm:via-black/40" />
     </div>
   );
 }

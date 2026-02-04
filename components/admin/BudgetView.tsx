@@ -7,6 +7,8 @@ import {
   type BudgetStatus,
 } from "@/components/admin/useBudget";
 import { formatCurrency } from "./utils/formatCurrency";
+import { KPICards } from "./KPICards";
+import { BudgetChart } from "./BudgetChart";
 
 const STATUS_OPTIONS: Array<{ value: BudgetStatus; label: string }> = [
   { value: "planeado", label: "Planeado" },
@@ -83,18 +85,12 @@ export function BudgetView() {
             Controla el presupuesto estimado, comprometido y pagado.
           </p>
         </div>
-        <div className="flex flex-wrap gap-4 rounded-[var(--radius-card)] border border-border/80 bg-surface/95 px-5 py-3 text-sm text-muted shadow-[var(--shadow-soft)]">
-          <span>
-            Estimado: <strong className="text-foreground">{formatCurrency(totals.estimate)}</strong>
-          </span>
-          <span>
-            Ejecutado: <strong className="text-foreground">{formatCurrency(totals.actual)}</strong>
-          </span>
-          <span>
-            Pagado: <strong className="text-foreground">{formatCurrency(totals.paid)}</strong>
-          </span>
-        </div>
+        <div />
       </header>
+
+      <KPICards totals={totals} />
+      
+      <BudgetChart items={items} />
 
       <section className="rounded-[var(--radius-card)] border border-border/80 bg-surface/95 p-5 shadow-[var(--shadow-soft)]">
         <h2 className="text-lg font-semibold">Añadir partida</h2>

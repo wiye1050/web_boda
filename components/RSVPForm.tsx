@@ -3,8 +3,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { toast } from "sonner";
 import { firebaseClient } from "@/lib/firebase";
 import { DEFAULT_PUBLIC_CONTENT, type RsvpFormCopy } from "@/lib/publicContent";
+import { sendConfirmationEmail } from "@/app/actions/sendConfirmation";
 
 type RSVPStatus = "idle" | "loading" | "success" | "error";
 
@@ -21,7 +23,9 @@ type FormState = {
   needsTransport: YesNo | null;
   transportSeats: string;
   requests: string;
+  songRequest: string;
   reminderOptIn: boolean;
+  acceptedTerms: boolean;
 };
 
 const INITIAL_STATE: FormState = {
@@ -35,7 +39,9 @@ const INITIAL_STATE: FormState = {
   needsTransport: null,
   transportSeats: "",
   requests: "",
+  songRequest: "",
   reminderOptIn: false,
+  acceptedTerms: false,
 };
 
 type RSVPFormProps = {
@@ -103,8 +109,8 @@ export function RSVPForm({
   }, [form.attendance, guestsNumber]);
 
   const phoneValid = useMemo(() => {
-    const digitsOnly = form.phone.replace(/\D/g, "");
-    return digitsOnly.length >= 8 && digitsOnly.length <= 15;
+    const digitsOnly = form.phone.replace(/[^\d+]/g, "");
+    return digitsOnly.length >= 8 && digitsOnly.length <= 25;
   }, [form.phone]);
 
   const seatsValid = useMemo(() => {
@@ -131,8 +137,11 @@ export function RSVPForm({
     form.preboda !== null &&
     form.needsTransport !== null &&
     (form.needsTransport === "si"
-      ? form.transportSeats.trim().length > 0 && !Number.isNaN(seatsRequested)
-      : true);
+      ? form.transportSeats.trim().length > 0 &&
+        !Number.isNaN(seatsRequested) &&
+        seatsRequested <= (Number.isNaN(guestsNumber) ? 0 : guestsNumber)
+      : true) &&
+    form.acceptedTerms;
 
   function handleChange<K extends keyof FormState>(
     field: K,
@@ -207,16 +216,18 @@ export function RSVPForm({
 
     if (botField.trim().length > 0) {
       setStatus("error");
-      setErrorMessage(
-        "No pudimos enviar el formulario. Inténtalo de nuevo en unos segundos.",
-      );
+      const msg = "No pudimos enviar el formulario. Inténtalo de nuevo en unos segundos.";
+      setErrorMessage(msg);
+      toast.error(msg);
       setTimeout(() => setStatus("idle"), 6000);
       return;
     }
 
     if (Date.now() - startedAt.current < 2500) {
       setStatus("error");
-      setErrorMessage("Espera unos segundos y vuelve a intentarlo.");
+      const msg = "Espera unos segundos y vuelve a intentarlo.";
+      setErrorMessage(msg);
+      toast.error(msg);
       setTimeout(() => setStatus("idle"), 6000);
       return;
     }
@@ -225,9 +236,9 @@ export function RSVPForm({
     if (now - lastSubmittedAt.current < COOLDOWN_MS) {
       const remaining = Math.ceil((COOLDOWN_MS - (now - lastSubmittedAt.current)) / 1000);
       setStatus("error");
-      setErrorMessage(
-        `Hemos recibido un envío reciente. Espera ${remaining} segundos antes de volver a intentarlo.`,
-      );
+      const msg = `Hemos recibido un envío reciente. Espera ${remaining} segundos antes de volver a intentarlo.`;
+      setErrorMessage(msg);
+      toast.error(msg);
       setTimeout(() => setStatus("idle"), 6000);
       return;
     }
@@ -241,7 +252,7 @@ export function RSVPForm({
 
     try {
       const db = firebaseClient.getFirestore();
-      const phoneDigits = form.phone.replace(/\\D/g, "");
+      const phoneDigits = form.phone.replace(/[^\d+]/g, "");
       const editToken = Math.random().toString(36).slice(2, 10);
 
       await addDoc(collection(db, "rsvps"), {
@@ -258,6 +269,7 @@ export function RSVPForm({
             ? Math.min(seatsRequested, Math.max(guestsNumber, 1))
             : 0,
         requests: form.requests.trim(),
+        songRequest: form.songRequest.trim(),
         reminderOptIn: Boolean(form.reminderOptIn),
         editToken,
         submittedAt: serverTimestamp(),
@@ -273,6 +285,7 @@ export function RSVPForm({
         guests: attending ? guestsNumber : 0,
         needsTransport: form.needsTransport ?? "no",
       });
+      toast.success("¡Confirmación recibida correctamente!");
       setForm(INITIAL_STATE);
       lastSubmittedAt.current = Date.now();
       if (typeof window !== "undefined") {
@@ -281,20 +294,29 @@ export function RSVPForm({
           String(lastSubmittedAt.current),
         );
       }
+
+      // Enviar email de confirmación (no bloqueante)
+      await sendConfirmationEmail({
+        fullName: form.fullName.trim(),
+        email: form.email.trim(),
+        guests: attending ? guestsNumber : 0,
+        attendance: form.attendance!,
+        transport: form.needsTransport === "si" ? "si" : "no",
+      });
     } catch (error) {
       console.error("Error guardando RSVP", error);
       setStatus("error");
 
       if (error instanceof Error) {
-        setErrorMessage(
-          error.message.includes("Faltan variables")
-            ? "Parece que hay un problema de configuración. Escríbenos por WhatsApp mientras lo solucionamos."
-            : "No pudimos guardar tu respuesta. Inténtalo de nuevo en unos minutos o contáctanos directamente.",
-        );
+        const msg = error.message.includes("Faltan variables")
+          ? "Parece que hay un problema de configuración. Escríbenos por WhatsApp mientras lo solucionamos."
+          : "No pudimos guardar tu respuesta. Inténtalo de nuevo en unos minutos o contáctanos directamente.";
+        setErrorMessage(msg);
+        toast.error(msg);
       } else {
-        setErrorMessage(
-          "No pudimos guardar tu respuesta. Inténtalo de nuevo en unos minutos o contáctanos directamente.",
-        );
+        const msg = "No pudimos guardar tu respuesta. Inténtalo de nuevo en unos minutos o contáctanos directamente.";
+        setErrorMessage(msg);
+        toast.error(msg);
       }
     } finally {
       setTimeout(() => setStatus("idle"), 6000);
@@ -319,38 +341,55 @@ export function RSVPForm({
       </label>
       <div className="grid gap-6 md:grid-cols-2">
         {submittedInfo && status === "success" && (
-          <div className="md:col-span-2 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-4 text-sm text-emerald-100">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200">
-              Resumen enviado
-            </p>
-            <ul className="mt-2 space-y-1">
-              <li>
-                <span className="font-semibold">Nombre:</span>{" "}
-                {submittedInfo.fullName}
-              </li>
-              {submittedInfo.attendance === "si" && (
-                <li>
-                  <span className="font-semibold">Asistentes:</span>{" "}
-                  {submittedInfo.guests}
+          <div className="md:col-span-2 flex flex-col items-center justify-center gap-4 rounded-[24px] border border-emerald-400/40 bg-emerald-500/10 p-8 text-center shadow-sm transition-all animate-in fade-in zoom-in duration-500">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 shadow-md animate-bounce">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2.5}
+                stroke="currentColor"
+                className="h-8 w-8"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4.5 12.75l6 6 9-13.5"
+                />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-emerald-800">
+                ¡Gracias {submittedInfo.fullName.split(" ")[0]}!
+              </h3>
+              <p className="mt-2 text-sm text-emerald-700">
+                Hemos recibido tu confirmación correctamente.
+              </p>
+            </div>
+            
+            <div className="mt-2 w-full max-w-sm rounded-xl bg-white/60 p-4 text-emerald-900 shadow-sm border border-emerald-200/50">
+              <ul className="space-y-2 text-sm">
+                <li className="flex justify-between border-b border-emerald-200/50 pb-2">
+                  <span className="font-semibold">Asistencia:</span>
+                  <span>{submittedInfo.attendance === "si" ? "Sí, asistiré" : "No podré asistir"}</span>
                 </li>
-              )}
-              <li>
-                <span className="font-semibold">Teléfono:</span>{" "}
-                {submittedInfo.phone}
-              </li>
-              {submittedInfo.email && (
-                <li>
-                  <span className="font-semibold">Email:</span>{" "}
-                  {submittedInfo.email}
-                </li>
-              )}
-              <li>
-                <span className="font-semibold">Transporte:</span>{" "}
-                {submittedInfo.needsTransport === "si" ? "Sí" : "No"}
-              </li>
-            </ul>
-            <p className="mt-3 text-xs text-emerald-200/80">
-              Gracias por confirmar. Si necesitas cambiar algo, avísanos.
+                 {submittedInfo.attendance === "si" && (
+                   <>
+                    <li className="flex justify-between border-b border-emerald-200/50 pb-2">
+                      <span className="font-semibold">Adultos:</span>
+                      <span>{submittedInfo.guests}</span>
+                    </li>
+                    <li className="flex justify-between pt-1">
+                      <span className="font-semibold">Transporte:</span>
+                      <span>{submittedInfo.needsTransport === "si" ? "Sí" : "No"}</span>
+                    </li>
+                   </>
+                 )}
+              </ul>
+            </div>
+
+             <p className="mt-2 text-xs text-emerald-600/80">
+              Te hemos enviado un email con el resumen.
             </p>
           </div>
         )}
@@ -628,7 +667,40 @@ export function RSVPForm({
         </div>
       )}
 
+      {attending && (
+        <label className="flex flex-col gap-2 text-left md:col-span-2">
+          <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+            <span role="img" aria-hidden>🎵</span> Una canción que no puede faltar
+          </span>
+          <input
+            name="songRequest"
+            value={form.songRequest}
+            onChange={(event) => handleChange("songRequest", event.target.value)}
+            placeholder="Ej: Flying Free, Paquito el Chocolatero..."
+            className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+          />
+        </label>
+      )}
+
       <div className="flex flex-col items-center gap-4 text-center">
+        <label className="flex items-start gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-left text-sm text-foreground">
+          <input
+            type="checkbox"
+            className="mt-1 h-4 w-4 rounded border-border bg-background accent-primary"
+            checked={form.acceptedTerms}
+            onChange={(event) =>
+              handleChange("acceptedTerms", event.target.checked)
+            }
+          />
+          <span className="text-xs sm:text-sm">
+            Entiendo que esta es una celebración{" "}
+            <span className="font-semibold text-primary">
+              exclusivamente para adultos
+            </span>
+            .
+          </span>
+        </label>
+
         <button
           type="submit"
           disabled={!isValid || status === "loading"}

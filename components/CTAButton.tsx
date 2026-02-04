@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -9,6 +10,7 @@ type CTAButtonProps = {
   variant?: CTAButtonVariant;
   className?: string;
   prefetch?: boolean;
+  onClick?: () => void;
 };
 
 const baseClasses =
@@ -29,13 +31,12 @@ export function CTAButton({
   variant = "primary",
   className,
   prefetch,
+  onClick,
 }: CTAButtonProps) {
-  const combinedClassName = [baseClasses, variantClasses[variant], className]
-    .filter(Boolean)
-    .join(" ");
+  const combinedClassName = cn(baseClasses, variantClasses[variant], className);
 
   return (
-    <Link href={href} className={combinedClassName} prefetch={prefetch}>
+    <Link href={href} className={combinedClassName} prefetch={prefetch} onClick={onClick}>
       {children}
     </Link>
   );

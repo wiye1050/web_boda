@@ -3,32 +3,15 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function isAdmin() {
-      if (request.auth == null) return false;
-
-      // Lista fija como respaldo
-      if (
+      return request.auth != null && (
         request.auth.uid in [
-          "Pes0MiUoP0TAKPabrIUGyxevsNX2",
+          "Pes0MiUoP0TAKPabrIUGyxevsNX2"
         ] ||
         request.auth.token.email in [
           "guillemenendez1050@gmail.com",
-          "varelamaciasalba@gmail.com",
+          "varelamaciasalba@gmail.com"
         ]
-      ) {
-        return true;
-      }
-
-      // Lista editable en private_config/general
-      let adminDoc = get(/databases/$(database)/documents/private_config/general);
-      let adminEmails = adminDoc.exists() && adminDoc.data.adminEmails is list
-        ? adminDoc.data.adminEmails
-        : [];
-      let adminUids = adminDoc.exists() && adminDoc.data.adminUids is list
-        ? adminDoc.data.adminUids
-        : [];
-
-      return (request.auth.token.email in adminEmails) ||
-        (request.auth.uid in adminUids);
+      );
     }
 
     function stringField(field, minLen, maxLen) {
@@ -135,7 +118,9 @@ service cloud.firestore {
         optionalTransportSeatsAssigned(data) &&
         (!data.keys().hasAny(["source"]) || stringField(data.source, 2, 40)) &&
         optionalString(data, "editToken", 0, 200) &&
-        optionalBoolean(data, "reminderOptIn");
+        optionalBoolean(data, "reminderOptIn") &&
+        optionalStringOrNull(data, "tableId", 0, 50) &&
+        optionalString(data, "songRequest", 0, 200);
     }
 
     function rsvpCreateKeys(data) {
@@ -153,7 +138,13 @@ service cloud.firestore {
         "submittedAt",
         "source",
         "editToken",
+        "source",
+        "editToken",
         "reminderOptIn",
+        "tableId",
+        "tableId",
+        "songRequest",
+        "acceptedTerms",
       ]);
     }
 
@@ -180,20 +171,26 @@ service cloud.firestore {
         "transportRouteId",
         "transportAssignedSeats",
         "editToken",
+        "transportAssignedSeats",
+        "editToken",
         "reminderOptIn",
+        "tableId",
+        "tableId",
+        "songRequest",
+        "acceptedTerms",
       ]);
     }
 
     match /rsvps/{docId} {
-      allow create: if (request.auth == null || isAdmin()) &&
+      allow create: if isAdmin() || (
+        request.auth == null &&
         rsvpCreateKeys(request.resource.data) &&
-        baseRsvpChecks(request.resource.data);
+        baseRsvpChecks(request.resource.data)
+      );
 
       allow read: if isAdmin();
 
-      allow update: if isAdmin() &&
-        rsvpUpdateKeys(request.resource.data) &&
-        baseRsvpChecks(request.resource.data);
+      allow update: if isAdmin();
 
       allow delete: if isAdmin();
     }
@@ -592,11 +589,7 @@ service cloud.firestore {
     }
 
     match /private_config/{docId} {
-      allow read, write: if isAdmin() &&
-        optionalString(request.resource.data, "bankHolder", 0, 200) &&
-        optionalString(request.resource.data, "bankIban", 0, 80) &&
-        optionalStringList(request.resource.data, "adminEmails", 50) &&
-        optionalStringList(request.resource.data, "adminUids", 50);
+      allow read, write: if isAdmin();
     }
 
     match /{document=**} {

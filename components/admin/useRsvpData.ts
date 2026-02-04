@@ -34,6 +34,9 @@ export type RsvpRecord = {
   tags: string[];
   transportRouteId?: string | null;
   transportAssignedSeats?: number;
+  acceptedTerms?: boolean;
+  tableId?: string | null;
+  songRequest?: string;
 };
 
 export type RsvpMetrics = {
@@ -132,6 +135,12 @@ export function useRsvpData(limitTo = 200) {
             transportAssignedSeats: Number.isFinite(data.transportAssignedSeats)
               ? Number(data.transportAssignedSeats)
               : undefined,
+            acceptedTerms:
+              typeof data.acceptedTerms === "boolean"
+                ? data.acceptedTerms
+                : false,
+            tableId: typeof data.tableId === "string" ? data.tableId : null,
+            songRequest: typeof data.songRequest === "string" ? data.songRequest : undefined,
           });
         });
 

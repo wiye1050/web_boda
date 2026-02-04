@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { FadeIn } from "./FadeIn";
 
 type SectionBackground = "default" | "surface" | "accent";
 type SectionAlign = "left" | "center";
@@ -59,31 +60,39 @@ export function Section({
               .join(" ")}
           >
             {eyebrow && (
-              <span className="text-xs font-semibold uppercase tracking-[0.4em] text-muted">
-                {eyebrow}
-              </span>
+              <FadeIn delay={0.1}>
+                <span className="text-xs font-semibold uppercase tracking-[0.4em] text-muted">
+                  {eyebrow}
+                </span>
+              </FadeIn>
             )}
             {title && (
-              <h2 id={headingId} className="font-display">
-                {title}
-              </h2>
+              <FadeIn delay={0.2}>
+                <h2 id={headingId} className="font-display">
+                  {title}
+                </h2>
+              </FadeIn>
             )}
             {description && (
-              <p
-                id={descriptionId}
-                className={[
-                  "text-base text-muted max-w-2xl",
-                  align === "center" ? "mx-auto" : "md:max-w-3xl",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                {description}
-              </p>
+              <FadeIn delay={0.3}>
+                <p
+                  id={descriptionId}
+                  className={[
+                    "text-base text-muted max-w-2xl",
+                    align === "center" ? "mx-auto" : "md:max-w-3xl",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  {description}
+                </p>
+              </FadeIn>
             )}
           </header>
         )}
-        <div className="grid gap-8">{children}</div>
+        <FadeIn>
+          <div className="grid gap-8">{children}</div>
+        </FadeIn>
       </div>
     </section>
   );

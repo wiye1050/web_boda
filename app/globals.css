@@ -10,6 +10,7 @@
   --primary-foreground: #fdf9f9;
   --accent: #f1dfd7;
   --accent-strong: #f5c9bf;
+  --topbar-height: 0px;
 }
 
 @theme inline {
