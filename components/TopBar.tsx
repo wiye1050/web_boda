@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import { Countdown } from "@/components/Countdown";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CTAButton } from "./CTAButton";
+import { ThemeToggle } from "./ThemeToggle";
 
 type NavItem = {
   label: string;
@@ -62,10 +64,14 @@ export function TopBar({
               href="#top"
               className="relative h-10 w-auto shrink-0 transition-opacity hover:opacity-80"
             >
-              <img 
+              <Image 
                  src="/logo-ag.png" 
                  alt={brandName} 
+                 width={150}
+                 height={60}
                  className="h-full w-auto object-contain"
+                 style={{ width: "auto", height: "100%" }}
+                 priority
               />
             </Link>
 
@@ -91,6 +97,7 @@ export function TopBar({
 
           {/* RIGHT: CTA + Mobile Menu Toggle */}
           <div className="flex items-center gap-3 shrink-0">
+            <ThemeToggle />
             <div className="hidden sm:block">
               <CTAButton
                 href="#asistencia"

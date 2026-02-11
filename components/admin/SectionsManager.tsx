@@ -16,20 +16,11 @@ import {
   type TimelineItem,
 } from "@/lib/publicContent";
 
-const SECTION_LABELS: Record<string, string> = {
-  preboda: "Preboda",
-  ceremonia: "La boda",
-  detalles: "Detalles prácticos",
-  cronograma: "Cronograma",
-  alojamiento: "Alojamiento",
-  regalos: "Regalos",
-  faq: "FAQ",
-  asistencia: "Confirmar asistencia",
-  ubicacion: "Ubicación",
-};
+
 
 const GLOBAL_BLOCKS = [
   { id: "marca", label: "Marca y cabecera" },
+  { id: "aviso", label: "Aviso destacado (Popup)" },
   { id: "hero", label: "Hero principal" },
   { id: "evento", label: "Datos del evento" },
   { id: "footer", label: "Footer" },
@@ -59,6 +50,18 @@ const EMPTY_PRACTICAL_ITEM: PracticalItem = {
 const EMPTY_FAQ_ITEM: FaqItem = {
   question: "",
   answer: "",
+};
+
+const SECTION_LABELS: Record<string, string> = {
+  hero: "Hero (Portada)",
+  preboda: "Preboda",
+  ceremonia: "La Boda (Timeline)",
+  ubicacion: "Ubicación",
+  alojamiento: "Alojamiento",
+  detalles: "Guía Práctica",
+  regalos: "Regalos",
+  faq: "Preguntas Frecuentes",
+  asistencia: "Confirmar Asistencia",
 };
 
 function sortSections(sections: SectionConfig[]) {
@@ -467,6 +470,43 @@ export function SectionsManager() {
                       </div>
                     )}
 
+                    {block.id === "aviso" && (
+                      <div className="grid gap-4">
+                        <CheckboxField
+                          label="Activar aviso"
+                          checked={content.noticeEnabled}
+                          onChange={(checked) =>
+                            updateField("noticeEnabled", checked)
+                          }
+                        />
+                        <TextAreaField
+                          label="Texto del aviso"
+                          value={content.noticeText}
+                          onChange={(value) => updateField("noticeText", value)}
+                        />
+                        <div className="grid gap-3 rounded-2xl border border-border/70 bg-surface/50 p-4">
+                          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                            Cuenta atrás en el aviso
+                          </p>
+                          <CheckboxField
+                            label="Activar cuenta atrás"
+                            checked={content.noticeCountdownEnabled}
+                            onChange={(checked) =>
+                              updateField("noticeCountdownEnabled", checked)
+                            }
+                          />
+                          <InputField
+                            label="Fecha objetivo (ISO)"
+                            value={content.noticeCountdownTarget}
+                            onChange={(value) =>
+                              updateField("noticeCountdownTarget", value)
+                            }
+                            placeholder="Ej: 2025-06-21T18:00:00"
+                          />
+                        </div>
+                      </div>
+                    )}
+
                     {block.id === "hero" && (
                       <div className="grid gap-4">
                         <InputField
@@ -847,67 +887,91 @@ export function SectionsManager() {
                     )}
 
                     {section.id === "ceremonia" && (
-                      <div className="grid gap-4">
-                        <InputField
-                          label="Eyebrow"
-                          value={content.ceremonyEyebrow}
-                          onChange={(value) => updateField("ceremonyEyebrow", value)}
-                        />
-                        <InputField
-                          label="Título"
-                          value={content.ceremonyTitle}
-                          onChange={(value) => updateField("ceremonyTitle", value)}
-                        />
-                        <TextAreaField
-                          label="Descripción"
-                          value={content.ceremonyDescription}
-                          onChange={(value) =>
-                            updateField("ceremonyDescription", value)
-                          }
-                        />
-                        <InputField
-                          label="Etiqueta tarjeta 1"
-                          value={content.ceremonyCardOneLabel}
-                          onChange={(value) =>
-                            updateField("ceremonyCardOneLabel", value)
-                          }
-                        />
-                        <InputField
-                          label="Título tarjeta 1"
-                          value={content.ceremonyCardOneTitle}
-                          onChange={(value) =>
-                            updateField("ceremonyCardOneTitle", value)
-                          }
-                        />
-                        <TextAreaField
-                          label="Descripción tarjeta 1"
-                          value={content.ceremonyCardOneDescription}
-                          onChange={(value) =>
-                            updateField("ceremonyCardOneDescription", value)
-                          }
-                        />
-                        <InputField
-                          label="Etiqueta tarjeta 2"
-                          value={content.ceremonyCardTwoLabel}
-                          onChange={(value) =>
-                            updateField("ceremonyCardTwoLabel", value)
-                          }
-                        />
-                        <InputField
-                          label="Título tarjeta 2"
-                          value={content.ceremonyCardTwoTitle}
-                          onChange={(value) =>
-                            updateField("ceremonyCardTwoTitle", value)
-                          }
-                        />
-                        <TextAreaField
-                          label="Descripción tarjeta 2"
-                          value={content.ceremonyCardTwoDescription}
-                          onChange={(value) =>
-                            updateField("ceremonyCardTwoDescription", value)
-                          }
-                        />
+                      <>
+                        <div className="grid gap-4">
+                          <InputField
+                            label="Eyebrow"
+                            value={content.ceremonyEyebrow}
+                            onChange={(value) =>
+                              updateField("ceremonyEyebrow", value)
+                            }
+                          />
+                        </div>
+
+                      <div className="mt-8 border-t border-border/50 pt-6">
+                        <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">
+                          Cronograma del día
+                        </h4>
+                        <div className="grid gap-4">
+                          <InputField
+                            label="Título del Cronograma"
+                            value={content.timelineTitle}
+                            onChange={(value) => updateField("timelineTitle", value)}
+                            placeholder="Ej: Cronograma"
+                          />
+                           <div className="grid gap-4">
+                          {content.timelineItems.map((item, index) => (
+                            <div
+                              key={`${item.time}-${index}`}
+                              className="grid gap-3 rounded-2xl border border-border/70 bg-surface/70 p-4"
+                            >
+                              <div className="grid gap-3 sm:grid-cols-2">
+                                <InputField
+                                  label="Hora"
+                                  value={item.time}
+                                  onChange={(value) =>
+                                    updateTimelineItem(index, "time", value)
+                                  }
+                                />
+                                <InputField
+                                  label="Icono"
+                                  value={item.icon}
+                                  onChange={(value) =>
+                                    updateTimelineItem(index, "icon", value)
+                                  }
+                                />
+                              </div>
+                              <InputField
+                                label="Título"
+                                value={item.title}
+                                onChange={(value) =>
+                                  updateTimelineItem(index, "title", value)
+                                }
+                              />
+                              <TextAreaField
+                                label="Descripción"
+                                value={item.description}
+                                onChange={(value) =>
+                                  updateTimelineItem(index, "description", value)
+                                }
+                              />
+                              <InputField
+                                label="Ubicación"
+                                value={item.location}
+                                onChange={(value) =>
+                                  updateTimelineItem(index, "location", value)
+                                }
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeTimelineItem(index)}
+                                className="w-fit rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+                              >
+                                Eliminar
+                              </button>
+                            </div>
+                          ))}
+                          <button
+                            type="button"
+                            onClick={addTimelineItem}
+                            className="w-fit rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+                          >
+                            Añadir hito
+                          </button>
+                        </div>
+                        </div>
                       </div>
+                      </>
                     )}
 
                     {section.id === "detalles" && (
@@ -982,89 +1046,7 @@ export function SectionsManager() {
                       </div>
                     )}
 
-                    {section.id === "cronograma" && (
-                      <div className="grid gap-6">
-                        <InputField
-                          label="Eyebrow"
-                          value={content.timelineEyebrow}
-                          onChange={(value) =>
-                            updateField("timelineEyebrow", value)
-                          }
-                        />
-                        <InputField
-                          label="Título"
-                          value={content.timelineTitle}
-                          onChange={(value) => updateField("timelineTitle", value)}
-                        />
-                        <TextAreaField
-                          label="Descripción"
-                          value={content.timelineDescription}
-                          onChange={(value) =>
-                            updateField("timelineDescription", value)
-                          }
-                        />
-                        <div className="grid gap-4">
-                          {content.timelineItems.map((item, index) => (
-                            <div
-                              key={`${item.time}-${index}`}
-                              className="grid gap-3 rounded-2xl border border-border/70 bg-surface/70 p-4"
-                            >
-                              <div className="grid gap-3 sm:grid-cols-2">
-                                <InputField
-                                  label="Hora"
-                                  value={item.time}
-                                  onChange={(value) =>
-                                    updateTimelineItem(index, "time", value)
-                                  }
-                                />
-                                <InputField
-                                  label="Icono"
-                                  value={item.icon}
-                                  onChange={(value) =>
-                                    updateTimelineItem(index, "icon", value)
-                                  }
-                                />
-                              </div>
-                              <InputField
-                                label="Título"
-                                value={item.title}
-                                onChange={(value) =>
-                                  updateTimelineItem(index, "title", value)
-                                }
-                              />
-                              <TextAreaField
-                                label="Descripción"
-                                value={item.description}
-                                onChange={(value) =>
-                                  updateTimelineItem(index, "description", value)
-                                }
-                              />
-                              <InputField
-                                label="Ubicación"
-                                value={item.location}
-                                onChange={(value) =>
-                                  updateTimelineItem(index, "location", value)
-                                }
-                              />
-                              <button
-                                type="button"
-                                onClick={() => removeTimelineItem(index)}
-                                className="w-fit rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-                              >
-                                Eliminar
-                              </button>
-                            </div>
-                          ))}
-                          <button
-                            type="button"
-                            onClick={addTimelineItem}
-                            className="w-fit rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-                          >
-                            Añadir hito
-                          </button>
-                        </div>
-                      </div>
-                    )}
+
 
                     {section.id === "alojamiento" && (
                       <div className="grid gap-6">
@@ -1853,10 +1835,12 @@ function InputField({
   label,
   value,
   onChange,
+  placeholder,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
+  placeholder?: string;
 }) {
   const inputId = useId();
   return (
@@ -1869,6 +1853,7 @@ function InputField({
         name={inputId}
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
         className="rounded-full border border-border/80 bg-background px-4 py-2.5 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
       />
     </label>
@@ -1898,6 +1883,32 @@ function TextAreaField({
         onChange={(event) => onChange(event.target.value)}
         className="rounded-3xl border border-border/80 bg-background px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
       />
+    </label>
+  );
+}
+
+function CheckboxField({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}) {
+  const checkboxId = useId();
+  return (
+    <label className="flex items-center gap-3">
+      <input
+        id={checkboxId}
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="h-5 w-5 rounded border-border/80 text-primary focus:ring-primary/20"
+      />
+      <span className="text-sm font-semibold uppercase tracking-[0.1em] text-foreground">
+        {label}
+      </span>
     </label>
   );
 }

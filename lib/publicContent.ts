@@ -205,13 +205,12 @@ export type PublicContent = {
 export const DEFAULT_SECTIONS: SectionConfig[] = [
   { id: "preboda", label: "Preboda", enabled: true, nav: true, order: 1 },
   { id: "ceremonia", label: "La boda", enabled: true, nav: true, order: 2 },
-  { id: "detalles", label: "Detalles", enabled: true, nav: true, order: 3 },
-  { id: "cronograma", label: "Cronograma", enabled: true, nav: true, order: 4 },
-  { id: "alojamiento", label: "Alojamiento", enabled: true, nav: true, order: 5 },
-  { id: "regalos", label: "Regalos", enabled: true, nav: true, order: 6 },
-  { id: "faq", label: "FAQ", enabled: true, nav: true, order: 7 },
-  { id: "asistencia", label: "Confirmar asistencia", enabled: true, nav: true, order: 8 },
-  { id: "ubicacion", label: "Ubicación", enabled: true, nav: true, order: 9 },
+  { id: "detalles", label: "Guía práctica", enabled: true, nav: true, order: 3 },
+  { id: "alojamiento", label: "Alojamiento", enabled: true, nav: true, order: 4 },
+  { id: "regalos", label: "Regalos", enabled: true, nav: true, order: 5 },
+  { id: "faq", label: "FAQ", enabled: true, nav: true, order: 6 },
+  { id: "asistencia", label: "Confirmar asistencia", enabled: true, nav: true, order: 7 },
+  { id: "ubicacion", label: "Ubicación", enabled: true, nav: true, order: 8 },
 ];
 
 export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
@@ -228,10 +227,10 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   navRsvpLabel: "Confirmar asistencia",
   navDetailsLabel: "Detalles",
   navLocationLabel: "Ubicación",
-  heroEyebrow: "Ponferrada · 2025",
+  heroEyebrow: "",
   heroTitle: "Alba & Guille",
   heroDescription:
-    "El 12 de septiembre de 2025 nos casamos en Finca El Casar, Ponferrada. Nos encantará compartir el día contigo.",
+    "El 12 de septiembre de 2026 nos casamos en Finca El Casar, Ponferrada. Nos encantará compartir el día contigo.",
   heroPrimaryCtaLabel: "Confirmar asistencia",
   heroSecondaryCtaLabel: "Ver horarios",
   heroMapCtaLabel: "Ver ubicación",
@@ -239,7 +238,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   heroStatLocationLabel: "Lugar",
   heroStatTimeLabel: "Horario",
   heroStatTimeNote: "solo adultos",
-  eventDate: "12 de septiembre · 2025",
+  eventDate: "12 de septiembre · 2026",
   eventTimeRange: "13:30 — 02:00",
   locationName: "Finca El Casar · Ponferrada",
   locationAddress: "Ponferrada, León",
@@ -266,9 +265,8 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   prebodaCardTwoDescription:
     "Unos vinos, algo de picoteo y buena conversación. También será solo para adultos.",
   ceremonyEyebrow: "La boda",
-  ceremonyTitle: "Cómo será el día",
-  ceremonyDescription:
-    "Abrimos puertas a las 13:30 h. Habrá ceremonia, banquete y fiesta hasta la madrugada.",
+  ceremonyTitle: "",
+  ceremonyDescription: "",
   ceremonyCardOneLabel: "Cómo llegar",
   ceremonyCardOneTitle: "Accesos y parking",
   ceremonyCardOneDescription:
@@ -278,7 +276,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   ceremonyCardTwoDescription:
     "Queremos un día tranquilo, por eso será una celebración solo para adultos.",
   timelineEyebrow: "Cronograma",
-  timelineTitle: "Cronograma del día",
+  timelineTitle: "Cómo será el día",
   timelineDescription:
     "Estos son los momentos principales para que te organices con calma.",
   timelineItems: [
@@ -323,11 +321,23 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
       icon: "🌙",
     },
   ],
-  practicalEyebrow: "Detalles prácticos",
-  practicalTitle: "Detalles prácticos",
+  practicalEyebrow: "",
+  practicalTitle: "Detalles",
   practicalDescription:
     "Lo esencial para venir tranquilo/a y disfrutar el día.",
   practicalItems: [
+    {
+      icon: "🚗",
+      title: "Accesos y parking",
+      description:
+        "La finca está a 10 minutos del centro. Hay parking dentro del recinto.",
+    },
+    {
+      icon: "🔞",
+      title: "Solo adultos",
+      description:
+        "Queremos un día tranquilo, por eso será una celebración solo para adultos.",
+    },
     {
       icon: "🕒",
       title: "Llegada con tiempo",
@@ -616,7 +626,20 @@ export function parsePracticalItems(raw: unknown): PracticalItem[] {
     })
     .filter((item) => item.icon || item.title || item.description);
 
-  return cleaned.length > 0 ? cleaned : DEFAULT_PUBLIC_CONTENT.practicalItems;
+  // Force-include critical items (Accesos and Solo Adultos) if not present
+  const defaults = DEFAULT_PUBLIC_CONTENT.practicalItems;
+  const criticalTitles = ["Accesos y parking", "Solo adultos", "Llegada con tiempo"];
+  
+  // Filter out any DB items that duplicate our critical titles to avoid double listing
+  const filteredCleaned = cleaned.filter(item => !criticalTitles.includes(item.title));
+
+  // Find the critical items from defaults
+  const criticalItems = defaults.filter(item => criticalTitles.includes(item.title));
+
+  // Combine: Critical Defaults First + Remaining DB Items
+  const combined = [...criticalItems, ...filteredCleaned];
+
+  return combined.length > 0 ? combined : defaults;
 }
 
 export function parseFaqItems(raw: unknown): FaqItem[] {

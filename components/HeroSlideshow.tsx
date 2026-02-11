@@ -6,7 +6,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 type HeroSlideshowProps = {
   images: string[];
   intervalMs?: number;
-  className?: string;
+  className?: string; // Container class
+  imageClassName?: string; // Image specific class (e.g. object position)
 };
 
 const FADE_DURATION_MS = 1200;
@@ -15,11 +16,11 @@ export function HeroSlideshow({
   images,
   intervalMs = 8000,
   className,
+  imageClassName,
 }: HeroSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [nextIndex, setNextIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [invalidImages, setInvalidImages] = useState<string[]>([]);
   const currentIndexRef = useRef(0);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -28,21 +29,6 @@ export function HeroSlideshow({
     () => images.filter((src) => typeof src === "string" && src.trim().length > 0),
     [images],
   );
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handleChange = () => setPrefersReducedMotion(media.matches);
-    handleChange();
-
-    if (typeof media.addEventListener === "function") {
-      media.addEventListener("change", handleChange);
-      return () => media.removeEventListener("change", handleChange);
-    }
-
-    media.addListener(handleChange);
-    return () => media.removeListener(handleChange);
-  }, []);
 
   const availableImages = useMemo(
     () => normalizedImages.filter((src) => !invalidImages.includes(src)),
@@ -71,7 +57,7 @@ export function HeroSlideshow({
   }, [currentIndex]);
 
   useEffect(() => {
-    if (availableImages.length < 2 || prefersReducedMotion) {
+    if (availableImages.length < 2) {
       return;
     }
 
@@ -96,7 +82,7 @@ export function HeroSlideshow({
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [availableImages.length, intervalMs, prefersReducedMotion]);
+  }, [availableImages.length, intervalMs]);
 
   const hasImages = availableImages.length > 0;
   const currentImage = hasImages
@@ -140,7 +126,7 @@ export function HeroSlideshow({
         priority={isInitialImage}
         fill
         sizes="100vw"
-        className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out"
+        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out ${imageClassName ?? ""}`}
         style={{ opacity: isFading ? 0 : 1 }}
         onError={() => handleImageError(currentImage)}
       />
@@ -151,11 +137,10 @@ export function HeroSlideshow({
         loading="lazy"
         fill
         sizes="100vw"
-        className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out"
+        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out ${imageClassName ?? ""}`}
         style={{ opacity: isFading ? 1 : 0 }}
         onError={() => handleImageError(upcomingImage)}
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent sm:via-black/40" />
     </div>
   );
 }

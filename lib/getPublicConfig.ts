@@ -63,7 +63,7 @@ export async function getPublicConfig(): Promise<PublicContent> {
   try {
     const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/config/general?key=${apiKey}`;
     const response = await fetch(url, {
-      next: { revalidate: 60 },
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {

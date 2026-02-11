@@ -23,9 +23,7 @@ export function Countdown({ target, className }: { target: string; className?: s
     return Number.isFinite(parsed) ? new Date(parsed) : null;
   }, [target]);
 
-  const [timeLeft, setTimeLeft] = useState(() => 
-    targetDate ? getTimeLeft(targetDate) : null
-  );
+  const [timeLeft, setTimeLeft] = useState<ReturnType<typeof getTimeLeft> | null>(null);
 
   const triggerCelebration = () => {
     const duration = 15 * 1000;
@@ -61,6 +59,9 @@ export function Countdown({ target, className }: { target: string; className?: s
 
   useEffect(() => {
     if (!targetDate) return;
+    
+    // Initial update
+    setTimeLeft(getTimeLeft(targetDate));
 
     const timer = setInterval(() => {
       const left = getTimeLeft(targetDate);

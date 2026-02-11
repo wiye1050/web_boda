@@ -14,7 +14,7 @@ type CTAButtonProps = {
 };
 
 const baseClasses =
-  "inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold tracking-[0.18em] uppercase transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
+  "inline-flex min-h-[44px] items-center justify-center rounded-full px-6 py-3 text-sm font-semibold tracking-[0.18em] uppercase transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
 
 const variantClasses: Record<CTAButtonVariant, string> = {
   primary:

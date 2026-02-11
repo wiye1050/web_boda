@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { m, useReducedMotion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 
 type FadeInProps = {
@@ -40,19 +40,15 @@ export function FadeIn({
     },
   };
 
-  if (shouldReduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
-
   return (
-    <motion.div
+    <m.div
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
       variants={variants}
-      className={`${className} ${fullWidth ? "w-full" : ""}`}
+      className={`${className} ${fullWidth ? "w-full" : ""}`.trim()}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

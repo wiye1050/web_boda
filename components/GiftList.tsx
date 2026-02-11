@@ -14,11 +14,11 @@ type GiftListProps = {
 
 export function GiftList({ gifts }: GiftListProps) {
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="flex flex-wrap justify-center gap-6">
       {gifts.map((gift) => (
         <article
           key={gift.title}
-          className="flex flex-col gap-4 rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 sm:p-6"
+          className="flex w-full max-w-3xl flex-col gap-4 rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 sm:p-6 text-center"
         >
           <h3 className="text-xl font-semibold">{gift.title}</h3>
           <p className="text-sm text-muted">{gift.description}</p>
@@ -42,9 +42,11 @@ export function GiftList({ gifts }: GiftListProps) {
               </ul>
             ))}
           {gift.action && (
-            <CTAButton href={gift.action.href} variant="outline" prefetch={false}>
-              {gift.action.label}
-            </CTAButton>
+            <div className="mt-4 flex justify-center">
+              <CTAButton href={gift.action.href} variant="outline" prefetch={false}>
+                {gift.action.label}
+              </CTAButton>
+            </div>
           )}
         </article>
       ))}

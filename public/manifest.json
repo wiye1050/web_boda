@@ -1,0 +1,21 @@
+{
+  "name": "Alba & Guille | Nuestra Boda",
+  "short_name": "Alba & Guille",
+  "description": "Detalles, horarios y confirmación para nuestra boda.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f5f2",
+  "theme_color": "#b76e79",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

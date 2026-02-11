@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import type { TimelineItem } from "@/lib/publicContent";
 import { 
   Heart, 
@@ -77,7 +77,7 @@ export function Timeline({ items }: TimelineProps) {
           const isEven = index % 2 === 0;
 
           return (
-            <motion.div
+            <m.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -124,18 +124,18 @@ export function Timeline({ items }: TimelineProps) {
 
               {/* Center Icon/Dot */}
               <div className="absolute left-8 flex -translate-x-1/2 items-center justify-center md:static md:left-auto md:translate-x-0 z-10">
-                <motion.div 
+                <m.div 
                     whileHover={{ scale: 1.2, rotate: 10 }}
                     transition={{ type: "spring", stiffness: 300 }}
                     className="relative flex h-14 w-14 items-center justify-center rounded-full border-4 border-background bg-white shadow-lg shadow-primary/10 ring-1 ring-border"
                 >
                   {getIcon(item.icon || item.title)}
-                </motion.div>
+                </m.div>
               </div>
 
               {/* Spacer for the other side (Desktop only) */}
               <div className="hidden flex-1 md:block md:w-1/2" />
-            </motion.div>
+            </m.div>
           );
         })}
       </div>
