@@ -29,7 +29,9 @@ To learn more about Next.js, take a look at the following resources:
 
 ## Admin y contenido
 
-- El contenido público se edita desde el panel en `/admin/configuracion`.
+- El contenido público se edita desde el panel en `/admin/secciones`.
+- La gestión de invitados y confirmaciones está en `/admin/rsvps`.
+- Las fotos subidas por los invitados se moderan en `/admin/media`.
 - El acceso al panel se controla con `NEXT_PUBLIC_ADMIN_EMAILS` (emails separados por comas).
 - Las contraseñas se gestionan en Firebase Auth (Email/Password); no se guardan en este repositorio.
 
