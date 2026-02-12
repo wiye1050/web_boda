@@ -1,0 +1,35 @@
+rules_version = '2';
+
+// Craft rules based on data in your Firestore database
+// allow write: if firestore.get(
+//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper para verificar admin (igual que en firestore)
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.uid in [
+          "Pes0MiUoP0TAKPabrIUGyxevsNX2"
+        ] ||
+        request.auth.token.email in [
+          "guillemenendez1050@gmail.com",
+          "varelamaciasalba@gmail.com"
+        ]
+      );
+    }
+
+    // Carpeta pública 'gallery'
+    match /gallery/{imageId} {
+      // Cualquiera puede leer (ver fotos)
+      allow read: if true;
+      
+      // Cualquiera puede subir (create) si es imagen y < 5MB
+      allow create: if request.resource.contentType.matches('image/.*')
+                    && request.resource.size < 5 * 1024 * 1024;
+      
+      // Solo admin puede borrar o actualizar (update metadata)
+      allow delete, update: if isAdmin();
+    }
+  }
+}

@@ -62,6 +62,7 @@ const SECTION_LABELS: Record<string, string> = {
   regalos: "Regalos",
   faq: "Preguntas Frecuentes",
   asistencia: "Confirmar Asistencia",
+  media: "Media & Recuerdos",
 };
 
 function sortSections(sections: SectionConfig[]) {

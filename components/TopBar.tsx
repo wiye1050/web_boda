@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Countdown } from "@/components/Countdown";
 import { cn } from "@/lib/utils";
@@ -31,6 +32,8 @@ export function TopBar({
   ctaLabel = "Confirmar asistencia",
   config 
 }: TopBarProps) {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -46,12 +49,15 @@ export function TopBar({
     };
   }, []);
 
+  // Force opaque background if not on home or if scrolled/menu open
+  const showOpaque = !isHome || isScrolled || isMobileMenuOpen;
+
   return (
     <>
       <motion.div
         className={cn(
           "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-in-out border-b",
-          isScrolled || isMobileMenuOpen
+          showOpaque
             ? "bg-surface/90 backdrop-blur-md border-border/50 shadow-sm"
             : "bg-surface/5 backdrop-blur-sm border-transparent"
         )}
@@ -61,7 +67,7 @@ export function TopBar({
           {/* LEFT: Brand + Countdown */}
           <div className="flex items-center gap-4 sm:gap-6">
             <Link
-              href="#top"
+              href={isHome ? "#top" : "/"}
               className="relative h-10 w-auto shrink-0 transition-opacity hover:opacity-80"
             >
               <Image 
@@ -100,7 +106,7 @@ export function TopBar({
             <ThemeToggle />
             <div className="hidden sm:block">
               <CTAButton
-                href="#asistencia"
+                href={isHome ? "#asistencia" : "/#asistencia"}
                 variant="primary"
                 className="!h-10 !px-6 !text-xs !py-0"
               >

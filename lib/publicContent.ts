@@ -208,9 +208,10 @@ export const DEFAULT_SECTIONS: SectionConfig[] = [
   { id: "detalles", label: "Guía práctica", enabled: true, nav: true, order: 3 },
   { id: "alojamiento", label: "Alojamiento", enabled: true, nav: true, order: 4 },
   { id: "regalos", label: "Regalos", enabled: true, nav: true, order: 5 },
-  { id: "faq", label: "FAQ", enabled: true, nav: true, order: 6 },
-  { id: "asistencia", label: "Confirmar asistencia", enabled: true, nav: true, order: 7 },
-  { id: "ubicacion", label: "Ubicación", enabled: true, nav: true, order: 8 },
+  { id: "media", label: "Media", enabled: true, nav: true, order: 6 },
+  { id: "faq", label: "FAQ", enabled: true, nav: true, order: 7 },
+  { id: "asistencia", label: "Confirmar asistencia", enabled: true, nav: true, order: 8 },
+  { id: "ubicacion", label: "Ubicación", enabled: true, nav: true, order: 9 },
 ];
 
 export const DEFAULT_PUBLIC_CONTENT: PublicContent = {

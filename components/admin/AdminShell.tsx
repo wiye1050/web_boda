@@ -12,6 +12,8 @@ const NAV_LINKS = [
   { href: "/admin/proveedores", label: "Proveedores" },
   { href: "/admin/presupuesto", label: "Presupuesto" },
   { href: "/admin/rsvps", label: "RSVPs" },
+  { href: "/admin/mesas", label: "Mesas" },
+  { href: "/admin/galeria", label: "Fotos" },
   { href: "/admin/transporte", label: "Transporte" },
   { href: "/admin/secciones", label: "Secciones" },
   { href: "/admin/privado", label: "Privado" },

@@ -6,9 +6,14 @@ import {
   type BudgetItem,
   type BudgetStatus,
 } from "@/components/admin/useBudget";
+import dynamic from "next/dynamic";
 import { formatCurrency } from "./utils/formatCurrency";
 import { KPICards } from "./KPICards";
-import { BudgetChart } from "./BudgetChart";
+
+const BudgetChart = dynamic(() => import("./BudgetChart").then((mod) => mod.BudgetChart), {
+  loading: () => <div className="h-[300px] w-full animate-pulse rounded-xl bg-muted/20" />,
+  ssr: false,
+});
 
 const STATUS_OPTIONS: Array<{ value: BudgetStatus; label: string }> = [
   { value: "planeado", label: "Planeado" },

@@ -6,6 +6,7 @@ import {
   initializeApp,
 } from "firebase/app";
 import { Firestore, getFirestore } from "firebase/firestore";
+import { FirebaseStorage, getStorage } from "firebase/storage";
 
 const requiredEnv = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -18,6 +19,7 @@ const requiredEnv = {
 
 let firebaseApp: FirebaseApp | undefined;
 let firestore: Firestore | undefined;
+let storage: FirebaseStorage | undefined;
 
 function ensureFirebaseConfig(): FirebaseOptions {
   const missing = Object.entries(requiredEnv)
@@ -70,7 +72,15 @@ export function getFirestoreDb(): Firestore {
   return firestore;
 }
 
+export function getFirebaseStorage(): FirebaseStorage {
+  if (storage) return storage;
+  storage = getStorage(getFirebaseApp());
+  return storage;
+}
+
 export const firebaseClient = {
   getApp: getFirebaseApp,
   getFirestore: getFirestoreDb,
+  getStorage: getFirebaseStorage,
 };
+

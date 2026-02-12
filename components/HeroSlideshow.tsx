@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 type HeroSlideshowProps = {
   images: string[];
@@ -10,20 +10,14 @@ type HeroSlideshowProps = {
   imageClassName?: string; // Image specific class (e.g. object position)
 };
 
-const FADE_DURATION_MS = 1200;
-
 export function HeroSlideshow({
   images,
   intervalMs = 8000,
   className,
   imageClassName,
 }: HeroSlideshowProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [nextIndex, setNextIndex] = useState(0);
-  const [isFading, setIsFading] = useState(false);
+  const [index, setIndex] = useState(0);
   const [invalidImages, setInvalidImages] = useState<string[]>([]);
-  const currentIndexRef = useRef(0);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const normalizedImages = useMemo(
     () => images.filter((src) => typeof src === "string" && src.trim().length > 0),
@@ -36,111 +30,48 @@ export function HeroSlideshow({
   );
 
   useEffect(() => {
-    if (invalidImages.length > 0) {
-      setInvalidImages([]);
-    }
-  }, [normalizedImages, invalidImages.length]);
-
-  useEffect(() => {
-    if (availableImages.length === 0) return;
-    const clampedCurrent = Math.min(currentIndexRef.current, availableImages.length - 1);
-    const nextSafe =
-      availableImages.length > 1 ? (clampedCurrent + 1) % availableImages.length : 0;
-    setCurrentIndex(clampedCurrent);
-    setNextIndex(nextSafe);
-    setIsFading(false);
-    currentIndexRef.current = clampedCurrent;
-  }, [availableImages.length]);
-
-  useEffect(() => {
-    currentIndexRef.current = currentIndex;
-  }, [currentIndex]);
-
-  useEffect(() => {
-    if (availableImages.length < 2) {
-      return;
-    }
-
-    const intervalId = setInterval(() => {
-      const next = (currentIndexRef.current + 1) % availableImages.length;
-      setNextIndex(next);
-      setIsFading(true);
-
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      timeoutRef.current = setTimeout(() => {
-        setCurrentIndex(next);
-        setIsFading(false);
-        currentIndexRef.current = next;
-      }, FADE_DURATION_MS);
-    }, Math.max(intervalMs, 2000));
-
-    return () => {
-      clearInterval(intervalId);
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
+    if (availableImages.length < 2) return;
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % availableImages.length);
+    }, intervalMs);
+    return () => clearInterval(timer);
   }, [availableImages.length, intervalMs]);
-
-  const hasImages = availableImages.length > 0;
-  const currentImage = hasImages
-    ? availableImages[currentIndex] ?? availableImages[0]
-    : "";
-  const upcomingImage = hasImages
-    ? availableImages[nextIndex] ??
-      availableImages[currentIndex] ??
-      availableImages[0]
-    : "";
-
-  useEffect(() => {
-    if (!upcomingImage) return;
-    const image = new window.Image();
-    image.src = upcomingImage;
-  }, [upcomingImage]);
 
   const handleImageError = (src: string) => {
     setInvalidImages((prev) => (prev.includes(src) ? prev : [...prev, src]));
   };
 
-  const isInitialImage = currentIndex === 0;
-
-  if (!hasImages) {
-    return null;
-  }
+  if (availableImages.length === 0) return null;
 
   return (
     <div
       className={[
-        "absolute inset-0 z-0 overflow-hidden pointer-events-none",
+        "absolute inset-0 z-0 overflow-hidden pointer-events-none bg-black",
         className ?? "",
       ]
         .filter(Boolean)
         .join(" ")}
     >
-      <Image
-        src={currentImage}
-        alt=""
-        aria-hidden
-        priority={isInitialImage}
-        fill
-        sizes="100vw"
-        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out ${imageClassName ?? ""}`}
-        style={{ opacity: isFading ? 0 : 1 }}
-        onError={() => handleImageError(currentImage)}
-      />
-      <Image
-        src={upcomingImage}
-        alt=""
-        aria-hidden
-        loading="lazy"
-        fill
-        sizes="100vw"
-        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out ${imageClassName ?? ""}`}
-        style={{ opacity: isFading ? 1 : 0 }}
-        onError={() => handleImageError(upcomingImage)}
-      />
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.img
+          key={availableImages[index]}
+          src={availableImages[index]}
+          alt=""
+          initial={{ opacity: 0, scale: 1.0 }}
+          animate={{ opacity: 1, scale: 1.1 }}
+          exit={{ opacity: 0 }}
+          transition={{
+            opacity: { duration: 1.5, ease: "easeInOut" },
+            scale: { duration: intervalMs / 1000 + 1, ease: "linear" }, // Move slightly longer than interval to avoid stop
+          }}
+          className={`absolute inset-0 h-full w-full object-cover ${imageClassName ?? ""}`}
+          onError={() => handleImageError(availableImages[index])}
+        />
+      </AnimatePresence>
+      
+      {/* Overlay gradiente oscuro solicitado */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-60" />
     </div>
   );
 }
+

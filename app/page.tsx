@@ -99,7 +99,7 @@ export default async function Home() {
     .sort((a, b) => a.order - b.order)
     .map((section) => ({
       label: section.label.trim() || section.id,
-      href: `#${section.id}`,
+      href: section.id === "media" ? "/media" : `#${section.id}`,
     }));
   const showNotice = true; // config.noticeEnabled && config.noticeText.trim().length > 0;
   
