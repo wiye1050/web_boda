@@ -25,7 +25,7 @@ export function SplitHero({ config, images }: SplitHeroProps) {
   return (
     <section className="relative flex min-h-[100dvh] flex-col overflow-hidden lg:flex-row">
       {/* LEFT: Content Side (Desktop) / Bottom (Mobile) */}
-      <div className="order-2 flex flex-1 flex-col justify-center bg-surface px-6 py-12 text-center lg:order-1 lg:w-[40%] lg:px-16 lg:text-left xl:px-24">
+      <div className="order-2 flex flex-1 flex-col justify-center bg-surface px-6 py-12 text-center lg:order-1 lg:w-[30%] lg:px-10 lg:text-left xl:px-12">
         
         {/* Main Title Area */}
         <motion.div
@@ -123,7 +123,7 @@ export function SplitHero({ config, images }: SplitHeroProps) {
           imageClassName="object-[50%_25%]"
         />
         {/* Desktop Gradient Overlay (Left) */}
-        <div className="absolute inset-y-0 left-0 z-10 hidden w-40 bg-gradient-to-r from-surface to-transparent lg:block" />
+        <div className="absolute inset-y-0 left-0 z-10 hidden w-16 bg-gradient-to-r from-surface to-transparent lg:block" />
 
         {/* Right Gradient Overlay */}
         <div className="absolute inset-y-0 right-0 z-10 w-32 bg-gradient-to-l from-surface to-transparent" />
