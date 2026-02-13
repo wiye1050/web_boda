@@ -8,6 +8,8 @@ import {
   orderBy,
   query,
   type Timestamp,
+  deleteDoc,
+  doc,
 } from "firebase/firestore";
 import { getFirestoreDb } from "@/lib/firebase";
 
@@ -197,5 +199,16 @@ export function useRsvpData(limitTo = 200) {
     );
   }, [records]);
 
-  return { records, isLoading, error, metrics };
+  const deleteRsvp = async (id: string) => {
+    const db = getFirestoreDb();
+    try {
+      await deleteDoc(doc(db, "rsvps", id));
+      // Optimistic update not needed as onSnapshot will handle it
+    } catch (err) {
+      console.error("Error deleting RSVP:", err);
+      throw err;
+    }
+  };
+
+  return { records, isLoading, error, metrics, deleteRsvp };
 }

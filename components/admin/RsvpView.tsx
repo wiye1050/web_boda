@@ -13,7 +13,7 @@ type SortOption = "date-desc" | "date-asc" | "name-asc" | "name-desc";
 type StatusFilter = "all" | RsvpStatus;
 
 export function RsvpView() {
-  const { records, isLoading, error } = useRsvpData();
+  const { records, isLoading, error, deleteRsvp, metrics } = useRsvpData();
   const [search, setSearch] = useState("");
   const [attendanceFilter, setAttendanceFilter] =
     useState<AttendanceFilter>("all");
@@ -173,174 +173,58 @@ export function RsvpView() {
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex flex-col gap-4">
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-3xl font-semibold">RSVPs</h1>
-            <p className="text-sm text-muted">
-              Busca por nombre, filtra por estado, preboda o transporte y
-              exporta los datos para compartirlos con el equipo.
-            </p>
-            <p className="mt-2 text-xs uppercase tracking-[0.3em] text-muted">
-              {sorted.length} de {records.length} resultados
-            </p>
+      {/* Metrics Bar - Compact */}
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <div className="flex items-center justify-between rounded-[16px] border border-border/70 bg-surface px-4 py-2 shadow-[var(--shadow-soft)]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">Confirmados</p>
+          <p className="text-xl font-semibold text-foreground">{metrics.attending}</p>
+        </div>
+        <div className="flex items-center justify-between rounded-[16px] border border-border/70 bg-surface px-4 py-2 shadow-[var(--shadow-soft)]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">Autobús</p>
+          <div className="text-right">
+            <p className="text-xl font-semibold text-foreground leading-none">{metrics.transportSeats}</p>
+            <p className="text-[9px] text-muted uppercase tracking-wider">plazas</p>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="relative w-full max-w-xs">
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Buscar invitado..."
-                className="w-full rounded-full border border-border/80 bg-surface px-4 py-2.5 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-              />
-              {search && (
-                <button
-                  type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs uppercase tracking-[0.3em] text-muted hover:text-primary"
-                  onClick={() => setSearch("")}
-                >
-                  limpiar
-                </button>
-              )}
-            </div>
+        </div>
+         <div className="flex items-center justify-between rounded-[16px] border border-border/70 bg-surface px-4 py-2 shadow-[var(--shadow-soft)]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">Preboda</p>
+          <p className="text-xl font-semibold text-foreground">{metrics.preboda}</p>
+        </div>
+        <div className="flex items-center justify-between rounded-[16px] border border-border/70 bg-surface px-4 py-2 shadow-[var(--shadow-soft)]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">Pendientes</p>
+          <p className="text-xl font-semibold text-amber-600 dark:text-amber-400">{metrics.statusCounts.pendiente}</p>
+        </div>
+      </div>
+
+      {/* Search & Export Row */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative w-full max-w-sm">
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Buscar invitado..."
+            className="w-full rounded-full border border-border/80 bg-surface px-4 py-2.5 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+          />
+          {search && (
             <button
               type="button"
-              onClick={handleExport}
-              className="inline-flex items-center justify-center rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs uppercase tracking-[0.3em] text-muted hover:text-primary"
+              onClick={() => setSearch("")}
             >
-              Exportar CSV
+              limpiar
             </button>
-            {isFilterActive && (
-              <button
-                type="button"
-                onClick={handleClearFilters}
-                className="inline-flex items-center justify-center rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-              >
-                Limpiar filtros
-              </button>
-            )}
-          </div>
+          )}
         </div>
-
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-wrap gap-2">
-            <FilterPill
-              label="Todos"
-              active={attendanceFilter === "all"}
-              onClick={() => setAttendanceFilter("all")}
-            />
-            <FilterPill
-              label="Asisten"
-              active={attendanceFilter === "attending"}
-              onClick={() => setAttendanceFilter("attending")}
-            />
-            <FilterPill
-              label="No asisten"
-              active={attendanceFilter === "notAttending"}
-              onClick={() => setAttendanceFilter("notAttending")}
-            />
-            <FilterPill
-              label="Pendientes"
-              active={statusFilter === "pendiente"}
-              onClick={() =>
-                setStatusFilter((prev) =>
-                  prev === "pendiente" ? "all" : "pendiente",
-                )
-              }
-            />
-            <FilterPill
-              label="Contactados"
-              active={statusFilter === "contactado"}
-              onClick={() =>
-                setStatusFilter((prev) =>
-                  prev === "contactado" ? "all" : "contactado",
-                )
-              }
-            />
-            <FilterPill
-              label="Confirmados"
-              active={statusFilter === "confirmado"}
-              onClick={() =>
-                setStatusFilter((prev) =>
-                  prev === "confirmado" ? "all" : "confirmado",
-                )
-              }
-            />
-            <FilterPill
-              label="Preboda"
-              active={onlyPreboda}
-              onClick={() => setOnlyPreboda((prev) => !prev)}
-            />
-            <FilterPill
-              label="Transporte"
-              active={onlyTransport}
-              onClick={() => setOnlyTransport((prev) => !prev)}
-            />
-            <FilterPill
-              label="Procesados"
-              active={processedFilter === "processed"}
-              onClick={() =>
-                setProcessedFilter((prev) =>
-                  prev === "processed" ? "all" : "processed",
-                )
-              }
-            />
-            <FilterPill
-              label="Sin procesar"
-              active={processedFilter === "pending"}
-              onClick={() =>
-                setProcessedFilter((prev) =>
-                  prev === "pending" ? "all" : "pending",
-                )
-              }
-            />
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-            <div className="flex items-center gap-2">
-              <label
-                htmlFor="tags"
-                className="text-xs font-semibold uppercase tracking-[0.3em] text-muted"
-              >
-                Etiqueta
-              </label>
-              <select
-                id="tags"
-                value={safeSelectedTag}
-                onChange={(event) => setSelectedTag(event.target.value)}
-                className="rounded-full border border-border/80 bg-surface px-4 py-2 text-xs uppercase tracking-[0.3em] text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-              >
-                <option value="all">Todas</option>
-                {availableTags.map((tag) => (
-                  <option key={tag} value={tag}>
-                    {tag}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex items-center gap-2">
-              <label
-                htmlFor="sort"
-                className="text-xs font-semibold uppercase tracking-[0.3em] text-muted"
-              >
-                Ordenar por
-              </label>
-              <select
-                id="sort"
-                value={sortOption}
-                onChange={(event) =>
-                  setSortOption(event.target.value as SortOption)
-                }
-                className="rounded-full border border-border/80 bg-surface px-4 py-2 text-xs uppercase tracking-[0.3em] text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-              >
-                <option value="date-desc">Fecha (reciente primero)</option>
-                <option value="date-asc">Fecha (antiguo primero)</option>
-                <option value="name-asc">Nombre (A-Z)</option>
-                <option value="name-desc">Nombre (Z-A)</option>
-              </select>
-            </div>
-          </div>
+        <div className="flex items-center gap-2">
+           <button
+            type="button"
+            onClick={handleExport}
+            className="inline-flex items-center justify-center rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+          >
+            Exportar CSV
+          </button>
         </div>
-      </header>
+      </div>
       <RsvpTable
         records={sorted}
         isLoading={isLoading}
@@ -348,6 +232,7 @@ export function RsvpView() {
         showHeader={false}
         showFilters={false}
         onSelectRecord={setSelectedRecord}
+        onDeleteRecord={deleteRsvp}
       />
       <RsvpDetailDialog
         record={selectedRecord}

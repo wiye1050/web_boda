@@ -14,34 +14,34 @@ export function AdminStats({ metrics }: AdminStatsProps) {
   }, [metrics.attending, metrics.total]);
 
   return (
-    <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       <StatCard
         label="Confirmados"
         value={metrics.attending}
         total={metrics.total}
         subtext="asistentes"
-        icon={<Users className="h-4 w-4 text-primary" />}
+        icon={<Users className="h-3 w-3 text-primary" />}
       />
       
       <StatCard
         label="Autobús"
         value={metrics.transportSeats}
-        subtext="plazas reservadas"
-        icon={<Bus className="h-4 w-4 text-blue-500" />}
+        subtext="plazas"
+        icon={<Bus className="h-3 w-3 text-blue-500" />}
       />
 
       <StatCard
         label="Pendientes"
         value={metrics.statusCounts.pendiente}
         subtext="sin responder"
-        icon={<CircleAlert className="h-4 w-4 text-amber-500" />}
+        icon={<CircleAlert className="h-3 w-3 text-amber-500" />}
       />
 
       <StatCard
         label="Preboda"
         value={metrics.preboda}
         subtext="asistentes"
-        icon={<Utensils className="h-4 w-4 text-purple-500" />}
+        icon={<Utensils className="h-3 w-3 text-purple-500" />}
       />
     </section>
   );
@@ -61,20 +61,19 @@ function StatCard({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-1 rounded-xl border border-border/50 bg-background/50 p-4 shadow-sm transition-all hover:border-border hover:bg-background">
-      <div className="flex items-center justify-between pb-2">
-        <span className="text-sm font-medium text-muted-foreground">{label}</span>
+    <div className="flex flex-col justify-between gap-0.5 rounded-[14px] border border-border/60 bg-surface px-3 py-2.5 shadow-sm transition-all hover:border-primary/20">
+      <div className="flex items-center justify-between">
+        <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground/80">{label}</span>
         {icon}
       </div>
-      <div className="flex items-baseline gap-2">
-        <span className="text-2xl font-bold tracking-tight text-foreground">
+      <div className="mt-0.5 flex items-baseline gap-1.5">
+        <span className="text-xl font-bold tracking-tight text-foreground">
           {value}
         </span>
         {total !== undefined && (
-          <span className="text-xs text-muted-foreground">/ {total}</span>
+          <span className="text-[9px] text-muted-foreground">/ {total}</span>
         )}
       </div>
-      <p className="text-xs text-muted-foreground capitalize">{subtext}</p>
     </div>
   );
 }
