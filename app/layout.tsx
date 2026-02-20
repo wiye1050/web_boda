@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { Lato } from "next/font/google";
-import { Playfair_Display } from "next/font/google";
+import { Montserrat } from "next/font/google";
+import { Cormorant_Garamond } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { getPublicConfig } from "@/lib/getPublicConfig";
@@ -9,15 +9,15 @@ import { LazyMotionProvider } from "@/components/providers/LazyMotionProvider";
 
 import { ThemeProvider } from "@/components/ThemeProvider";
 
-const lato = Lato({
+const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["100", "300", "400", "700", "900"],
-  variable: "--font-lato",
+  variable: "--font-montserrat",
 });
 
-const playfair = Playfair_Display({
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-display",
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-cormorant",
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -73,7 +73,7 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning data-scroll-behavior="smooth">
       <body
-        className={`${lato.variable} ${playfair.variable} antialiased bg-background text-foreground`}
+        className={`${montserrat.variable} ${cormorant.variable} antialiased bg-background text-foreground`}
       >
         <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="relative min-h-screen bg-surface">

@@ -2,7 +2,7 @@ import { CTAButton } from "@/components/CTAButton";
 import { Footer } from "@/components/Footer";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { Divider } from "@/components/Divider";
-import { SplitHero } from "@/components/SplitHero";
+import { HeroFloatingGallery } from "@/components/HeroFloatingGallery";
 import { Section } from "@/components/Section";
 import { FadeIn } from "@/components/FadeIn";
 import { TopBar } from "@/components/TopBar";
@@ -35,10 +35,12 @@ export default async function Home() {
     config = DEFAULT_PUBLIC_CONTENT;
   }
 
-  const prebodaMapUrl = config.prebodaMapUrl || config.locationMapUrl;
-  const heroImages = (config.heroBackgroundImages ?? []).filter(
-    (src) => typeof src === "string" && src.trim().length > 0,
-  );
+  const prebodaMapUrl = config.prebodaMapUrl || config.locationMapUrl; /* DYNAMIC IMAGES (Floating Hero) */
+  const heroImages = [
+    "/hero-images/IMG-20180813-WA0013.jpg",
+    "/hero-images/IMG-20220906-WA0027.jpg",
+    "/hero-images/IMG_20200717_193506.jpg",
+  ];
   const intervalMs = Number.parseInt(
     config.heroBackgroundIntervalMs ?? "8000",
     10,
@@ -117,26 +119,20 @@ export default async function Home() {
         />
       )}
       <main className="flex-1 pb-[calc(env(safe-area-inset-bottom)_+_84px)] sm:pb-0">
-        <SplitHero
+        <HeroFloatingGallery
           config={{
             heroTitle: config.heroTitle,
             heroDescription: config.heroDescription,
             eventDate: config.eventDate || "12 de septiembre · 2026",
             eventTimeRange: config.eventTimeRange,
-            heroStatTimeNote: config.heroStatTimeNote,
             locationName: config.locationName,
             locationAddress: config.locationAddress,
-            locationMapUrl: config.locationMapUrl,
-            brandName: config.brandName,
-            heroEyebrow: config.heroEyebrow,
           }}
-          images={heroImages}
+          localImages={heroImages}
         />
-        <div className="py-6">
+        <div className="py-6 hidden">
           <Divider />
         </div>
-
-
 
         {isSectionEnabled("preboda") && (
           <Section
@@ -144,14 +140,15 @@ export default async function Home() {
             eyebrow={config.prebodaEyebrow}
             title={config.prebodaTitle}
             description={config.prebodaDescription}
+            background="surface" // White
           >
           <FadeIn>
             <div className="grid gap-6 md:grid-cols-2">
-              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 shadow-[var(--shadow-soft)] sm:p-6">
+              <article className="rounded-[var(--radius-card)] border border-border/40 bg-background/50 p-4 shadow-[var(--shadow-soft)] sm:p-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
                   {config.prebodaCardOneLabel}
                 </p>
-                <h3 className="mt-3 text-2xl font-semibold">
+                <h3 className="mt-3 text-2xl font-display font-semibold">
                   {config.prebodaTime}
                 </h3>
                 <p className="mt-3 text-sm text-muted">
@@ -168,11 +165,11 @@ export default async function Home() {
                   </CTAButton>
                 )}
               </article>
-              <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 shadow-[var(--shadow-soft)] sm:p-6">
+              <article className="rounded-[var(--radius-card)] border border-border/40 bg-background/50 p-4 shadow-[var(--shadow-soft)] sm:p-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
                   {config.prebodaCardTwoLabel}
                 </p>
-                <h3 className="mt-3 text-2xl font-semibold">
+                <h3 className="mt-3 text-2xl font-display font-semibold">
                   {config.prebodaCardTwoTitle}
                 </h3>
                 <p className="mt-3 text-sm text-muted">
@@ -184,21 +181,7 @@ export default async function Home() {
           </Section>
         )}
 
-        {isSectionEnabled("ceremonia") && (
-          <Section
-            id="ceremonia"
-            eyebrow={config.ceremonyEyebrow}
-            title={config.ceremonyTitle}
-            description={config.ceremonyDescription}
-          >
-            <FadeIn>
-              {/* Timeline Only */}
-              <div className="mt-0">
-                <Timeline items={config.timelineItems} />
-              </div>
-            </FadeIn>
-          </Section>
-        )}
+
 
         {isSectionEnabled("ubicacion") && (
           <Section
@@ -206,11 +189,11 @@ export default async function Home() {
             eyebrow={config.locationEyebrow}
             title={config.locationTitle}
             description={config.locationDescription}
-            background="surface"
+            background="surface" // White
           >
             <FadeIn>
               {config.locationMapEmbedUrl && (
-                <div className="mb-6 overflow-hidden rounded-[var(--radius-card)] border border-border/80 shadow-[var(--shadow-soft)]">
+                <div className="mb-6 overflow-hidden rounded-[var(--radius-card)] border border-border/40 shadow-[var(--shadow-soft)]">
                   <iframe
                     src={config.locationMapEmbedUrl}
                     className="h-[360px] w-full border-0"
@@ -221,8 +204,8 @@ export default async function Home() {
                 </div>
               )}
               <div className="grid gap-6 md:grid-cols-2">
-                <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 shadow-[var(--shadow-soft)] sm:p-6">
-                  <h3 className="text-xl font-semibold">{config.locationName}</h3>
+                <article className="rounded-[var(--radius-card)] border border-border/40 bg-background/50 p-4 shadow-[var(--shadow-soft)] sm:p-6">
+                  <h3 className="text-xl font-display font-semibold">{config.locationName}</h3>
                   <p className="mt-3 text-sm text-muted">
                     {config.locationAddress}
                   </p>
@@ -230,7 +213,7 @@ export default async function Home() {
                     {config.locationMapUrl && (
                       <CTAButton
                         href={config.locationMapUrl}
-                        variant="outline"
+                        variant="primary"
                         prefetch={false}
                       >
                         {config.locationMapLabel}
@@ -238,8 +221,8 @@ export default async function Home() {
                     )}
                   </div>
                 </article>
-                <article className="rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 shadow-[var(--shadow-soft)] sm:p-6">
-                  <h3 className="text-xl font-semibold">
+                <article className="rounded-[var(--radius-card)] border border-border/40 bg-background/50 p-4 shadow-[var(--shadow-soft)] sm:p-6">
+                  <h3 className="text-xl font-display font-semibold">
                     {config.locationContactTitle}
                   </h3>
                   <ul className="mt-3 space-y-2 text-sm text-muted">
@@ -303,7 +286,7 @@ export default async function Home() {
               {(config.weddingMapsUrl || config.prebodaMapsUrl) && (
                 <div className="mt-8 grid gap-4 sm:grid-cols-2">
                   {config.weddingMapsUrl && (
-                    <article className="flex flex-col gap-3 rounded-[var(--radius-card)] border border-primary/30 bg-primary/10 p-4 text-foreground">
+                    <article className="flex flex-col gap-3 rounded-[var(--radius-card)] border border-primary/20 bg-primary/5 p-4 text-foreground">
                       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">
                         Boda (principal)
                       </p>
@@ -319,7 +302,7 @@ export default async function Home() {
                     </article>
                   )}
                   {config.prebodaMapsUrl && (
-                    <article className="flex flex-col gap-3 rounded-[var(--radius-card)] border border-border/70 bg-surface/80 p-4 text-foreground">
+                    <article className="flex flex-col gap-3 rounded-[var(--radius-card)] border border-border/40 bg-background/50 p-4 text-foreground">
                       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
                         Preboda
                       </p>
@@ -348,6 +331,7 @@ export default async function Home() {
             eyebrow={config.practicalEyebrow}
             title={config.practicalTitle}
             description={config.practicalDescription}
+            background="default" // Beige
           >
             <FadeIn>
               <PracticalList 
@@ -364,6 +348,7 @@ export default async function Home() {
             eyebrow={config.stayEyebrow}
             title={config.stayTitle}
             description={config.stayDescription}
+            background="surface" // White
           >
             <FadeIn>
               <StayList
@@ -380,7 +365,7 @@ export default async function Home() {
             eyebrow={config.giftsEyebrow}
             title={config.giftsTitle}
             description={config.giftsDescription}
-            background="surface"
+            background="default" // Beige
             align="center"
           >
             <FadeIn>
@@ -389,7 +374,7 @@ export default async function Home() {
           </Section>
         )}
 
-        <div className="py-6">
+        <div className="py-6 hidden">
           <Divider />
         </div>
 
@@ -399,6 +384,7 @@ export default async function Home() {
             eyebrow={config.faqEyebrow}
             title={config.faqTitle}
             description={config.faqDescription}
+            background="surface" // White
             align="center"
           >
             <FadeIn>
@@ -413,11 +399,11 @@ export default async function Home() {
             eyebrow={config.rsvpEyebrow}
             title={config.rsvpTitle}
             description={config.rsvpDescription}
-            background="accent"
+            background="accent" // Light Gold
             align="center"
           >
             <FadeIn>
-              <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-6 rounded-[var(--radius-card)] border border-border/80 bg-surface/95 p-8 text-center shadow-[var(--shadow-soft)]">
+              <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-6 rounded-[var(--radius-card)] border border-border/40 bg-surface/80 p-8 text-center shadow-[var(--shadow-soft)] backdrop-blur-sm">
                 <RSVPForm
                   importantTitle={config.rsvpImportantTitle}
                   importantNotes={config.rsvpImportantNotes}

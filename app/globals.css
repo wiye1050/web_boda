@@ -1,15 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f5f2;
-  --foreground: #232220;
+  /* Base - Soft Beige & Dark Gray */
+  --background: #f7f4f0;
+  --foreground: #4a4a4a;
+
+  /* Surface - Pure White for Cards */
   --surface: #ffffff;
-  --muted: #4b4846;
-  --border: rgba(35, 34, 32, 0.08);
-  --primary: #b76e79;
-  --primary-foreground: #fdf9f9;
-  --accent: #f1dfd7;
-  --accent-strong: #f5c9bf;
+
+  /* Text Muted */
+  --muted: #8c8c8c;
+
+  /* Border - Subtle for Soft UI */
+  --border: rgba(74, 74, 74, 0.08);
+
+  /* Primary - Taupe / Walnut */
+  --primary: #8a7b68;
+  --primary-foreground: #ffffff;
+
+  /* Accent - Gold Muted / Champagne */
+  --accent: #b89d7b;
+  --accent-strong: #9a8c70;
+
   --topbar-height: 0px;
 }
 
@@ -23,24 +35,29 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
-  --color-accent-strong: var(--accent-strong);
-  --font-sans: var(--font-lato);
-  --font-display: var(--font-display);
+
+  /* Typography Mapping */
+  --font-sans: var(--font-montserrat);
+  --font-display: var(--font-cormorant);
+
   --spacing-section: clamp(3.5rem, 6vw, 7rem);
+
+  /* Soft UI Tokens */
   --radius-card: 24px;
-  --shadow-soft: 0 30px 80px rgba(35, 34, 32, 0.08);
+  --shadow-soft: 0 15px 40px -10px rgba(0, 0, 0, 0.08);
 }
 
-.dark, [data-theme="dark"] {
-  --background: #181617;
-  --foreground: #f6f1ed;
-  --surface: #201d1f;
-  --muted: #bdb7b3;
-  --border: rgba(246, 241, 237, 0.08);
-  --primary: #d58b95;
-  --primary-foreground: #1f1b1c;
-  --accent: #372f33;
-  --accent-strong: #4a4044;
+.dark,
+[data-theme="dark"] {
+  --background: #1c1b1a; /* Deep warm charcoal */
+  --foreground: #e8e6e3; /* Off-white text */
+  --surface: #262422; /* Slightly lighter charcoal */
+  --muted: #a09c98;
+  --border: rgba(232, 230, 227, 0.08);
+  --primary: #a89b88; /* Lighter Taupe */
+  --primary-foreground: #1c1b1a;
+  --accent: #c8b090; /* Lighter Gold */
+  --accent-strong: #b09878;
 }
 
 @media (max-width: 640px) {
@@ -54,7 +71,11 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI",
+  font-family:
+    var(--font-sans),
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
     sans-serif;
   line-height: 1.6;
   text-rendering: optimizeLegibility;
@@ -73,7 +94,9 @@ main {
 a {
   color: inherit;
   text-decoration: none;
-  transition: color 150ms ease, text-decoration-color 150ms ease;
+  transition:
+    color 150ms ease,
+    text-decoration-color 150ms ease;
 }
 
 a:hover {

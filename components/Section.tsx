@@ -16,8 +16,8 @@ type SectionProps = {
 
 const backgroundClassMap: Record<SectionBackground, string> = {
   default: "bg-transparent",
-  surface: "bg-surface/90 backdrop-blur-sm",
-  accent: "bg-accent/90 backdrop-blur-sm",
+  surface: "bg-surface",
+  accent: "bg-accent/10", // Making accent much lighter for backgrounds
 };
 
 const alignmentClassMap: Record<SectionAlign, string> = {

@@ -25,7 +25,7 @@ export function SplitHero({ config, images }: SplitHeroProps) {
   return (
     <section className="relative flex min-h-[100dvh] flex-col overflow-hidden lg:flex-row">
       {/* LEFT: Content Side (Desktop) / Bottom (Mobile) */}
-      <div className="order-2 flex flex-1 flex-col justify-center bg-surface px-6 py-12 text-center lg:order-1 lg:w-[30%] lg:px-10 lg:text-left xl:px-12">
+      <div className="order-2 flex flex-1 flex-col justify-center bg-background px-6 py-12 text-center lg:order-1 lg:w-[30%] lg:px-10 lg:text-left xl:px-12">
         
         {/* Main Title Area */}
         <motion.div
