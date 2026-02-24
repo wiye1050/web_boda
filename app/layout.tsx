@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
-import { Cormorant_Garamond } from "next/font/google";
+import { Montserrat, Cormorant_Garamond, Playfair_Display, Lato, Great_Vibes, Pinyon_Script } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { getPublicConfig } from "@/lib/getPublicConfig";
@@ -18,6 +17,29 @@ const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-cormorant",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+});
+
+const lato = Lato({
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
+  variable: "--font-lato",
+});
+
+const greatVibes = Great_Vibes({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-great-vibes",
+});
+
+const pinyonScript = Pinyon_Script({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-pinyon-script",
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -73,10 +95,10 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning data-scroll-behavior="smooth">
       <body
-        className={`${montserrat.variable} ${cormorant.variable} antialiased bg-background text-foreground`}
+        className={`${montserrat.variable} ${cormorant.variable} ${playfair.variable} ${lato.variable} ${greatVibes.variable} ${pinyonScript.variable} antialiased bg-background text-foreground`}
       >
         <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <div className="relative min-h-screen bg-surface">
+          <div className="relative min-h-screen bg-background">
             <a
               href="#main-content"
               className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-xs focus:font-semibold focus:uppercase focus:tracking-[0.3em] focus:text-primary-foreground focus:shadow-lg"

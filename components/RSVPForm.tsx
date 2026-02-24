@@ -329,7 +329,7 @@ export function RSVPForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="mx-auto flex w-full max-w-3xl flex-col gap-8 rounded-[var(--radius-card)] border border-border/70 bg-surface/95 p-8 shadow-[var(--shadow-soft)]"
+      className="mx-auto flex w-full max-w-3xl flex-col gap-8 rounded-[var(--radius-card)] border border-border/70 bg-surface/95 p-8 shadow-[var(--shadow-soft)] text-center"
     >
       <label className="sr-only">
         No completar
@@ -396,7 +396,7 @@ export function RSVPForm({
             </p>
           </div>
         )}
-        <label className="flex flex-col gap-2 text-left">
+        <label className="flex flex-col gap-2 text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
             {copy.fullNameLabel}
           </span>
@@ -407,11 +407,11 @@ export function RSVPForm({
             value={form.fullName}
             onChange={(event) => handleChange("fullName", event.target.value)}
             placeholder={copy.fullNamePlaceholder}
-            className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+            className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
           />
         </label>
 
-        <label className="flex flex-col gap-2 text-left">
+        <label className="flex flex-col gap-2 text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
             {copy.emailLabel}
           </span>
@@ -422,7 +422,7 @@ export function RSVPForm({
             value={form.email}
             onChange={(event) => handleChange("email", event.target.value)}
             placeholder={copy.emailPlaceholder}
-            className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+            className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
           />
           {!emailValid && form.email.length > 0 && (
             <span className="text-xs text-primary">
@@ -433,7 +433,7 @@ export function RSVPForm({
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <label className="flex flex-col gap-2 text-left">
+        <label className="flex flex-col gap-2 text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
             {copy.phoneLabel}
           </span>
@@ -445,7 +445,7 @@ export function RSVPForm({
             value={form.phone}
             onChange={(event) => handleChange("phone", event.target.value)}
             placeholder={copy.phonePlaceholder}
-            className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+            className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
           />
           {!phoneValid && form.phone.length > 0 && (
             <span className="text-xs text-primary">
@@ -454,11 +454,11 @@ export function RSVPForm({
           )}
         </label>
 
-        <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-left shadow-sm">
-          <legend className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+        <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-center shadow-sm">
+          <legend className="mx-auto text-xs font-semibold uppercase tracking-[0.3em] text-muted">
             {copy.attendanceLegend}
           </legend>
-          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap justify-center">
             {["si", "no"].map((value) => (
               <label
                 key={value}
@@ -496,7 +496,7 @@ export function RSVPForm({
 
       {attending && (
         <div className="grid gap-6">
-          <label className="flex flex-col gap-2 text-left">
+          <label className="flex flex-col gap-2 text-center">
             <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
               {copy.guestsLabel}
             </span>
@@ -508,9 +508,9 @@ export function RSVPForm({
               value={form.guests}
               onChange={(event) => handleChange("guests", event.target.value)}
               placeholder={copy.guestsPlaceholderYes}
-              className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+              className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
             />
-            <span className="text-xs text-muted">{copy.guestsHelper}</span>
+            <span className="text-xs text-muted text-center">{copy.guestsHelper}</span>
             {showGuestError && (
               <span className="text-xs text-primary">
                 {copy.guestsError}
@@ -522,9 +522,9 @@ export function RSVPForm({
       {attending && (
         <div
           id="rsvp-advanced"
-          className="grid gap-6 rounded-[24px] border border-border/80 bg-surface/90 p-6 md:grid-cols-2"
+          className="grid gap-6 rounded-[24px] border border-border/80 bg-surface/90 p-6 md:grid-cols-2 text-center"
         >
-          <label className="flex flex-col gap-2 text-left">
+          <label className="flex flex-col gap-2 text-center">
             <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
               {copy.guestNamesLabel}
             </span>
@@ -534,12 +534,12 @@ export function RSVPForm({
               onChange={(event) => handleChange("guestNames", event.target.value)}
               rows={3}
               placeholder={copy.guestNamesPlaceholder}
-              className="min-h-[100px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+              className="min-h-[100px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
               disabled={!attending}
           />
         </label>
 
-        <label className="md:col-span-2 flex items-start gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-left text-sm text-foreground">
+        <label className="md:col-span-2 flex items-start justify-center gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-center text-sm text-foreground">
           <input
             type="checkbox"
             className="mt-1 h-4 w-4 rounded border-border bg-background accent-primary"
@@ -550,11 +550,11 @@ export function RSVPForm({
             Quiero recordatorio antes de la boda (usaremos tu teléfono o email).
           </span>
         </label>
-          <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-left shadow-sm">
-            <legend className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+          <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-center shadow-sm">
+            <legend className="mx-auto text-xs font-semibold uppercase tracking-[0.3em] text-muted">
               {copy.prebodaLegend}
             </legend>
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap justify-center">
               {["si", "no"].map((value) => (
                 <label
                   key={value}
@@ -588,11 +588,11 @@ export function RSVPForm({
             <p className="text-xs text-muted">{copy.prebodaNote}</p>
           </fieldset>
 
-          <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-left shadow-sm">
-            <legend className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+          <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-center shadow-sm">
+            <legend className="mx-auto text-xs font-semibold uppercase tracking-[0.3em] text-muted">
               {copy.transportLegend}
             </legend>
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap justify-center">
               {["no", "si"].map((value) => (
                 <label
                   key={value}
@@ -629,7 +629,7 @@ export function RSVPForm({
           </fieldset>
 
           {form.needsTransport === "si" && (
-            <label className="flex flex-col gap-2 text-left md:col-span-2">
+            <label className="flex flex-col gap-2 text-center md:col-span-2">
               <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
                 {copy.transportSeatsLabel}
               </span>
@@ -644,7 +644,7 @@ export function RSVPForm({
                   handleChange("transportSeats", event.target.value)
                 }
                 placeholder={copy.transportSeatsPlaceholder}
-                className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+                className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
               />
               {showSeatsError && (
                 <span className="text-xs text-primary">
@@ -654,7 +654,7 @@ export function RSVPForm({
             </label>
           )}
 
-          <label className="flex flex-col gap-2 text-left md:col-span-2">
+          <label className="flex flex-col gap-2 text-center md:col-span-2">
             <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
               {copy.requestsLabel}
             </span>
@@ -664,7 +664,7 @@ export function RSVPForm({
               onChange={(event) => handleChange("requests", event.target.value)}
               rows={4}
               placeholder={copy.requestsPlaceholder}
-              className="min-h-[160px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+              className="min-h-[160px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
             />
           </label>
         </div>
@@ -672,7 +672,7 @@ export function RSVPForm({
 
       {attending && (
         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-           <label className="flex items-start gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-left text-sm text-foreground md:flex-1">
+           <label className="md:col-span-2 flex items-start justify-center gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-center text-sm text-foreground md:flex-1">
             <input
               type="checkbox"
               className="mt-1 h-4 w-4 rounded border-border bg-background accent-primary"
@@ -684,8 +684,8 @@ export function RSVPForm({
             </span>
           </label>
            
-          <label className="flex flex-col gap-2 text-left md:flex-1">
-            <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+          <label className="flex flex-col gap-2 text-center md:flex-1">
+            <span className="flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted">
               <span role="img" aria-hidden>🎵</span> Una canción que no puede faltar
             </span>
             <input
@@ -693,14 +693,14 @@ export function RSVPForm({
               value={form.songRequest}
               onChange={(event) => handleChange("songRequest", event.target.value)}
               placeholder="Ej: Flying Free, Paquito el Chocolatero..."
-              className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+              className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
             />
           </label>
         </div>
       )}
 
       <div className="flex flex-col items-center gap-4 text-center">
-        <label className="flex items-start gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-left text-sm text-foreground">
+        <label className="flex items-start justify-center gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-center text-sm text-foreground">
           <input
             type="checkbox"
             className="mt-1 h-4 w-4 rounded border-border bg-background accent-primary"
@@ -733,7 +733,7 @@ export function RSVPForm({
         )}
       </div>
 
-      <div className="rounded-[20px] border border-border/80 bg-accent/70 px-5 py-4 text-left text-xs text-muted">
+      <div className="rounded-[20px] border border-border/80 bg-accent/70 px-5 py-4 text-center text-xs text-muted">
         <p className="font-semibold uppercase tracking-[0.3em] text-muted">
           {importantTitle}
         </p>

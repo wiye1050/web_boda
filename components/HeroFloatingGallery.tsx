@@ -1,10 +1,11 @@
 "use client";
+import Image from "next/image";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { getGoogleCalendarUrl } from "@/lib/calendar";
 import { ArrowDown } from "lucide-react";
-import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 type HeroFloatingGalleryProps = {
   config: {
@@ -15,155 +16,145 @@ type HeroFloatingGalleryProps = {
     locationName: string;
     locationAddress: string;
   };
-  localImages: string[]; // Paths to images in public/
+  localImages: string[];
 };
 
-// SLOT SYSTEM CONFIGURATION
-const CYCLE_INTERVAL_MS = 6000; // Time between slot changes
-const FADE_DURATION = 2; // Slow fade in/out
+const CYCLE_INTERVAL_MS = 6000;
+const FADE_DURATION = 2;
 
-// 4 Fixed Slots - RESPONSIVE SAFE ZONES
-// Uses % for position to scale with viewport
-// Uses vmin for size to never exceed screen bounds vertically or horizontally
 const SLOTS = [
-  { id: "top-left", top: "30%", left: "18%", rotation: -6 },
-  { id: "bottom-left", top: "60%", left: "12%", rotation: 4 },
-  { id: "top-right", top: "25%", left: "82%", rotation: 5 },
-  { id: "bottom-right", top: "58%", left: "88%", rotation: -3 },
+  { id: "top-left", top: "20%", left: "18%", rotation: -6 },
+  { id: "bottom-left", top: "80%", left: "18%", rotation: 4 },
+  { id: "top-right", top: "20%", left: "82%", rotation: 5 },
+  { id: "bottom-right", top: "82%", left: "82%", rotation: -3 },
 ];
 
 export function HeroFloatingGallery({ config, localImages }: HeroFloatingGalleryProps) {
-  const [activeSlotIndex, setActiveSlotIndex] = useState(0);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [leftImageIndex, setLeftImageIndex] = useState(0);
+  const [rightImageIndex, setRightImageIndex] = useState(1);
+  const [transitionSide, setTransitionSide] = useState<"left" | "right">("left");
 
   useEffect(() => {
-    if (localImages.length === 0) return;
+    if (localImages.length < 2) return;
 
-    // Cycle through slots sequentially
     const interval = setInterval(() => {
-      setActiveSlotIndex((prev) => (prev + 1) % SLOTS.length);
-      setCurrentImageIndex((prev) => (prev + 1) % localImages.length);
+      if (transitionSide === "left") {
+        // Find next index for left that's not currently on right
+        setLeftImageIndex((prev) => {
+          let next = (prev + 1) % localImages.length;
+          if (next === rightImageIndex) next = (next + 1) % localImages.length;
+          return next;
+        });
+        setTransitionSide("right");
+      } else {
+        // Find next index for right that's not currently on left
+        setRightImageIndex((prev) => {
+          let next = (prev + 1) % localImages.length;
+          if (next === leftImageIndex) next = (next + 1) % localImages.length;
+          return next;
+        });
+        setTransitionSide("left");
+      }
     }, CYCLE_INTERVAL_MS);
 
     return () => clearInterval(interval);
-  }, [localImages]);
+  }, [localImages, transitionSide, leftImageIndex, rightImageIndex]);
 
   return (
-    <section className="relative min-h-[92vh] w-full overflow-hidden bg-background">
-      {/* BACKGROUND LAYER - SLOTS */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <AnimatePresence mode="wait">
-           {/* We render distinct images for slots to persist? No, user wants them to appear/disappear. */}
-           {/* Let's render the Current Slot's Image */}
-           <motion.div
-              key={`${activeSlotIndex}-${currentImageIndex}`}
-              initial={{ opacity: 0, scale: 0.8 }}
+    <header className="relative min-h-screen w-full flex flex-col items-center justify-center text-center px-4 pt-32 pb-10 bg-background overflow-hidden">
+      {/* 3-Column Layout Container */}
+      <div className="absolute inset-0 flex w-full h-full z-0 overflow-hidden pointer-events-none px-4 md:px-12">
+        
+        {/* Left Column - Photo */}
+        <div className="hidden md:flex flex-1 relative overflow-hidden items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`left-${leftImageIndex}`}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: FADE_DURATION, ease: "easeInOut" }}
-              style={{
-                position: "absolute",
-                top: SLOTS[activeSlotIndex].top,
-                left: SLOTS[activeSlotIndex].left,
-                transform: `translate(-50%, -50%) rotate(${SLOTS[activeSlotIndex].rotation}deg)`,
-                // RESPONSIVE SIZING MATH:
-                // 25vmin = 25% of smaller screen dimension (safe on mobile landscape and portrait)
-                width: "25vmin", 
-                maxWidth: "380px", // Hard cap for huge screens
-                minWidth: "180px", // Don't get too small on mobile
-                // Height constraints to prevent bottom clipping
-                maxHeight: "35vh", 
-                aspectRatio: "3/4", 
-              }}
-              // Added border/frame style: bg-white p-3 shadow-xl
-              className="z-10 flex items-center justify-center p-3 sm:p-4 bg-white shadow-2xl skew-y-1"
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ duration: 2, ease: "easeInOut" }}
+              className="w-full h-full max-w-[450px] lg:max-w-[500px] flex items-center justify-center p-4"
             >
-              <div className="relative w-full h-full bg-neutral-100 overflow-hidden"> 
+              <div className="relative w-full h-full max-h-[70vh]">
                 <Image
-                  src={localImages[currentImageIndex % localImages.length]}
-                  alt="Memory"
+                  src={localImages[leftImageIndex % localImages.length]}
+                  alt="Gallery Left"
                   fill
-                  className="object-contain" // Contain ensures full visibility inside frame
-                  sizes="(max-width: 768px) 300px, 450px"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover object-top drop-shadow-sm rounded-[2rem]"
                   priority
                 />
               </div>
             </motion.div>
-            
-            {/* Secondary Image (Previous Slot) to keep screen populated? */}
-            {/* User said "Appear... Disappear". Sequential single focus is safest for "No Overlap". */}
-            {/* But purely 1 image might be too empty. Let's try 2 alternating diagonals. */}
-            
-        </AnimatePresence>
-        
-        {/* Render a SECOND persistent layer for the "Previous" slot to overlap gracefully? */}
-        {/* No, AnimatePresence handles the exit. The exiting image will fade out while new one fades in. */}
-        {/* With "mode='wait'", one leaves THEN one enters. */}
-        {/* With default mode, they overlap in time (crossfade). This is what we want. */}
+          </AnimatePresence>
+        </div>
+
+        {/* Center Column - Safe Zone for Text */}
+        <div className="flex-[2] min-w-0" aria-hidden="true" />
+
+        {/* Right Column - Photo */}
+        <div className="hidden md:flex flex-1 relative overflow-hidden items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`right-${rightImageIndex}`}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ duration: 2, ease: "easeInOut" }}
+              className="w-full h-full max-w-[450px] lg:max-w-[500px] flex items-center justify-center p-4"
+            >
+              <div className="relative w-full h-full max-h-[70vh]">
+                <Image
+                  src={localImages[rightImageIndex % localImages.length]}
+                  alt="Gallery Right"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover object-top drop-shadow-sm rounded-[2rem]"
+                  priority
+                />
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
 
-      {/* CONTENT LAYER - Centered & Safe - CLEAN STYLE (No BG) */}
-      <div className="relative z-20 flex h-full min-h-[90vh] flex-col items-center justify-center px-4 text-center">
-        <motion.div
-           initial={{ opacity: 0, y: 20 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ duration: 1.2 }}
-           className="flex flex-col items-center gap-6 p-8"
-        >
-          {/* Eyebrow */}
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary/80">
-            12 · SEPT · 2026
-          </span>
+      {/* Main Content */}
+      <div className="fade-up relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center">
 
-          {/* Main Title */}
-          <h1 className="font-display text-[4.5rem] leading-[0.9] text-foreground sm:text-[6rem] lg:text-[8rem] drop-shadow-sm">
-            {config.heroTitle}
+        <div className="mb-6 relative">
+          <h1 className="!font-script text-6xl md:text-8xl lg:text-9xl text-foreground font-light tracking-normal drop-shadow-sm">
+            Alba <span className="text-accent mx-2">&</span> Guille
           </h1>
+        </div>
 
-          {/* Description */}
-          <p className="max-w-lg font-sans text-lg font-light text-foreground/80 sm:text-2xl">
-            {config.heroDescription}
-          </p>
+        <div className="flex flex-col items-center justify-center gap-3 mb-12 w-full">
+          <h2 className="!font-script text-4xl md:text-5xl lg:text-7xl text-accent tracking-normal font-light mt-2">
+            12 de septiembre de 2026
+          </h2>
+        </div>
 
-          <div className="h-px w-16 bg-primary/30 my-2" />
+        <p className="text-black max-w-lg mx-auto mb-10 font-sans font-medium leading-relaxed text-sm italic">
+          &ldquo;{config.heroDescription || "Tenemos el lugar, tenemos la fecha y tenemos las ganas... ¡Sólo nos faltas tú para hacerlo inolvidable!"}&rdquo;
+        </p>
 
-          {/* Location */}
-             <div className="flex flex-col gap-1">
-                <p className="font-display text-2xl text-primary-strong">
-                   {config.locationName}
-                </p>
-                <p className="text-sm text-foreground/60">{localImages.length > 0 ? "Galería en vivo" : config.locationAddress}</p>
-             </div>
-
-           {/* CTA */}
-           <div className="mt-6">
-              <a
-                href={getGoogleCalendarUrl({
-                  title: "Boda Alba & Guille",
-                  description: config.heroDescription,
-                  location: `${config.locationName}, ${config.locationAddress}`,
-                  start: new Date("2026-09-12T13:30:00"),
-                  end: new Date("2026-09-13T02:00:00"),
-                })}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 text-sm font-medium text-white transition-transform hover:scale-105 shadow-lg shadow-primary/20"
-              >
-                Añadir al Calendario
-              </a>
-            </div>
-        </motion.div>
+        <a
+          href={getGoogleCalendarUrl({
+            title: "Boda Alba & Guille",
+            description: config.heroDescription,
+            location: `${config.locationName}, ${config.locationAddress}`,
+            start: new Date("2026-09-12T13:30:00"),
+            end: new Date("2026-09-13T02:00:00"),
+          })}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative overflow-hidden bg-accent text-white px-10 py-3 rounded-full text-[10px] tracking-[0.2em] hover:shadow-lg transition-all duration-300 uppercase font-bold"
+        >
+          <span className="relative z-10">Añadir al Calendario</span>
+          <div className="absolute inset-0 h-full w-full scale-0 rounded-full transition-all duration-300 group-hover:scale-100 group-hover:bg-white/10"></div>
+        </a>
       </div>
 
-       {/* Scroll Indicator */}
-       <motion.div
-           initial={{ opacity: 0 }}
-           animate={{ opacity: 1 }}
-           transition={{ delay: 2, duration: 1 }}
-           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
-        >
-             <ArrowDown className="animate-bounce text-primary/50" size={24} />
-       </motion.div>
-    </section>
+    </header>
   );
 }

@@ -79,8 +79,8 @@ export function MapsChooserModal({
         ref={panelRef}
         className="relative w-full max-w-lg rounded-t-[28px] border border-border/70 bg-surface/95 px-5 pb-[calc(env(safe-area-inset-bottom)_+_24px)] pt-5 shadow-[0_-20px_60px_rgba(0,0,0,0.35)] backdrop-blur"
       >
-        <div className="flex items-start justify-between gap-4">
-          <div>
+        <div className="flex flex-col items-center text-center gap-4">
+          <div className="flex flex-col items-center">
             <h2
               id="maps-modal-title"
               className="text-base font-semibold uppercase tracking-[0.3em] text-foreground"
@@ -95,7 +95,7 @@ export function MapsChooserModal({
             ref={closeBtnRef}
             type="button"
             onClick={onClose}
-            className="rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+            className="rounded-full border border-border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
           >
             {copy.closeLabel}
           </button>
@@ -108,7 +108,7 @@ export function MapsChooserModal({
               target="_blank"
               rel="noopener noreferrer"
               onClick={onClose}
-              className="flex flex-col gap-2 rounded-[20px] border border-primary/40 bg-primary/10 px-4 py-4 text-left transition hover:border-primary/70 hover:bg-primary/15"
+              className="flex flex-col items-center gap-2 rounded-[20px] border border-primary/40 bg-primary/10 px-4 py-4 text-center transition hover:border-primary/70 hover:bg-primary/15"
             >
               <span className="text-sm font-semibold uppercase tracking-[0.3em] text-foreground">
                 {copy.weddingLabel}
@@ -125,7 +125,7 @@ export function MapsChooserModal({
               target="_blank"
               rel="noopener noreferrer"
               onClick={onClose}
-              className="flex flex-col gap-2 rounded-[20px] border border-border/80 bg-surface/80 px-4 py-4 text-left transition hover:border-primary/60"
+              className="flex flex-col items-center gap-2 rounded-[20px] border border-border/80 bg-surface/80 px-4 py-4 text-center transition hover:border-primary/60"
             >
               <span className="text-sm font-semibold uppercase tracking-[0.3em] text-foreground">
                 {copy.prebodaLabel}

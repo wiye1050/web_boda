@@ -35,7 +35,8 @@ export default async function Home() {
     config = DEFAULT_PUBLIC_CONTENT;
   }
 
-  const prebodaMapUrl = config.prebodaMapUrl || config.locationMapUrl; /* DYNAMIC IMAGES (Floating Hero) */
+  const prebodaMapUrl = config.prebodaMapsUrl?.trim() || config.prebodaMapUrl?.trim() || (config.prebodaPlace ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(config.prebodaPlace)}` : "");
+  const weddingMapUrl = config.weddingMapsUrl?.trim() || config.locationMapUrl?.trim() || (config.locationName ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(config.locationName + " " + (config.locationAddress || ""))}` : "");
   const heroImages = [
     "/hero-images/IMG-20180813-WA0013.jpg",
     "/hero-images/IMG-20220906-WA0027.jpg",
@@ -143,38 +144,38 @@ export default async function Home() {
             background="surface" // White
           >
           <FadeIn>
-            <div className="grid gap-6 md:grid-cols-2">
-              <article className="rounded-[var(--radius-card)] border border-border/40 bg-background/50 p-4 shadow-[var(--shadow-soft)] sm:p-6">
+            <div className="mx-auto grid max-w-3xl gap-6 sm:grid-cols-2">
+              {/* Tarjeta 1: Fecha y Hora */}
+              <article className="flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-border/60 bg-surface p-6 text-center shadow-[var(--shadow-soft)] sm:p-8">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                  {config.prebodaCardOneLabel}
+                  Fecha
                 </p>
                 <h3 className="mt-3 text-2xl font-display font-semibold">
-                  {config.prebodaTime}
+                  {config.prebodaTime.replace(/\s*h\s*$/i, "")}
                 </h3>
                 <p className="mt-3 text-sm text-muted">
-                  {config.prebodaPlace}. {config.prebodaCardOneDescription}
+                  {config.prebodaCardOneDescription || "Un brindis para calentar motores."}
                 </p>
+              </article>
+
+              {/* Tarjeta 2: Lugar */}
+              <article className="flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-border/60 bg-surface p-6 text-center shadow-[var(--shadow-soft)] sm:p-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                  Lugar
+                </p>
+                <h3 className="mt-3 text-2xl font-display font-semibold">
+                  {config.prebodaPlace}
+                </h3>
                 {prebodaMapUrl && (
                   <CTAButton
                     href={prebodaMapUrl}
                     variant="ghost"
-                    className="mt-6 w-fit"
+                    className="mt-6 w-fit tracking-[0.2em] font-bold uppercase text-[10px]"
                     prefetch={false}
                   >
-                    {config.prebodaCardOneCtaLabel}
+                    Cómo llegar
                   </CTAButton>
                 )}
-              </article>
-              <article className="rounded-[var(--radius-card)] border border-border/40 bg-background/50 p-4 shadow-[var(--shadow-soft)] sm:p-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                  {config.prebodaCardTwoLabel}
-                </p>
-                <h3 className="mt-3 text-2xl font-display font-semibold">
-                  {config.prebodaCardTwoTitle}
-                </h3>
-                <p className="mt-3 text-sm text-muted">
-                  {config.prebodaCardTwoDescription}
-                </p>
               </article>
             </div>
           </FadeIn>
@@ -186,53 +187,64 @@ export default async function Home() {
         {isSectionEnabled("ubicacion") && (
           <Section
             id="ubicacion"
-            eyebrow={config.locationEyebrow}
-            title={config.locationTitle}
+            eyebrow="La Boda"
+            title="Cuándo y dónde"
             description={config.locationDescription}
             background="surface" // White
           >
             <FadeIn>
-              {config.locationMapEmbedUrl && (
-                <div className="mb-6 overflow-hidden rounded-[var(--radius-card)] border border-border/40 shadow-[var(--shadow-soft)]">
-                  <iframe
-                    src={config.locationMapEmbedUrl}
-                    className="h-[360px] w-full border-0"
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    aria-label="Mapa con ubicaciones de la boda y preboda"
-                  />
-                </div>
-              )}
-              <div className="grid gap-6 md:grid-cols-2">
-                <article className="rounded-[var(--radius-card)] border border-border/40 bg-background/50 p-4 shadow-[var(--shadow-soft)] sm:p-6">
-                  <h3 className="text-xl font-display font-semibold">{config.locationName}</h3>
-                  <p className="mt-3 text-sm text-muted">
+              {/* Bloque de Tarjetas: Fecha y Lugar (Estética unificada con Preboda) */}
+              <div className="mx-auto grid max-w-3xl gap-6 sm:grid-cols-2 mb-8">
+                {/* Tarjeta 1: Fecha y Hora */}
+                <article className="flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-border/60 bg-surface p-6 text-center shadow-[var(--shadow-soft)] sm:p-8">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                    Fecha
+                  </p>
+                  <h3 className="mt-3 text-2xl font-display font-semibold">
+                    12 de septiembre · 14:00
+                  </h3>
+                  <p className="mt-3 text-xs italic text-muted">
+                    Se ruega puntualidad (procurad estar 15 min antes)
+                  </p>
+                </article>
+
+                {/* Tarjeta 2: Lugar */}
+                <article className="flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-border/60 bg-surface p-6 text-center shadow-[var(--shadow-soft)] sm:p-8">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+                    Lugar
+                  </p>
+                  <h3 className="mt-3 text-2xl font-display font-semibold">
+                    {config.locationName}
+                  </h3>
+                  <p className="mt-2 text-sm text-muted">
                     {config.locationAddress}
                   </p>
-                  <div className="mt-5 flex flex-wrap gap-3">
-                    {config.locationMapUrl && (
-                      <CTAButton
-                        href={config.locationMapUrl}
-                        variant="primary"
-                        prefetch={false}
-                      >
-                        {config.locationMapLabel}
-                      </CTAButton>
-                    )}
-                  </div>
+                  {weddingMapUrl && (
+                    <CTAButton
+                      href={weddingMapUrl}
+                      variant="ghost"
+                      className="mt-6 w-fit tracking-[0.2em] font-bold uppercase text-[10px]"
+                      prefetch={false}
+                    >
+                      Cómo llegar
+                    </CTAButton>
+                  )}
                 </article>
-                <article className="rounded-[var(--radius-card)] border border-border/40 bg-background/50 p-4 shadow-[var(--shadow-soft)] sm:p-6">
-                  <h3 className="text-xl font-display font-semibold">
-                    {config.locationContactTitle}
-                  </h3>
-                  <ul className="mt-3 space-y-2 text-sm text-muted">
-                    <li className="flex flex-col gap-1">
-                      <span>{config.locationEmailLabel}:</span>
-                      <div className="flex flex-wrap gap-2">
+              </div>
+
+              {/* Bloque de Contacto */}
+              <article className="rounded-[var(--radius-card)] border border-border/60 bg-surface p-6 shadow-[var(--shadow-soft)] max-w-3xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-6 overflow-hidden mt-8">
+                <h3 className="text-xl font-display font-semibold m-0 text-center md:text-left flex-shrink-0">
+                  {config.locationContactTitle}
+                </h3>
+                <ul className="mt-0 flex flex-col sm:flex-row gap-6 text-sm text-muted w-full sm:w-auto p-0 list-none m-0">
+                    <li className="flex flex-col gap-1 items-center sm:items-start flex-1 min-w-0">
+                      <span className="text-[10px] uppercase tracking-widest text-muted">{config.locationEmailLabel}:</span>
+                      <div className="flex flex-col gap-1 w-full text-center sm:text-left">
                         {config.contactEmail && (
                           <a
                             href={`mailto:${config.contactEmail}`}
-                            className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
+                            className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary truncate"
                           >
                             {config.contactEmail}
                           </a>
@@ -240,20 +252,20 @@ export default async function Home() {
                         {config.contactEmail2 && (
                           <a
                             href={`mailto:${config.contactEmail2}`}
-                            className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
+                            className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary truncate"
                           >
                             {config.contactEmail2}
                           </a>
                         )}
                       </div>
                     </li>
-                    <li className="flex flex-col gap-1">
-                      <span>{config.locationPhoneLabel}:</span>
-                      <div className="flex flex-wrap gap-2">
+                    <li className="flex flex-col gap-1 items-center sm:items-start flex-1 sm:pl-6 sm:border-l border-border/50 min-w-0">
+                      <span className="text-[10px] uppercase tracking-widest text-muted">{config.locationPhoneLabel}:</span>
+                      <div className="flex flex-col gap-1 w-full text-center sm:text-left">
                         {config.contactPhone && (
                           <a
                             href={`tel:${config.contactPhone}`}
-                            className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
+                            className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary truncate"
                           >
                             {config.contactPhone}
                           </a>
@@ -261,66 +273,15 @@ export default async function Home() {
                         {config.contactPhone2 && (
                           <a
                             href={`tel:${config.contactPhone2}`}
-                            className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
+                            className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary truncate"
                           >
                             {config.contactPhone2}
                           </a>
                         )}
                       </div>
                     </li>
-                    {config.whatsappLink && (
-                      <li>
-                        {config.locationWhatsappLabel}:{" "}
-                        <a
-                          href={config.whatsappLink}
-                          className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary"
-                        >
-                          {config.locationWhatsappActionLabel}
-                        </a>
-                      </li>
-                    )}
                   </ul>
-                </article>
-              </div>
-
-              {(config.weddingMapsUrl || config.prebodaMapsUrl) && (
-                <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                  {config.weddingMapsUrl && (
-                    <article className="flex flex-col gap-3 rounded-[var(--radius-card)] border border-primary/20 bg-primary/5 p-4 text-foreground">
-                      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">
-                        Boda (principal)
-                      </p>
-                      <p className="text-sm text-muted">Ceremonia y banquete</p>
-                      <CTAButton
-                        href={config.weddingMapsUrl}
-                        variant="primary"
-                        className="w-full sm:w-auto"
-                        prefetch={false}
-                      >
-                        Abrir mapa boda
-                      </CTAButton>
-                    </article>
-                  )}
-                  {config.prebodaMapsUrl && (
-                    <article className="flex flex-col gap-3 rounded-[var(--radius-card)] border border-border/40 bg-background/50 p-4 text-foreground">
-                      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                        Preboda
-                      </p>
-                      <p className="text-sm text-muted">
-                        Evento del día anterior (no es la ubicación de la boda)
-                      </p>
-                      <CTAButton
-                        href={config.prebodaMapsUrl}
-                        variant="outline"
-                        className="w-full sm:w-auto"
-                        prefetch={false}
-                      >
-                        Abrir mapa preboda
-                      </CTAButton>
-                    </article>
-                  )}
-                </div>
-              )}
+              </article>
             </FadeIn>
           </Section>
         )}
@@ -334,10 +295,31 @@ export default async function Home() {
             background="default" // Beige
           >
             <FadeIn>
-              <PracticalList 
-                variant="strip"
-                items={config.practicalItems}
-              />
+              <div className="grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-12">
+                {/* Lado Izquierdo: Notas del Evento */}
+                <div className="flex flex-col gap-6">
+                  <PracticalList 
+                    variant="strip"
+                    items={config.practicalItems}
+                  />
+                </div>
+
+                {/* Lado Derecho: Mapa Interactivo */}
+                {config.locationMapEmbedUrl && (
+                  <div className="relative group">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-accent-soft/20 to-primary/10 rounded-[var(--radius-card)] blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                    <div className="relative overflow-hidden rounded-[var(--radius-card)] border border-border/40 shadow-[var(--shadow-soft)] h-[400px] lg:h-[450px]">
+                      <iframe
+                        src={config.locationMapEmbedUrl}
+                        className="h-full w-full border-0 grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-700"
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        aria-label="Mapa con ubicaciones de la boda y preboda"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
             </FadeIn>
           </Section>
         )}
@@ -354,6 +336,7 @@ export default async function Home() {
               <StayList
                 items={config.stayOptions}
                 linkLabel={config.stayLinkLabel}
+                showViewAll={config.stayOptions.length > 0}
               />
             </FadeIn>
           </Section>

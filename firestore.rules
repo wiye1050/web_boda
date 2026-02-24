@@ -251,6 +251,29 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // --- ACCOMMODATIONS MODULE ---
+    function baseAccommodationChecks(data) {
+      return stringField(data.name, 2, 200) &&
+        data.type in ["Hotel", "Casa Rural", "Apartamento", "Otro"] &&
+        optionalBoolean(data, "hasBlock") &&
+        optionalStringOrNull(data, "capacity", 0, 100) &&
+        optionalStringOrNull(data, "distance", 0, 100) &&
+        optionalStringOrNull(data, "priceRange", 0, 20) &&
+        optionalStringOrNull(data, "link", 0, 1000000) &&
+        optionalStringOrNull(data, "imageUrl", 0, 1000000) &&
+        optionalStringOrNull(data, "notes", 0, 20000) &&
+        optionalTimestamp(data, "createdAt") &&
+        optionalTimestamp(data, "updatedAt") &&
+        optionalNumber(data, "order", 0, 1000);
+    }
+
+    match /accommodations/{accommodationId} {
+      allow read: if true; // Public access for the home/accommodations page
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
     function baseVendorChecks(data) {
       return stringField(data.name, 2, 200) &&
         data.category in [

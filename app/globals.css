@@ -1,26 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  /* Base - Soft Beige & Dark Gray */
-  --background: #f7f4f0;
+  /* Fine Art Palette - Warm Crema & Taupe */
+  --background: #f8f5f2;
   --foreground: #4a4a4a;
 
   /* Surface - Pure White for Cards */
   --surface: #ffffff;
 
-  /* Text Muted */
-  --muted: #8c8c8c;
+  /* Muted - Muted Taupe */
+  --muted: #8b7e74;
 
   /* Border - Subtle for Soft UI */
   --border: rgba(74, 74, 74, 0.08);
 
-  /* Primary - Taupe / Walnut */
-  --primary: #8a7b68;
+  /* Primary - Taupe / Brown Accent */
+  --primary: #8b7e74;
   --primary-foreground: #ffffff;
 
-  /* Accent - Gold Muted / Champagne */
-  --accent: #b89d7b;
-  --accent-strong: #9a8c70;
+  /* Accent - Gold Accent */
+  --accent: #d4af37;
+  --accent-strong: #b89d7b;
+  --accent-bg: #f3ede2; /* Pre-mixed 11% accent with background */
+
+  /* Contrast Acelts from Invitation */
+  --olive: #5b634a;
+  --navy: #1b2a4a;
 
   --topbar-height: 0px;
 }
@@ -35,16 +40,35 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
+  --color-accent-bg: var(--accent-bg);
+  --color-olive: var(--olive);
+  --color-navy: var(--navy);
 
   /* Typography Mapping */
-  --font-sans: var(--font-montserrat);
-  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-lato);
+  --font-serif: var(--font-playfair);
+  --font-script: var(--font-great-vibes);
+  --font-calligraphy: var(--font-pinyon-script);
+  --font-display: var(--font-playfair);
 
-  --spacing-section: clamp(3.5rem, 6vw, 7rem);
+  --spacing-section: clamp(2.5rem, 5vw, 5rem);
 
   /* Soft UI Tokens */
-  --radius-card: 24px;
-  --shadow-soft: 0 15px 40px -10px rgba(0, 0, 0, 0.08);
+  --radius-card: 32px;
+  --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+
+  --animate-fade-up: fadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 .dark,
@@ -58,11 +82,12 @@
   --primary-foreground: #1c1b1a;
   --accent: #c8b090; /* Lighter Gold */
   --accent-strong: #b09878;
+  --accent-bg: #292622; /* Pre-mixed 11% lighter gold with charcoal */
 }
 
 @media (max-width: 640px) {
   :root {
-    --spacing-section: clamp(2.5rem, 5vw, 4.5rem);
+    --spacing-section: clamp(2rem, 4vw, 3.5rem);
     --shadow-soft: 0 24px 60px rgba(35, 34, 32, 0.16);
     --border: rgba(35, 34, 32, 0.12);
   }
@@ -83,6 +108,7 @@ body {
 }
 
 html {
+  background: var(--background);
   overflow-x: hidden;
   scroll-behavior: smooth;
 }
@@ -132,4 +158,54 @@ a:hover {
 
 :where(h3) {
   font-size: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.mask-brush {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M45.7,-76.3C58.9,-69.3,69.1,-58.3,77.3,-46.3C85.5,-34.3,91.7,-21.3,92.6,-8.1C93.5,5.1,89.1,18.5,82.4,30.8C75.7,43.1,66.7,54.3,55.4,63.1C44.1,71.9,30.5,78.3,16.6,81.1C2.7,83.9,-11.5,83.1,-24.6,78.3C-37.7,73.5,-49.7,64.7,-59.8,54.2C-69.9,43.7,-78.1,31.5,-82.1,18.2C-86.1,4.9,-85.9,-9.5,-80.7,-22.4C-75.5,-35.3,-65.3,-46.7,-53.6,-54.3C-41.9,-61.9,-28.7,-65.7,-15.7,-68.2C-2.7,-70.7,10.1,-71.9,23.1,-73.1" transform="translate(100 100)" fill="black" /></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M45.7,-76.3C58.9,-69.3,69.1,-58.3,77.3,-46.3C85.5,-34.3,91.7,-21.3,92.6,-8.1C93.5,5.1,89.1,18.5,82.4,30.8C75.7,43.1,66.7,54.3,55.4,63.1C44.1,71.9,30.5,78.3,16.6,81.1C2.7,83.9,-11.5,83.1,-24.6,78.3C-37.7,73.5,-49.7,64.7,-59.8,54.2C-69.9,43.7,-78.1,31.5,-82.1,18.2C-86.1,4.9,-85.9,-9.5,-80.7,-22.4C-75.5,-35.3,-65.3,-46.7,-53.6,-54.3C-41.9,-61.9,-28.7,-65.7,-15.7,-68.2C-2.7,-70.7,10.1,-71.9,23.1,-73.1" transform="translate(100 100)" fill="black" /></svg>');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.decorative-banner {
+  position: relative;
+  display: inline-block;
+  padding: 10px 60px;
+  border-top: 2px solid rgba(139, 126, 116, 0.4);
+  border-bottom: 2px solid rgba(139, 126, 116, 0.4);
+}
+
+.decorative-banner::before,
+.decorative-banner::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 15px;
+  height: 15px;
+  border-top: 2px solid rgba(139, 126, 116, 0.4);
+  border-right: 2px solid rgba(139, 126, 116, 0.4);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.decorative-banner::before {
+  left: -8px;
+  transform: translateY(-50%) rotate(-135deg);
+}
+
+.decorative-banner::after {
+  right: -8px;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.outline-floral {
+  filter: grayscale(100%) opacity(0.4);
+}
+
+.fade-up {
+  opacity: 0;
+  animation: var(--animate-fade-up);
 }

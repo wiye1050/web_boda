@@ -23,7 +23,7 @@ export function GiftList({ gifts }: GiftListProps) {
       {gifts.map((gift) => (
         <article
           key={gift.title}
-          className="flex w-full max-w-3xl flex-col gap-4 rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 sm:p-6 text-center"
+          className="flex w-full max-w-3xl flex-col gap-4 rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 sm:p-6 text-center items-center"
         >
           <h3 className="text-xl font-semibold">{gift.title}</h3>
           <p className="text-sm text-muted">{gift.description}</p>
@@ -74,7 +74,7 @@ function CopyableDetail({ text }: { text: string }) {
   };
 
   return (
-    <li className="flex w-full items-center justify-between gap-3 rounded-lg bg-background/50 px-4 py-3 border border-border/50">
+    <li className="flex w-full items-center justify-center gap-3 rounded-lg bg-background/50 px-4 py-3 border border-border/50">
       <span className="font-mono text-base tracking-wide sm:text-lg">{text}</span>
       <button
         onClick={handleCopy}

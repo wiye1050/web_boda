@@ -1,15 +1,12 @@
 "use client";
+import Image from "next/image";
 
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Countdown } from "@/components/Countdown";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { CTAButton } from "./CTAButton";
-import { ThemeToggle } from "./ThemeToggle";
 
 type NavItem = {
   label: string;
@@ -42,88 +39,73 @@ export function TopBar({
       setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
-    document.documentElement.style.setProperty("--topbar-height", "4rem");
+    document.documentElement.style.setProperty("--topbar-height", "0rem");
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-  // Force opaque background if not on home or if scrolled/menu open
-  const showOpaque = !isHome || isScrolled || isMobileMenuOpen;
+  const half = Math.ceil(navItems.length / 2);
+  const leftItems = navItems.slice(0, half);
+  const rightItems = navItems.slice(half);
 
   return (
     <>
-      <motion.div
-        className={cn(
-          "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-in-out border-b",
-          showOpaque
-            ? "bg-surface/90 backdrop-blur-md border-border/50 shadow-sm"
-            : "bg-surface/5 backdrop-blur-sm border-transparent"
-        )}
-      >
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-          
-          {/* LEFT: Brand + Countdown */}
-          <div className="flex items-center gap-4 sm:gap-6">
+      <nav className={cn(
+        "fixed top-6 left-0 right-0 z-50 transition-all duration-300 pointer-events-none",
+        isScrolled ? "top-2" : "top-6"
+      )}>
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 pointer-events-auto">
+          <div className="bg-white/95 backdrop-blur-md rounded-full px-4 sm:px-8 py-3 shadow-sm border border-gray-100 flex justify-between items-center transition-all">
+            
+            {/* LEFT: Nav Links (Desktop) */}
+            <div className="hidden md:flex flex-1 justify-start space-x-6 lg:space-x-8">
+              {leftItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="font-serif text-[10px] lg:text-[11px] tracking-[0.15em] text-foreground hover:text-primary transition-colors uppercase font-medium"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+
+            {/* CENTER: Logo */}
             <Link
               href={isHome ? "#top" : "/"}
-              className="relative h-10 w-auto shrink-0 transition-opacity hover:opacity-80"
+              className="mx-4 md:mx-0 flex items-center justify-center relative group shrink-0"
             >
               <Image 
-                 src="/logo-ag.png" 
-                 alt={brandName} 
-                 width={150}
-                 height={60}
-                 className="h-full w-auto object-contain"
-                 style={{ width: "auto", height: "100%" }}
-                 priority
+                src="/logo-ag.png" 
+                alt="Alba & Guille Logo" 
+                width={80}
+                height={40}
+                className="h-10 w-auto object-contain transition-transform group-hover:scale-105"
+                priority
               />
             </Link>
 
-            <div className="h-5 w-px bg-border/40 hidden sm:block" />
-
-            <div className="scale-100 origin-left opacity-90 hover:opacity-100 transition-opacity">
-               <Countdown target={config.noticeCountdownTarget} className="bg-accent/30 border-accent-strong/20 text-foreground !py-1.5 !px-4 !gap-2 !h-auto text-sm" /> 
-            </div>
-          </div>
-
-          {/* CENTER: Navigation (Desktop) */}
-          <nav className="hidden lg:flex items-center gap-2 absolute left-1/2 -translate-x-1/2 ml-16">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-full px-4 py-2 text-[0.75rem] font-bold uppercase tracking-[0.15em] text-muted transition-colors hover:bg-black/5 hover:text-primary"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* RIGHT: CTA + Mobile Menu Toggle */}
-          <div className="flex items-center gap-3 shrink-0">
-            <ThemeToggle />
-            <div className="hidden sm:block">
-              <CTAButton
-                href={isHome ? "#asistencia" : "/#asistencia"}
-                variant="primary"
-                className="!h-10 !px-6 !text-xs !py-0"
-              >
-                {ctaLabel}
-              </CTAButton>
+            {/* RIGHT: Nav Links (Desktop) */}
+            <div className="hidden md:flex flex-1 justify-end space-x-6 lg:space-x-8">
+              {rightItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="font-serif text-[10px] lg:text-[11px] tracking-[0.15em] text-foreground hover:text-primary transition-colors uppercase font-medium"
+                >
+                  {item.label}
+                </Link>
+              ))}
             </div>
 
+            {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="group flex h-10 w-10 items-center justify-center rounded-full bg-accent/20 hover:bg-accent/40 transition-colors lg:hidden"
-              aria-label="Abrir menú"
+              className="md:hidden text-foreground ml-auto p-1"
             >
-              {isMobileMenuOpen ? (
-                <X className="h-5 w-5 text-foreground transition-colors" />
-              ) : (
-                <Menu className="h-5 w-5 text-foreground transition-colors group-hover:text-primary" />
-              )}
+              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
@@ -135,38 +117,36 @@ export function TopBar({
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="border-t border-border/50 bg-surface/95 backdrop-blur lg:hidden overflow-hidden"
+              className="mx-auto max-w-6xl px-4 mt-2 md:hidden overflow-hidden pointer-events-auto"
             >
-              <nav className="flex flex-col p-4 gap-2">
+              <nav className="bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-lg border border-gray-100 flex flex-col gap-2">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block rounded-lg px-4 py-3 text-sm font-semibold uppercase tracking-widest text-foreground/80 hover:bg-accent/30 hover:text-primary"
+                    className="block rounded-lg px-4 py-3 text-xs font-bold uppercase tracking-widest text-foreground/80 hover:bg-primary/10 hover:text-primary transition-colors"
                   >
                     {item.label}
                   </Link>
                 ))}
-                 <div className="pt-2 mt-2 border-t border-border/30">
-                    <CTAButton
+                 <div className="pt-2 mt-2 border-t border-border/10">
+                    <Link
                         href="#asistencia"
-                        variant="primary"
-                        className="w-full"
+                        className="flex w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-lg transition-transform hover:scale-[1.02]"
                         onClick={() => setIsMobileMenuOpen(false)}
                     >
                         {ctaLabel}
-                    </CTAButton>
+                    </Link>
                  </div>
               </nav>
             </motion.div>
           )}
         </AnimatePresence>
-
-      </motion.div>
+      </nav>
       
-      {/* Spacer */}
-      <div className="h-16 w-full" />
+      {/* Spacer - reduced since navbar is floating */}
+      <div className="h-4 w-full" />
     </>
   );
 }
