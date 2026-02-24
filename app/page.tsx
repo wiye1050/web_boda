@@ -7,6 +7,7 @@ import { Section } from "@/components/Section";
 import { FadeIn } from "@/components/FadeIn";
 import { TopBar } from "@/components/TopBar";
 import { getPublicConfig } from "@/lib/getPublicConfig";
+import { getAccommodations } from "@/lib/getAccommodations";
 import dynamic from "next/dynamic";
 import type { GiftOption } from "@/components/GiftList";
 
@@ -26,13 +27,20 @@ const FaqList = dynamic(() => import("@/components/FaqList").then(mod => mod.Faq
 
 export default async function Home() {
   let config;
+  let accommodations = [];
   try {
-    config = await getPublicConfig();
+    const [configRes, accommodationsRes] = await Promise.all([
+      getPublicConfig(),
+      getAccommodations(),
+    ]);
+    config = configRes;
+    accommodations = accommodationsRes;
   } catch (error) {
-    console.error("Critical error fetching public config:", error);
+    console.error("Critical error fetching data:", error);
     // Fallback to a safe default if the fetch fails completely
     const { DEFAULT_PUBLIC_CONTENT } = await import("@/lib/publicContent");
     config = DEFAULT_PUBLIC_CONTENT;
+    accommodations = config.stayOptions;
   }
 
   const prebodaMapUrl = config.prebodaMapsUrl?.trim() || config.prebodaMapUrl?.trim() || (config.prebodaPlace ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(config.prebodaPlace)}` : "");
@@ -334,9 +342,9 @@ export default async function Home() {
           >
             <FadeIn>
               <StayList
-                items={config.stayOptions}
+                items={accommodations.length > 0 ? accommodations.slice(0, 4) : config.stayOptions}
                 linkLabel={config.stayLinkLabel}
-                showViewAll={config.stayOptions.length > 0}
+                showViewAll={accommodations.length > 0 || config.stayOptions.length > 0}
               />
             </FadeIn>
           </Section>
@@ -439,12 +447,8 @@ export default async function Home() {
 
       </main>
       <Footer
-        eyebrow={config.footerEyebrow}
-        title={config.footerTitle}
-        ctaLabel={config.footerCtaLabel}
-        copyright={config.footerCopyright}
-        madeWith={config.footerMadeWith}
         brandName={config.brandName}
+        targetDate={config.noticeCountdownTarget}
       />
       <MobileBottomBar
         confirmHref="#asistencia"

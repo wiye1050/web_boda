@@ -35,10 +35,13 @@ const EMPTY_TIMELINE_ITEM: TimelineItem = {
 };
 
 const EMPTY_STAY_OPTION: StayOption = {
+  id: "",
   name: "",
+  type: "Hotel",
   description: "",
   distance: "",
   link: "",
+  hasBlock: false,
 };
 
 const EMPTY_PRACTICAL_ITEM: PracticalItem = {

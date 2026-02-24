@@ -1,3 +1,5 @@
+import type { AccommodationType } from "@/components/admin/useAccommodations";
+
 export type TimelineItem = {
   time: string;
   title: string;
@@ -7,10 +9,16 @@ export type TimelineItem = {
 };
 
 export type StayOption = {
+  id: string;
   name: string;
+  type: AccommodationType;
   description: string;
   distance: string;
   link: string;
+  imageUrl?: string;
+  hasBlock: boolean;
+  priceRange?: string;
+  capacity?: string;
 };
 
 export type PracticalItem = {
@@ -364,25 +372,31 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   stayLinkLabel: "Ver mapa",
   stayOptions: [
     {
+      id: "ac-ponferrada",
       name: "Hotel AC Ponferrada",
-      description:
-        "Moderno y céntrico, ideal si quieres explorar la ciudad a pie.",
+      type: "Hotel",
+      description: "Moderno y céntrico, ideal si quieres explorar la ciudad a pie.",
       distance: "10 minutos en coche",
       link: "https://maps.app.goo.gl/",
+      hasBlock: false,
     },
     {
+      id: "rock-suites",
       name: "The Rock Suites & Spa",
-      description:
-        "Habitaciones amplias, spa y desayuno hasta tarde para recuperarse de la fiesta.",
+      type: "Hotel",
+      description: "Habitaciones amplias, spa y desayuno hasta tarde para recuperarse de la fiesta.",
       distance: "12 minutos en coche",
       link: "https://maps.app.goo.gl/",
+      hasBlock: false,
     },
     {
+      id: "casa-lago",
       name: "Casa Rural Lago de Carucedo",
-      description:
-        "Opción tranquila en plena naturaleza, perfecta para grupos.",
+      type: "Casa Rural",
+      description: "Opción tranquila en plena naturaleza, perfecta para grupos.",
       distance: "18 minutos en coche",
       link: "https://maps.app.goo.gl/",
+      hasBlock: false,
     },
   ],
   giftsEyebrow: "Regalos",
@@ -567,10 +581,16 @@ export function parseStayOptions(raw: unknown): StayOption[] {
     .map((item) => {
       const record = item as Record<string, unknown>;
       return {
+        id: normalizeString(record.id, ""),
         name: normalizeString(record.name, ""),
+        type: normalizeString(record.type, "Hotel") as AccommodationType,
         description: normalizeString(record.description, ""),
         distance: normalizeString(record.distance, ""),
         link: normalizeString(record.link, ""),
+        imageUrl: normalizeString(record.imageUrl, ""),
+        hasBlock: Boolean(record.hasBlock),
+        priceRange: normalizeString(record.priceRange, ""),
+        capacity: normalizeString(record.capacity, ""),
       };
     })
     .filter(
