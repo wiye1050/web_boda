@@ -8,6 +8,8 @@ import { LazyMotionProvider } from "@/components/providers/LazyMotionProvider";
 
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { WeddingChatWrapper } from "@/components/WeddingChatWrapper";
+import { EnvelopeWrapper } from "@/components/EnvelopeWrapper";
+import { MusicWrapper } from "@/components/MusicWrapper";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -112,6 +114,8 @@ export default function RootLayout({
             </LazyMotionProvider>
             <Toaster position="top-center" richColors />
             <WeddingChatWrapper />
+            <EnvelopeWrapper />
+            <MusicWrapper />
           </div>
         </ThemeProvider>
       </body>

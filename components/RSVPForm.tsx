@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { firebaseClient } from "@/lib/firebase";
 import { DEFAULT_PUBLIC_CONTENT, type RsvpFormCopy } from "@/lib/publicContent";
 import { sendConfirmationEmail } from "@/app/actions/sendConfirmation";
+import confetti from "canvas-confetti";
 
 type RSVPStatus = "idle" | "loading" | "success" | "error";
 
@@ -289,6 +290,12 @@ export function RSVPForm({
         needsTransport: form.needsTransport ?? "no",
       });
       toast.success("¡Confirmación recibida correctamente!");
+      // 🎉 Confetti celebration
+      if (form.attendance === "si") {
+        const colors = ["#8b7e74", "#d4af37", "#b89d7b", "#f8f5f2", "#5b634a"];
+        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors });
+        setTimeout(() => confetti({ particleCount: 60, spread: 100, origin: { y: 0.55 }, colors }), 400);
+      }
       setForm(INITIAL_STATE);
       lastSubmittedAt.current = Date.now();
       if (typeof window !== "undefined") {
