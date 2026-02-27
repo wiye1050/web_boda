@@ -17,6 +17,7 @@ const Countdown = dynamic(() => import("@/components/Countdown").then(mod => mod
 const RSVPForm = dynamic(() => import("@/components/RSVPForm").then(mod => mod.RSVPForm));
 const Timeline = dynamic(() => import("@/components/Timeline").then(mod => mod.Timeline));
 const AddToCalendar = dynamic(() => import("@/components/AddToCalendar").then(mod => mod.AddToCalendar));
+const MapboxMap = dynamic(() => import("@/components/MapboxMap").then(mod => mod.MapboxMap));
 
 // Extracted components as dynamic imports
 const StayList = dynamic(() => import("@/components/StayList").then(mod => mod.StayList));
@@ -313,10 +314,12 @@ export default async function Home() {
                 </div>
 
                 {/* Lado Derecho: Mapa Interactivo */}
-                {config.locationMapEmbedUrl && (
-                  <div className="relative group">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-accent-soft/20 to-primary/10 rounded-[var(--radius-card)] blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-                    <div className="relative overflow-hidden rounded-[var(--radius-card)] border border-border/40 shadow-[var(--shadow-soft)] h-[400px] lg:h-[450px]">
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-accent-soft/20 to-primary/10 rounded-[var(--radius-card)] blur opacity-25 group-hover:opacity-50 transition duration-1000" />
+                  <div className="relative overflow-hidden rounded-[var(--radius-card)] border border-border/40 shadow-[var(--shadow-soft)] h-[400px] lg:h-[450px]">
+                    {process.env.NEXT_PUBLIC_MAPBOX_TOKEN ? (
+                      <MapboxMap />
+                    ) : config.locationMapEmbedUrl ? (
                       <iframe
                         src={config.locationMapEmbedUrl}
                         className="h-full w-full border-0 grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-700"
@@ -324,9 +327,9 @@ export default async function Home() {
                         referrerPolicy="no-referrer-when-downgrade"
                         aria-label="Mapa con ubicaciones de la boda y preboda"
                       />
-                    </div>
+                    ) : null}
                   </div>
-                )}
+                </div>
               </div>
             </FadeIn>
           </Section>
