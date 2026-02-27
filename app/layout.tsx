@@ -7,6 +7,7 @@ import { DEFAULT_PUBLIC_CONTENT } from "@/lib/publicContent";
 import { LazyMotionProvider } from "@/components/providers/LazyMotionProvider";
 
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { WeddingChatWrapper } from "@/components/WeddingChatWrapper";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -110,6 +111,7 @@ export default function RootLayout({
               <main id="main-content">{children}</main>
             </LazyMotionProvider>
             <Toaster position="top-center" richColors />
+            <WeddingChatWrapper />
           </div>
         </ThemeProvider>
       </body>
