@@ -4,22 +4,21 @@ import { useEffect, useRef, useState } from "react";
 import { Music, Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+const AUDIO_SRC = "/audio/Burn Out Piano Intro Edit feat. Dewain Whitmore By Krominate.mp3";
+const PREF_KEY = "wb_music_pref"; // "yes" | "no"
+
 export function AmbientMusic() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [ready, setReady] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [showBanner, setShowBanner] = useState(false);
+  const [buttonVisible, setButtonVisible] = useState(false);
 
+  // Load audio
   useEffect(() => {
-    // Delay appearance so it doesn't clash with the envelope
-    const t = setTimeout(() => setVisible(true), 3000);
-    return () => clearTimeout(t);
-  }, []);
-
-  useEffect(() => {
-    const audio = new Audio("/audio/cancion.mp3");
+    const audio = new Audio(AUDIO_SRC);
     audio.loop = true;
-    audio.volume = 0.35;
+    audio.volume = 0;
     audio.addEventListener("canplaythrough", () => setReady(true));
     audioRef.current = audio;
     return () => {
@@ -28,6 +27,52 @@ export function AmbientMusic() {
     };
   }, []);
 
+  // Show banner after 2.5s if no preference saved yet
+  useEffect(() => {
+    const pref = sessionStorage.getItem(PREF_KEY);
+    if (pref === "yes") {
+      // Already said yes this session - show button only
+      setButtonVisible(true);
+      return;
+    }
+    if (pref === "no") {
+      setButtonVisible(true);
+      return;
+    }
+    const t = setTimeout(() => setShowBanner(true), 2500);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Fade audio volume in/out
+  const fadeIn = (audio: HTMLAudioElement) => {
+    audio.volume = 0;
+    const step = () => {
+      if (audio.volume < 0.33) {
+        audio.volume = Math.min(audio.volume + 0.02, 0.33);
+        requestAnimationFrame(step);
+      }
+    };
+    requestAnimationFrame(step);
+  };
+
+  const handleYes = () => {
+    sessionStorage.setItem(PREF_KEY, "yes");
+    setShowBanner(false);
+    setButtonVisible(true);
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.play().then(() => {
+      setPlaying(true);
+      fadeIn(audio);
+    }).catch(() => {});
+  };
+
+  const handleNo = () => {
+    sessionStorage.setItem(PREF_KEY, "no");
+    setShowBanner(false);
+    setButtonVisible(true);
+  };
+
   const toggle = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -35,57 +80,78 @@ export function AmbientMusic() {
       audio.pause();
       setPlaying(false);
     } else {
-      audio.play().catch(() => {});
-      setPlaying(true);
+      audio.play().then(() => {
+        setPlaying(true);
+        fadeIn(audio);
+      }).catch(() => {});
     }
   };
 
-  if (!visible) return null;
-
   return (
-    <div
-      className={cn(
-        "fixed bottom-20 left-4 z-40 transition-all duration-500 sm:bottom-8 sm:left-8",
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-      )}
-    >
-      <button
-        onClick={toggle}
-        disabled={!ready}
-        aria-label={playing ? "Silenciar música" : "Reproducir música ambiente"}
-        title={playing ? "Silenciar" : "Reproducir música"}
+    <>
+      {/* Consent banner */}
+      <div
         className={cn(
-          "group relative flex h-10 w-10 items-center justify-center rounded-full border shadow-md transition-all",
-          playing
-            ? "bg-foreground border-foreground text-white hover:bg-foreground/80"
-            : "bg-surface/90 border-border/50 text-muted hover:border-primary/30 hover:text-foreground",
-          !ready && "opacity-40 cursor-wait"
+          "fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-500",
+          showBanner
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 translate-y-4 pointer-events-none"
         )}
+        aria-live="polite"
       >
-        {playing ? (
-          <Volume2 className="h-4 w-4" />
-        ) : (
-          <VolumeX className="h-4 w-4" />
-        )}
+        <div className="flex items-center gap-3 rounded-full border border-border/40 bg-surface/95 px-5 py-3 shadow-lg backdrop-blur-sm">
+          <Music className="h-4 w-4 shrink-0 text-accent-strong" />
+          <span className="text-sm font-sans text-foreground/80 whitespace-nowrap">
+            ¿Reproducir música de fondo?
+          </span>
+          <div className="flex gap-2">
+            <button
+              onClick={handleYes}
+              disabled={!ready}
+              className="rounded-full bg-accent-strong px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white transition hover:opacity-80 disabled:opacity-40"
+            >
+              Sí
+            </button>
+            <button
+              onClick={handleNo}
+              className="rounded-full border border-border/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/60 transition hover:text-foreground"
+            >
+              No, gracias
+            </button>
+          </div>
+        </div>
+      </div>
 
-        {/* Pulsing ring when playing */}
-        {playing && (
-          <span className="absolute inset-0 rounded-full animate-ping bg-foreground/20 pointer-events-none" />
-        )}
-
-        {/* Tooltip */}
-        <span className="absolute left-12 whitespace-nowrap rounded-full border border-border/30 bg-surface/95 px-3 py-1 text-[10px] tracking-widest uppercase text-muted shadow-sm opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none">
-          {playing ? "Silenciar" : "Música"}
-        </span>
-      </button>
-
-      {/* First-time hint */}
-      {!playing && ready && (
-        <div className="absolute left-12 bottom-0 flex items-center gap-1 whitespace-nowrap rounded-full border border-accent/20 bg-accent-bg px-3 py-1 text-[9px] tracking-widest uppercase text-accent-strong shadow-sm animate-pulse pointer-events-none">
-          <Music className="h-2.5 w-2.5" />
-          Música ambiente
+      {/* Floating toggle button */}
+      {buttonVisible && (
+        <div className="fixed bottom-20 left-4 z-40 sm:bottom-8 sm:left-8">
+          <button
+            onClick={toggle}
+            disabled={!ready}
+            aria-label={playing ? "Silenciar música" : "Reproducir música ambiente"}
+            title={playing ? "Silenciar" : "Reproducir música"}
+            className={cn(
+              "group relative flex h-10 w-10 items-center justify-center rounded-full border shadow-md transition-all",
+              playing
+                ? "bg-foreground border-foreground text-white hover:bg-foreground/80"
+                : "bg-surface/90 border-border/50 text-muted hover:border-primary/30 hover:text-foreground",
+              !ready && "opacity-40 cursor-wait"
+            )}
+          >
+            {playing ? (
+              <Volume2 className="h-4 w-4" />
+            ) : (
+              <VolumeX className="h-4 w-4" />
+            )}
+            {playing && (
+              <span className="absolute inset-0 rounded-full animate-ping bg-foreground/20 pointer-events-none" />
+            )}
+            <span className="absolute left-12 whitespace-nowrap rounded-full border border-border/30 bg-surface/95 px-3 py-1 text-[10px] tracking-widest uppercase text-muted shadow-sm opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none">
+              {playing ? "Silenciar" : "Música"}
+            </span>
+          </button>
         </div>
       )}
-    </div>
+    </>
   );
 }
