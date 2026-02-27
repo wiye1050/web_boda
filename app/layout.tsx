@@ -97,7 +97,7 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} ${cormorant.variable} ${playfair.variable} ${lato.variable} ${greatVibes.variable} ${pinyonScript.variable} antialiased bg-background text-foreground`}
       >
-        <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="data-theme" forcedTheme="light" disableTransitionOnChange>
           <div className="relative min-h-screen bg-background">
             <a
               href="#main-content"

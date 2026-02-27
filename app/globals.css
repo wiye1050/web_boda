@@ -71,19 +71,7 @@
   }
 }
 
-.dark,
-[data-theme="dark"] {
-  --background: #1c1b1a; /* Deep warm charcoal */
-  --foreground: #e8e6e3; /* Off-white text */
-  --surface: #262422; /* Slightly lighter charcoal */
-  --muted: #a09c98;
-  --border: rgba(232, 230, 227, 0.08);
-  --primary: #a89b88; /* Lighter Taupe */
-  --primary-foreground: #1c1b1a;
-  --accent: #c8b090; /* Lighter Gold */
-  --accent-strong: #b09878;
-  --accent-bg: #292622; /* Pre-mixed 11% lighter gold with charcoal */
-}
+
 
 @media (max-width: 640px) {
   :root {
