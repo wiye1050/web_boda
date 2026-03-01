@@ -25,6 +25,7 @@ type FormState = {
   transportSeats: string;
   requests: string;
   songRequest: string;
+  dietary: string;
   hairMakeup?: boolean;
   reminderOptIn: boolean;
   acceptedTerms: boolean;
@@ -42,6 +43,7 @@ const INITIAL_STATE: FormState = {
   transportSeats: "",
   requests: "",
   songRequest: "",
+  dietary: "",
   hairMakeup: false,
   reminderOptIn: false,
   acceptedTerms: false,
@@ -139,6 +141,7 @@ export function RSVPForm({
     form.attendance !== null &&
     form.preboda !== null &&
     form.needsTransport !== null &&
+    form.acceptedTerms &&
     (form.needsTransport === "si"
       ? form.transportSeats.trim().length > 0 &&
         !Number.isNaN(seatsRequested) &&
@@ -272,8 +275,10 @@ export function RSVPForm({
             : 0,
         requests: form.requests.trim(),
         songRequest: form.songRequest.trim(),
+        dietary: form.dietary.trim(),
         hairMakeup: Boolean(form.hairMakeup),
         reminderOptIn: Boolean(form.reminderOptIn),
+        acceptedTerms: true,
         editToken,
         submittedAt: serverTimestamp(),
         source: "web",
@@ -678,6 +683,20 @@ export function RSVPForm({
               className="min-h-[160px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
             />
           </label>
+
+          <label className="flex flex-col gap-2 text-center md:col-span-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+              Restricciones alimenticias
+            </span>
+            <textarea
+              name="dietary"
+              value={form.dietary}
+              onChange={(event) => handleChange("dietary", event.target.value)}
+              rows={3}
+              placeholder="Alergias, intolerancias, veganismo..."
+              className="min-h-[100px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10 text-center"
+            />
+          </label>
         </div>
       )}
 
@@ -709,6 +728,21 @@ export function RSVPForm({
           </label>
         </div>
       )}
+
+      <div className="flex flex-col items-center gap-4">
+        <label className="flex items-start gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-sm text-foreground max-w-lg transition-colors hover:bg-background/80 cursor-pointer">
+          <input
+            type="checkbox"
+            required
+            className="mt-1 h-4 w-4 rounded border-border bg-background accent-primary cursor-pointer"
+            checked={form.acceptedTerms}
+            onChange={(event) => handleChange("acceptedTerms", event.target.checked)}
+          />
+          <span className="text-xs text-muted-foreground leading-relaxed">
+            Acepto que Alba & Guille guarden mis datos para la organización de la boda. No los compartiremos con nadie más.
+          </span>
+        </label>
+      </div>
 
       <div className="flex flex-col items-center gap-4 text-center">
         <button

@@ -195,11 +195,11 @@ export function WeddingChat() {
       {/* Chat panel */}
       {isOpen && (
         <div
-          className="fixed bottom-20 right-4 z-50 flex w-[calc(100vw-2rem)] max-w-sm flex-col rounded-[var(--radius-card)] border border-border/30 bg-surface/90 backdrop-blur-xl shadow-2xl sm:bottom-8 sm:right-8"
-          style={{ height: "min(560px, calc(100dvh - 120px))" }}
+          className="fixed bottom-0 right-0 z-50 flex w-full flex-col bg-surface/95 backdrop-blur-xl shadow-2xl transition-all animate-in slide-in-from-bottom duration-300 sm:bottom-8 sm:right-8 sm:w-[calc(100vw-2rem)] sm:max-w-sm sm:rounded-[var(--radius-card)] sm:border sm:border-border/30"
+          style={{ height: "min(600px, 100dvh)" }}
         >
           {/* Header */}
-          <div className="flex shrink-0 items-center justify-between gap-3 rounded-t-[var(--radius-card)] bg-foreground px-5 py-4 text-white">
+          <div className="flex shrink-0 items-center justify-between gap-3 bg-foreground px-5 py-4 text-white sm:rounded-t-[var(--radius-card)]">
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10">
                 <MessageCircleHeart className="h-5 w-5" />
@@ -219,7 +219,7 @@ export function WeddingChat() {
           </div>
 
           {/* Messages */}
-          <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
+          <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4 overscroll-contain">
             {messages.map((msg) => (
               <div
                 key={msg.id}

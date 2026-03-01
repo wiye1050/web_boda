@@ -110,6 +110,8 @@ service cloud.firestore {
         optionalTimestamp(data, "submittedAt") &&
         optionalTimestamp(data, "updatedAt") &&
         optionalStringOrNull(data, "updatedBy", 0, 200) &&
+        optionalString(data, "dietary", 0, 1000) &&
+        optionalBoolean(data, "hairMakeup") &&
         optionalBoolean(data, "processed") &&
         optionalString(data, "notes", 0, 800) &&
         optionalStatus(data) &&
@@ -120,7 +122,8 @@ service cloud.firestore {
         optionalString(data, "editToken", 0, 200) &&
         optionalBoolean(data, "reminderOptIn") &&
         optionalStringOrNull(data, "tableId", 0, 50) &&
-        optionalString(data, "songRequest", 0, 200);
+        optionalString(data, "songRequest", 0, 200) &&
+        (!data.keys().hasAny(["acceptedTerms"]) || data.acceptedTerms == true);
     }
 
     function rsvpCreateKeys(data) {
@@ -135,18 +138,17 @@ service cloud.firestore {
         "needsTransport",
         "transportSeats",
         "requests",
+        "dietary",
         "submittedAt",
-        "source",
-        "editToken",
         "source",
         "editToken",
         "reminderOptIn",
         "tableId",
-        "tableId",
         "songRequest",
         "acceptedTerms",
+        "transportRouteId",
+        "hairMakeup"
       ]);
-    }
 
     function rsvpUpdateKeys(data) {
       return data.keys().hasOnly([
