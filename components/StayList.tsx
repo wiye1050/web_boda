@@ -42,7 +42,7 @@ export function StayList({ items, linkLabel, showViewAll }: StayListProps) {
                {stay.hasBlock && (
                   <div className="flex items-center gap-1 rounded-full bg-primary/95 backdrop-blur px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-sm">
                     <Check className="h-3.5 w-3.5" />
-                    <span>Bloqueo Especial</span>
+                    <span>Precio Especial</span>
                   </div>
                )}
                {stay.priceRange && (
@@ -56,7 +56,7 @@ export function StayList({ items, linkLabel, showViewAll }: StayListProps) {
             <div className="relative z-10 flex flex-col p-6 pointer-events-none items-center text-center">
               <header className="flex flex-col gap-1 text-white items-center">
                 <span className="text-[10px] uppercase tracking-widest text-white/80 font-bold">{stay.type}</span>
-                <h3 className="text-2xl font-serif text-white">{stay.name}</h3>
+                <h3 className="text-2xl font-serif !text-white">{stay.name}</h3>
                 
                 {(stay.distance || stay.capacity) && (
                   <div className="mt-2 flex items-center justify-center gap-3 text-xs text-white/90">

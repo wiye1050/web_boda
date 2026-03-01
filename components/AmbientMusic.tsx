@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Music, Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const AUDIO_SRC = "/audio/Burn Out Piano Intro Edit feat. Dewain Whitmore By Krominate.mp3";
+const AUDIO_SRC = "/audio/cancion 1.mp3";
 const PREF_KEY = "wb_music_pref"; // "yes" | "no"
 
 export function AmbientMusic() {
@@ -99,24 +99,26 @@ export function AmbientMusic() {
         )}
         aria-live="polite"
       >
-        <div className="flex items-center gap-3 rounded-full border border-border/40 bg-surface/95 px-5 py-3 shadow-lg backdrop-blur-sm">
-          <Music className="h-4 w-4 shrink-0 text-accent-strong" />
-          <span className="text-sm font-sans text-foreground/80 whitespace-nowrap">
-            ¿Reproducir música de fondo?
+        <div className="flex items-center gap-2 sm:gap-3 rounded-full border border-border/40 bg-surface/95 px-4 py-2 sm:px-5 sm:py-3 shadow-lg backdrop-blur-sm">
+          <Music className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-accent-strong" />
+          <span className="text-[11px] sm:text-sm font-sans text-foreground/80 whitespace-nowrap">
+            ¿Música de fondo?
           </span>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5 sm:gap-2">
             <button
               onClick={handleYes}
               disabled={!ready}
-              className="rounded-full bg-accent-strong px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white transition hover:opacity-80 disabled:opacity-40"
+              className="rounded-full bg-accent-strong px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-white transition hover:opacity-80 disabled:opacity-40"
             >
               Sí
             </button>
             <button
               onClick={handleNo}
-              className="rounded-full border border-border/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/60 transition hover:text-foreground"
+              className="rounded-full border border-border/60 px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-foreground/60 transition hover:text-foreground"
             >
-              No, gracias
+              {/* On mobile use shorter "No", on desktop "No, gracias" */}
+              <span className="hidden sm:inline">No, gracias</span>
+              <span className="sm:hidden">No</span>
             </button>
           </div>
         </div>
@@ -131,7 +133,7 @@ export function AmbientMusic() {
             aria-label={playing ? "Silenciar música" : "Reproducir música ambiente"}
             title={playing ? "Silenciar" : "Reproducir música"}
             className={cn(
-              "group relative flex h-10 w-10 items-center justify-center rounded-full border shadow-md transition-all",
+              "group relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border shadow-md transition-all",
               playing
                 ? "bg-foreground border-foreground text-white hover:bg-foreground/80"
                 : "bg-surface/90 border-border/50 text-muted hover:border-primary/30 hover:text-foreground",
@@ -139,9 +141,9 @@ export function AmbientMusic() {
             )}
           >
             {playing ? (
-              <Volume2 className="h-4 w-4" />
+              <Volume2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             ) : (
-              <VolumeX className="h-4 w-4" />
+              <VolumeX className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             )}
             {playing && (
               <span className="absolute inset-0 rounded-full animate-ping bg-foreground/20 pointer-events-none" />

@@ -166,28 +166,36 @@ export function WeddingChat() {
   return (
     <>
       {/* Floating button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        aria-label="Abrir chat de asistencia"
-        className={cn(
-          "fixed bottom-20 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all duration-300 sm:bottom-8 sm:right-8",
-          "bg-foreground text-white hover:scale-110 hover:shadow-xl",
-          isOpen && "opacity-0 pointer-events-none scale-95"
-        )}
-      >
-        <MessageCircleHeart className="h-6 w-6" />
-        {hasNewMessage && (
-          <span className="absolute -top-1 -right-1 flex h-4 w-4">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-            <span className="relative inline-flex h-4 w-4 rounded-full bg-primary" />
-          </span>
-        )}
-      </button>
+      <div className="fixed bottom-20 right-4 z-40 sm:bottom-8 sm:right-8">
+        <button
+          onClick={() => setIsOpen(true)}
+          aria-label="Abrir chat de asistencia"
+          className={cn(
+            "group relative flex h-16 w-16 items-center justify-center rounded-full transition-all duration-300 hover:scale-110 bg-transparent border-none outline-none shadow-none",
+            isOpen && "opacity-0 pointer-events-none scale-95"
+          )}
+        >
+          <div className="absolute inset-0 rounded-full overflow-hidden flex items-center justify-center">
+             <img 
+               src="/images/ai-logo.png" 
+               alt="AI Assistant" 
+               className="h-[145%] w-[145%] max-w-none object-cover mix-blend-multiply brightness-[1.08] contrast-[1.12] grayscale-[0.05]"
+             />
+          </div>
+          
+          {hasNewMessage && (
+            <span className="absolute -top-1 -right-1 flex h-4 w-4">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
+              <span className="relative inline-flex h-4 w-4 rounded-full bg-accent shadow-sm" />
+            </span>
+          )}
+        </button>
+      </div>
 
       {/* Chat panel */}
       {isOpen && (
         <div
-          className="fixed bottom-20 right-4 z-50 flex w-[calc(100vw-2rem)] max-w-sm flex-col rounded-[var(--radius-card)] border border-border/30 bg-surface shadow-2xl sm:bottom-8 sm:right-8"
+          className="fixed bottom-20 right-4 z-50 flex w-[calc(100vw-2rem)] max-w-sm flex-col rounded-[var(--radius-card)] border border-border/30 bg-surface/90 backdrop-blur-xl shadow-2xl sm:bottom-8 sm:right-8"
           style={{ height: "min(560px, calc(100dvh - 120px))" }}
         >
           {/* Header */}

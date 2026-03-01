@@ -78,7 +78,7 @@ function CopyableDetail({ text }: { text: string }) {
       <span className="font-mono text-base tracking-wide sm:text-lg">{text}</span>
       <button
         onClick={handleCopy}
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-surface text-muted-foreground transition-all hover:bg-primary hover:text-white hover:scale-105 active:scale-95 shadow-sm border border-border/40"
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface text-muted-foreground transition-all hover:bg-primary hover:text-white hover:scale-105 active:scale-95 shadow-sm border border-border/40"
         aria-label="Copiar IBAN"
       >
         {copied ? <Check size={14} /> : <Copy size={14} />}

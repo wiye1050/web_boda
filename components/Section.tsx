@@ -16,8 +16,10 @@ type SectionProps = {
 
 const backgroundClassMap: Record<SectionBackground, string> = {
   default: "bg-transparent relative z-0",
-  surface: "relative z-10 bg-surface before:content-[''] before:pointer-events-none before:absolute before:-top-24 before:left-0 before:w-full before:h-24 before:bg-gradient-to-b before:from-transparent before:to-surface after:content-[''] after:pointer-events-none after:absolute after:-bottom-24 after:left-0 after:w-full after:h-24 after:bg-gradient-to-b after:from-surface after:to-transparent",
-  accent: "relative z-10 bg-accent-bg before:content-[''] before:pointer-events-none before:absolute before:-top-24 before:left-0 before:w-full before:h-24 before:bg-gradient-to-b before:from-transparent before:to-accent-bg after:content-[''] after:pointer-events-none after:absolute after:-bottom-24 after:left-0 after:w-full after:h-24 after:bg-gradient-to-b after:from-accent-bg after:to-transparent",
+  surface:
+    "relative z-10 bg-surface before:absolute before:-inset-8 before:-z-10 before:rounded-[3rem] before:bg-gradient-to-b before:from-white/0 before:via-white before:to-white/0",
+  accent:
+    "relative z-10 bg-accent-bg before:absolute before:-inset-8 before:-z-10 before:rounded-[3rem] before:bg-gradient-to-b before:from-[#f3ede2]/0 before:via-[#f3ede2] before:to-[#f3ede2]/0",
 };
 
 const alignmentClassMap: Record<SectionAlign, string> = {

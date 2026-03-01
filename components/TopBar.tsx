@@ -72,10 +72,13 @@ export function TopBar({
               ))}
             </div>
 
+            {/* Placeholder for centering logo on mobile */}
+            <div className="flex-1 md:hidden" />
+
             {/* CENTER: Logo */}
             <Link
               href={isHome ? "#top" : "/"}
-              className="mx-4 md:mx-0 flex items-center justify-center relative group shrink-0"
+              className="flex items-center justify-center relative group shrink-0"
             >
               <Image 
                 src="/logo-ag.png" 
@@ -87,26 +90,29 @@ export function TopBar({
               />
             </Link>
 
-            {/* RIGHT: Nav Links (Desktop) */}
-            <div className="hidden md:flex flex-1 justify-end space-x-6 lg:space-x-8">
-              {rightItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="font-serif text-[10px] lg:text-[11px] tracking-[0.15em] text-foreground hover:text-primary transition-colors uppercase font-medium"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
+            {/* RIGHT: Nav Links (Desktop) & Mobile Toggle */}
+            <div className="flex-1 flex justify-end items-center gap-4">
+              <div className="hidden md:flex space-x-6 lg:space-x-8">
+                {rightItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="font-serif text-[10px] lg:text-[11px] tracking-[0.15em] text-foreground hover:text-primary transition-colors uppercase font-medium"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
 
-            {/* Mobile Menu Toggle */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden text-foreground ml-auto p-1"
-            >
-              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
+              {/* Mobile Menu Toggle */}
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden text-foreground p-1"
+                aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
+              >
+                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -130,7 +136,7 @@ export function TopBar({
                     {item.label}
                   </Link>
                 ))}
-                 <div className="pt-2 mt-2 border-t border-border/10">
+                 <div className="hidden md:pt-2 md:mt-2 md:border-t md:border-border/10">
                     <Link
                         href="#asistencia"
                         className="flex w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-lg transition-transform hover:scale-[1.02]"

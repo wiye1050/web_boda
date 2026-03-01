@@ -143,8 +143,7 @@ export function RSVPForm({
       ? form.transportSeats.trim().length > 0 &&
         !Number.isNaN(seatsRequested) &&
         seatsRequested <= (Number.isNaN(guestsNumber) ? 0 : guestsNumber)
-      : true) &&
-    form.acceptedTerms;
+      : true);
 
   function handleChange<K extends keyof FormState>(
     field: K,
@@ -305,14 +304,19 @@ export function RSVPForm({
         );
       }
 
-      // Enviar email de confirmación (no bloqueante)
-      await sendConfirmationEmail({
-        fullName: form.fullName.trim(),
-        email: form.email.trim(),
-        guests: attending ? guestsNumber : 0,
-        attendance: form.attendance!,
-        transport: form.needsTransport === "si" ? "si" : "no",
-      });
+      // Enviar email de confirmación (no bloqueante visualmente)
+      try {
+        await sendConfirmationEmail({
+          fullName: form.fullName.trim(),
+          email: form.email.trim(),
+          guests: attending ? guestsNumber : 0,
+          attendance: form.attendance!,
+          transport: form.needsTransport === "si" ? "si" : "no",
+        });
+      } catch (emailError) {
+        console.error("Error enviando email de confirmación", emailError);
+        // Omitimos mostrar un toast de error general, porque el RSVP ya se guardó correctamente en Firebase.
+      }
     } catch (error) {
       console.error("Error guardando RSVP", error);
       setStatus("error");
@@ -707,24 +711,6 @@ export function RSVPForm({
       )}
 
       <div className="flex flex-col items-center gap-4 text-center">
-        <label className="flex items-start justify-center gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-center text-sm text-foreground">
-          <input
-            type="checkbox"
-            className="mt-1 h-4 w-4 rounded border-border bg-background accent-primary"
-            checked={form.acceptedTerms}
-            onChange={(event) =>
-              handleChange("acceptedTerms", event.target.checked)
-            }
-          />
-          <span className="text-xs sm:text-sm">
-            Entiendo que esta es una celebración{" "}
-            <span className="font-semibold text-primary">
-              exclusivamente para adultos
-            </span>
-            .
-          </span>
-        </label>
-
         <button
           type="submit"
           disabled={!isValid || status === "loading"}

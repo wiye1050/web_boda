@@ -13,7 +13,6 @@ import {
   type PublicContent,
   type SectionConfig,
   type StayOption,
-  type TimelineItem,
 } from "@/lib/publicContent";
 
 
@@ -25,14 +24,6 @@ const GLOBAL_BLOCKS = [
   { id: "evento", label: "Datos del evento" },
   { id: "footer", label: "Footer" },
 ];
-
-const EMPTY_TIMELINE_ITEM: TimelineItem = {
-  time: "",
-  title: "",
-  description: "",
-  location: "",
-  icon: "",
-};
 
 const EMPTY_STAY_OPTION: StayOption = {
   id: "",
@@ -58,7 +49,7 @@ const EMPTY_FAQ_ITEM: FaqItem = {
 const SECTION_LABELS: Record<string, string> = {
   hero: "Hero (Portada)",
   preboda: "Preboda",
-  ceremonia: "La Boda (Timeline)",
+  ceremonia: "La Boda",
   ubicacion: "Ubicación",
   alojamiento: "Alojamiento",
   detalles: "Guía Práctica",
@@ -209,32 +200,6 @@ export function SectionsManager() {
       .split("\n")
       .map((line) => line.trim())
       .filter(Boolean);
-  }
-
-  function updateTimelineItem(
-    index: number,
-    field: keyof TimelineItem,
-    value: string,
-  ) {
-    setContent((prev) => {
-      const next = [...prev.timelineItems];
-      next[index] = { ...next[index], [field]: value };
-      return { ...prev, timelineItems: next };
-    });
-  }
-
-  function addTimelineItem() {
-    setContent((prev) => ({
-      ...prev,
-      timelineItems: [...prev.timelineItems, { ...EMPTY_TIMELINE_ITEM }],
-    }));
-  }
-
-  function removeTimelineItem(index: number) {
-    setContent((prev) => ({
-      ...prev,
-      timelineItems: prev.timelineItems.filter((_, idx) => idx !== index),
-    }));
   }
 
   function updateStayOption(
@@ -891,91 +856,61 @@ export function SectionsManager() {
                     )}
 
                     {section.id === "ceremonia" && (
-                      <>
-                        <div className="grid gap-4">
+                      <div className="grid gap-4">
+                        <InputField
+                          label="Eyebrow"
+                          value={content.ceremonyEyebrow}
+                          onChange={(value) =>
+                            updateField("ceremonyEyebrow", value)
+                          }
+                        />
+                        <InputField
+                          label="Título"
+                          value={content.ceremonyTitle}
+                          onChange={(value) => updateField("ceremonyTitle", value)}
+                        />
+                        <TextAreaField
+                          label="Descripción"
+                          value={content.ceremonyDescription}
+                          onChange={(value) =>
+                            updateField("ceremonyDescription", value)
+                          }
+                        />
+                        <div className="grid gap-3 sm:grid-cols-2">
+                           <InputField
+                            label="Tarjeta 1: Etiqueta"
+                            value={content.ceremonyCardOneLabel}
+                            onChange={(value) => updateField("ceremonyCardOneLabel", value)}
+                          />
                           <InputField
-                            label="Eyebrow"
-                            value={content.ceremonyEyebrow}
-                            onChange={(value) =>
-                              updateField("ceremonyEyebrow", value)
-                            }
+                            label="Tarjeta 1: Título"
+                            value={content.ceremonyCardOneTitle}
+                            onChange={(value) => updateField("ceremonyCardOneTitle", value)}
                           />
                         </div>
-
-                      <div className="mt-8 border-t border-border/50 pt-6">
-                        <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">
-                          Cronograma del día
-                        </h4>
-                        <div className="grid gap-4">
-                          <InputField
-                            label="Título del Cronograma"
-                            value={content.timelineTitle}
-                            onChange={(value) => updateField("timelineTitle", value)}
-                            placeholder="Ej: Cronograma"
+                        <TextAreaField
+                          label="Tarjeta 1: Descripción"
+                          value={content.ceremonyCardOneDescription}
+                          onChange={(value) => updateField("ceremonyCardOneDescription", value)}
+                        />
+                         <div className="grid gap-3 sm:grid-cols-2">
+                           <InputField
+                            label="Tarjeta 2: Etiqueta"
+                            value={content.ceremonyCardTwoLabel}
+                            onChange={(value) => updateField("ceremonyCardTwoLabel", value)}
                           />
-                           <div className="grid gap-4">
-                          {content.timelineItems.map((item, index) => (
-                            <div
-                              key={`${item.time}-${index}`}
-                              className="grid gap-3 rounded-2xl border border-border/70 bg-surface/70 p-4"
-                            >
-                              <div className="grid gap-3 sm:grid-cols-2">
-                                <InputField
-                                  label="Hora"
-                                  value={item.time}
-                                  onChange={(value) =>
-                                    updateTimelineItem(index, "time", value)
-                                  }
-                                />
-                                <InputField
-                                  label="Icono"
-                                  value={item.icon}
-                                  onChange={(value) =>
-                                    updateTimelineItem(index, "icon", value)
-                                  }
-                                />
-                              </div>
-                              <InputField
-                                label="Título"
-                                value={item.title}
-                                onChange={(value) =>
-                                  updateTimelineItem(index, "title", value)
-                                }
-                              />
-                              <TextAreaField
-                                label="Descripción"
-                                value={item.description}
-                                onChange={(value) =>
-                                  updateTimelineItem(index, "description", value)
-                                }
-                              />
-                              <InputField
-                                label="Ubicación"
-                                value={item.location}
-                                onChange={(value) =>
-                                  updateTimelineItem(index, "location", value)
-                                }
-                              />
-                              <button
-                                type="button"
-                                onClick={() => removeTimelineItem(index)}
-                                className="w-fit rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-                              >
-                                Eliminar
-                              </button>
-                            </div>
-                          ))}
-                          <button
-                            type="button"
-                            onClick={addTimelineItem}
-                            className="w-fit rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-                          >
-                            Añadir hito
-                          </button>
+                          <InputField
+                            label="Tarjeta 2: Título"
+                            value={content.ceremonyCardTwoTitle}
+                            onChange={(value) => updateField("ceremonyCardTwoTitle", value)}
+                          />
                         </div>
-                        </div>
+                        <TextAreaField
+                          label="Tarjeta 2: Descripción"
+                          value={content.ceremonyCardTwoDescription}
+                          onChange={(value) => updateField("ceremonyCardTwoDescription", value)}
+                        />
                       </div>
-                      </>
                     )}
 
                     {section.id === "detalles" && (

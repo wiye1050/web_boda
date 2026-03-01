@@ -4,10 +4,49 @@ import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-// Finca El Casar, Cabañas Raras, Ponferrada
-const WEDDING_COORDS: [number, number] = [-6.6198, 42.5572];
-// Casino de Ponferrada (preboda)
-const PREBODA_COORDS: [number, number] = [-6.5874, 42.5462];
+// Centralized pins data
+const PINS = [
+  {
+    id: "finca",
+    label: "AG",
+    color: "#8b7e74",
+    coords: [-6.6358, 42.6186] as [number, number],
+    title: "Finca El Casar",
+    subtitle: "Cabañas Raras, Ponferrada",
+    time: "12 sep 2026 · 13:30h",
+    address: "C. Valle del Agua, 14, 24412 Cabañas Raras, León",
+  },
+  {
+    id: "casino",
+    label: "♥",
+    color: "#5b634a",
+    coords: [-6.5926, 42.5445] as [number, number],
+    title: "Rooftop Casino de Ponferrada",
+    subtitle: "Pre-boda",
+    time: "11 sep 2026 · 19:30h",
+    address: "C. Reloj, 14, 24400 Ponferrada, León",
+  },
+  {
+    id: "hotel",
+    label: "H",
+    color: "#a08b7a",
+    coords: [-6.5915, 42.5441] as [number, number],
+    title: "Hotel Aroi Bierzo",
+    subtitle: "Alojamiento",
+    time: "",
+    address: "Pl. Ayuntamiento, 4, 24401 Ponferrada, León",
+  },
+  {
+    id: "bus",
+    label: "B",
+    color: "#6b6560",
+    coords: [-6.5898, 42.5430] as [number, number],
+    title: "Parking Albergue Peregrinos",
+    subtitle: "Parada de bus",
+    time: "",
+    address: "Av. el Castillo, 47, 24400 Ponferrada, León",
+  }
+];
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
 
@@ -21,13 +60,27 @@ export function MapboxMap() {
 
     const map = new mapboxgl.Map({
       container: containerRef.current,
-      style: "mapbox://styles/mapbox/light-v11",
-      center: [-6.6050, 42.5520],
-      zoom: 11,
+      style: "mapbox://styles/mapbox/satellite-streets-v12", // Vista satélite con calles
+      center: [-6.6050, 42.5620], // Centered between Ponferrada and Cabañas Raras
+      zoom: 11.5,
+      pitch: 60, // Inclinación para efecto 3D
+      bearing: -20, // Rotación de cámara
       attributionControl: false,
     });
 
-    // Custom AG marker SVG
+    // Añadir topografía 3D (montañas reales)
+    map.on("style.load", () => {
+      map.addSource("mapbox-dem", {
+        type: "raster-dem",
+        url: "mapbox://mapbox.mapbox-terrain-dem-v1",
+        tileSize: 512,
+        maxzoom: 14,
+      });
+      // Exageración 1.5 para notar más el relieve del Bierzo
+      map.setTerrain({ source: "mapbox-dem", exaggeration: 1.5 });
+    });
+
+    // Custom marker SVG function
     const makeSvgEl = (label: string, color: string) => {
       const el = document.createElement("div");
       el.innerHTML = `
@@ -43,31 +96,26 @@ export function MapboxMap() {
     };
 
     map.on("load", () => {
-      // Wedding venue marker
-      new mapboxgl.Marker({ element: makeSvgEl("AG", "#8b7e74"), anchor: "bottom" })
-        .setLngLat(WEDDING_COORDS)
-        .setPopup(
-          new mapboxgl.Popup({ offset: 50, className: "wb-popup" }).setHTML(`
-            <div style="font-family:Georgia,serif;padding:4px 2px">
-              <p style="font-weight:bold;font-size:14px;margin:0 0 2px">Finca El Casar</p>
-              <p style="font-size:12px;color:#6b6560;margin:0">Cabañas Raras, Ponferrada</p>
-              <p style="font-size:11px;color:#a08b7a;margin:4px 0 0">12 sep 2026 · 13:30h</p>
-            </div>`)
-        )
-        .addTo(map);
-
-      // Preboda marker
-      new mapboxgl.Marker({ element: makeSvgEl("♥", "#5b634a"), anchor: "bottom" })
-        .setLngLat(PREBODA_COORDS)
-        .setPopup(
-          new mapboxgl.Popup({ offset: 50, className: "wb-popup" }).setHTML(`
-            <div style="font-family:Georgia,serif;padding:4px 2px">
-              <p style="font-weight:bold;font-size:14px;margin:0 0 2px">Rooftop Casino de Ponferrada</p>
-              <p style="font-size:12px;color:#6b6560;margin:0">Pre-boda</p>
-              <p style="font-size:11px;color:#a08b7a;margin:4px 0 0">11 sep 2026 · 19:30h</p>
-            </div>`)
-        )
-        .addTo(map);
+      // Create markers dynamically from PINS array
+      PINS.forEach((pin) => {
+        // Build the Google Maps direction URL using the exact literal address string
+        const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(pin.address)}`;
+        
+        new mapboxgl.Marker({ element: makeSvgEl(pin.label, pin.color), anchor: "bottom" })
+          .setLngLat(pin.coords)
+          .setPopup(
+            new mapboxgl.Popup({ offset: 50, className: "wb-popup" }).setHTML(`
+              <div style="font-family:Georgia,serif;padding:4px 2px;text-align:center">
+                <p style="font-weight:bold;font-size:14px;margin:0 0 2px">${pin.title}</p>
+                <p style="font-size:12px;color:#6b6560;margin:0">${pin.subtitle}</p>
+                ${pin.time ? `<p style="font-size:11px;color:#a08b7a;margin:2px 0 0">${pin.time}</p>` : ""}
+                <div style="margin-top:10px">
+                  <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:${pin.color};color:white;text-decoration:none;padding:6px 12px;border-radius:20px;font-size:11px;font-family:sans-serif;font-weight:bold;text-transform:uppercase;letter-spacing:1px;transition:opacity 0.2s">Cómo llegar</a>
+                </div>
+              </div>`)
+          )
+          .addTo(map);
+      });
 
       // Navigation control
       map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");

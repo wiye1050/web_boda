@@ -1,13 +1,5 @@
 import type { AccommodationType } from "@/components/admin/useAccommodations";
 
-export type TimelineItem = {
-  time: string;
-  title: string;
-  description: string;
-  location: string;
-  icon: string;
-};
-
 export type StayOption = {
   id: string;
   name: string;
@@ -101,7 +93,6 @@ export type PublicContent = {
   brandName: string;
   headerCtaLabel: string;
   navWeddingLabel: string;
-  navTimelineLabel: string;
   navStayLabel: string;
   navGiftsLabel: string;
   navRsvpLabel: string;
@@ -149,10 +140,6 @@ export type PublicContent = {
   ceremonyCardTwoLabel: string;
   ceremonyCardTwoTitle: string;
   ceremonyCardTwoDescription: string;
-  timelineEyebrow: string;
-  timelineTitle: string;
-  timelineDescription: string;
-  timelineItems: TimelineItem[];
   practicalEyebrow: string;
   practicalTitle: string;
   practicalDescription: string;
@@ -230,7 +217,6 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   brandName: "Alba & Guille",
   headerCtaLabel: "Confirmar asistencia",
   navWeddingLabel: "La boda",
-  navTimelineLabel: "Cronograma",
   navStayLabel: "Alojamiento",
   navGiftsLabel: "Regalos",
   navRsvpLabel: "Confirmar asistencia",
@@ -283,52 +269,6 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   ceremonyCardTwoTitle: "Celebración para adultos",
   ceremonyCardTwoDescription:
     "Queremos un día tranquilo, por eso será una celebración solo para adultos.",
-  timelineEyebrow: "Cronograma",
-  timelineTitle: "Cómo será el día",
-  timelineDescription:
-    "Estos son los momentos principales para que te organices con calma.",
-  timelineItems: [
-    {
-      time: "13:30",
-      title: "Bienvenida & aperitivo",
-      description:
-        "Abrimos puertas con vermú y tapas locales para que puedas acomodarte con calma.",
-      location: "Patio de recepción, Finca El Casar",
-      icon: "🍹",
-    },
-    {
-      time: "14:15",
-      title: "Ceremonia civil",
-      description:
-        "Celebramos nuestra unión al aire libre. Tendremos música en directo y lectura de votos.",
-      location: "Jardín principal",
-      icon: "💍",
-    },
-    {
-      time: "16:00",
-      title: "Banquete bajo el sol",
-      description:
-        "Menú de temporada con guiños bercianos. Avisadnos intolerancias o alergias en el formulario.",
-      location: "Carpa acristalada",
-      icon: "🍽️",
-    },
-    {
-      time: "20:00",
-      title: "Atardecer & fiesta",
-      description:
-        "Pista de baile con DJ, barra libre y sorpresas. Preparad vuestras canciones favoritas.",
-      location: "Sala el Mirador",
-      icon: "🕺",
-    },
-    {
-      time: "00:30",
-      title: "Recena y despedida",
-      description:
-        "Food trucks dulces y salados para recargar energías antes de volver a casa. La música baja sobre las 02:00.",
-      location: "Terraza exterior",
-      icon: "🌙",
-    },
-  ],
   practicalEyebrow: "",
   practicalTitle: "Detalles",
   practicalDescription:
@@ -377,7 +317,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
       type: "Hotel",
       description: "Moderno y céntrico, ideal si quieres explorar la ciudad a pie.",
       distance: "10 minutos en coche",
-      link: "https://maps.app.goo.gl/",
+      link: "https://www.google.com/maps/search/?api=1&query=42.5512,-6.5985",
       hasBlock: false,
     },
     {
@@ -386,7 +326,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
       type: "Hotel",
       description: "Habitaciones amplias, spa y desayuno hasta tarde para recuperarse de la fiesta.",
       distance: "12 minutos en coche",
-      link: "https://maps.app.goo.gl/",
+      link: "https://www.google.com/maps/search/?api=1&query=42.5451,-6.5932",
       hasBlock: false,
     },
     {
@@ -395,7 +335,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
       type: "Casa Rural",
       description: "Opción tranquila en plena naturaleza, perfecta para grupos.",
       distance: "18 minutos en coche",
-      link: "https://maps.app.goo.gl/",
+      link: "https://www.google.com/maps/search/?api=1&query=42.4855,-6.7725",
       hasBlock: false,
     },
   ],
@@ -538,36 +478,6 @@ function safeJsonParse(raw: unknown): unknown | null {
   } catch {
     return null;
   }
-}
-
-export function parseTimelineItems(raw: unknown): TimelineItem[] {
-  const parsed = Array.isArray(raw) ? raw : safeJsonParse(raw);
-  if (!Array.isArray(parsed)) {
-    return DEFAULT_PUBLIC_CONTENT.timelineItems;
-  }
-
-  const cleaned = parsed
-    .map((item) => (item && typeof item === "object" ? item : {}))
-    .map((item) => {
-      const record = item as Record<string, unknown>;
-      return {
-        time: normalizeString(record.time, ""),
-        title: normalizeString(record.title, ""),
-        description: normalizeString(record.description, ""),
-        location: normalizeString(record.location, ""),
-        icon: normalizeString(record.icon, ""),
-      };
-    })
-    .filter(
-      (item) =>
-        item.time ||
-        item.title ||
-        item.description ||
-        item.location ||
-        item.icon,
-    );
-
-  return cleaned.length > 0 ? cleaned : DEFAULT_PUBLIC_CONTENT.timelineItems;
 }
 
 export function parseStayOptions(raw: unknown): StayOption[] {
@@ -789,10 +699,6 @@ export function normalizePublicContent(
       data.navWeddingLabel,
       DEFAULT_PUBLIC_CONTENT.navWeddingLabel,
     ),
-    navTimelineLabel: normalizeString(
-      data.navTimelineLabel,
-      DEFAULT_PUBLIC_CONTENT.navTimelineLabel,
-    ),
     navStayLabel: normalizeString(
       data.navStayLabel,
       DEFAULT_PUBLIC_CONTENT.navStayLabel,
@@ -965,19 +871,6 @@ export function normalizePublicContent(
       data.ceremonyCardTwoDescription,
       DEFAULT_PUBLIC_CONTENT.ceremonyCardTwoDescription,
     ),
-    timelineEyebrow: normalizeString(
-      data.timelineEyebrow,
-      DEFAULT_PUBLIC_CONTENT.timelineEyebrow,
-    ),
-    timelineTitle: normalizeString(
-      data.timelineTitle,
-      DEFAULT_PUBLIC_CONTENT.timelineTitle,
-    ),
-    timelineDescription: normalizeString(
-      data.timelineDescription,
-      DEFAULT_PUBLIC_CONTENT.timelineDescription,
-    ),
-    timelineItems: parseTimelineItems(data.timelineItems),
     practicalEyebrow: normalizeString(
       data.practicalEyebrow,
       DEFAULT_PUBLIC_CONTENT.practicalEyebrow,
@@ -1205,7 +1098,6 @@ export function normalizePublicContent(
 export function serializePublicContent(content: PublicContent) {
   return {
     ...content,
-    timelineItems: JSON.stringify(content.timelineItems),
     practicalItems: JSON.stringify(content.practicalItems),
     stayOptions: JSON.stringify(content.stayOptions),
     rsvpImportantNotes: JSON.stringify(content.rsvpImportantNotes),
