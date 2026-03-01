@@ -51,7 +51,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
             }}
           >
             <Image
-              src="/photos/hero/Captura de pantalla 21.png"
+              src="/photos/hero/hero_ilustracion.png"
               alt="Ilustración Alba y Guille"
               fill
               className="scale-[0.98] md:scale-100"

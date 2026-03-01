@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Music, Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const AUDIO_SRC = "/audio/cancion 1.mp3";
+const AUDIO_SRC = "/audio/cancion_1.mp3";
 const PREF_KEY = "wb_music_pref"; // "yes" | "no"
 
 export function AmbientMusic() {
