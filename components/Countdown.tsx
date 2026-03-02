@@ -128,7 +128,7 @@ export function Countdown({ target, className }: { target: string; className?: s
           type="button"
           className={cn(
              "animate-in fade-in zoom-in duration-500",
-             "relative flex items-center gap-2 overflow-hidden rounded-full bg-primary/90 px-6 py-2 shadow-lg transition-all hover:scale-105 hover:bg-primary",
+             "relative flex items-center gap-2 overflow-hidden rounded-full bg-accent/90 px-6 py-2 shadow-lg transition-all hover:scale-105 hover:bg-accent",
              className
           )}
         >

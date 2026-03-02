@@ -40,7 +40,7 @@ export function StayList({ items, linkLabel, showViewAll }: StayListProps) {
             {/* Badges */}
             <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-10 pointer-events-none">
                {stay.hasBlock && (
-                  <div className="flex items-center gap-1 rounded-full bg-primary/95 backdrop-blur px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-sm">
+                  <div className="flex items-center gap-1 rounded-full bg-accent/95 backdrop-blur px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-sm">
                     <Check className="h-3.5 w-3.5" />
                     <span>Precio Especial</span>
                   </div>

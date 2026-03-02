@@ -77,7 +77,7 @@ export function MobileBottomBar({
         <div className="mx-auto grid w-full max-w-6xl grid-cols-3 gap-3 pb-[env(safe-area-inset-bottom)]">
           <a
             href={confirmHref}
-            className="flex min-h-[44px] flex-1 items-center justify-center rounded-full bg-primary px-4 text-xs font-semibold uppercase tracking-[0.3em] text-primary-foreground shadow-lg shadow-primary/30"
+            className="flex min-h-[44px] flex-1 items-center justify-center rounded-full bg-accent px-4 text-xs font-semibold uppercase tracking-[0.3em] text-primary-foreground shadow-lg shadow-accent/30"
           >
             {confirmLabel}
           </a>
@@ -89,14 +89,14 @@ export function MobileBottomBar({
               window.dispatchEvent(new CustomEvent("wb-pause-music"));
               setIsOpen(true);
             }}
-            className="flex min-h-[44px] flex-1 items-center justify-center rounded-full border border-border/80 bg-surface px-4 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-[44px] flex-1 items-center justify-center rounded-full border border-border/80 bg-surface px-4 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-accent/60 hover:text-accent disabled:cursor-not-allowed disabled:opacity-50"
           >
             {mapsLabel}
           </button>
           <button
             type="button"
             onClick={handleShare}
-            className="flex min-h-[44px] flex-1 items-center justify-center rounded-full border border-border/80 bg-surface px-4 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
+            className="flex min-h-[44px] flex-1 items-center justify-center rounded-full border border-border/80 bg-surface px-4 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-accent/60 hover:text-accent"
           >
             Compartir
           </button>

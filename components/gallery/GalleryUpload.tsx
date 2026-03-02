@@ -103,15 +103,15 @@ export function GalleryUpload() {
         className={cn(
           "relative flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-xl transition-all cursor-pointer overflow-hidden",
           isDragActive 
-            ? "border-primary bg-primary/5" 
-            : "border-border/50 hover:border-primary/50 hover:bg-muted/50",
+            ? "border-accent bg-accent/5" 
+            : "border-border/50 hover:border-accent/50 hover:bg-muted/50",
           status === "uploading" && "pointer-events-none opacity-50"
         )}
       >
         <input {...getInputProps()} />
         <div className="flex flex-col items-center gap-3 text-center p-4">
           <div className="p-3 bg-background rounded-full shadow-sm border border-border">
-             <CloudUpload className="h-6 w-6 text-primary" />
+             <CloudUpload className="h-6 w-6 text-accent" />
           </div>
           <div className="space-y-1">
              <p className="text-sm font-medium text-foreground">
@@ -167,7 +167,7 @@ export function GalleryUpload() {
                {status === "idle" && (
                   <button
                     onClick={handleUpload}
-                    className="w-full rounded-full bg-primary py-3 text-sm font-bold uppercase tracking-widest text-primary-foreground transition hover:opacity-90 shadow-md"
+                    className="w-full rounded-full bg-accent py-3 text-sm font-bold uppercase tracking-widest text-primary-foreground transition hover:opacity-90 shadow-md"
                   >
                     Subir {files.length} fotos
                   </button>
@@ -181,7 +181,7 @@ export function GalleryUpload() {
                      </div>
                      <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                         <div 
-                           className="h-full bg-primary transition-all duration-300 ease-out"
+                           className="h-full bg-accent transition-all duration-300 ease-out"
                            style={{ width: `${uploadProgress}%` }}
                         />
                      </div>

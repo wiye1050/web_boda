@@ -63,7 +63,7 @@ export function MapboxMap() {
       style: "mapbox://styles/mapbox/satellite-streets-v12", // Vista satélite con calles
       center: [-6.6050, 42.5620], // Centered between Ponferrada and Cabañas Raras
       zoom: 11.5,
-      pitch: 60, // Inclinación para efecto 3D
+      pitch: 25, // Inclinación leve sugerida por el usuario
       bearing: -20, // Rotación de cámara
       attributionControl: false,
     });
