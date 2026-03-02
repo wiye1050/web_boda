@@ -90,38 +90,34 @@ export function AmbientMusic() {
   return (
     <>
       {/* Consent banner */}
-      <div
-        className={cn(
-          "fixed bottom-28 sm:bottom-6 left-1/2 -translate-x-1/2 z-[70] transition-all duration-500",
-          showBanner
-            ? "opacity-100 translate-y-0 pointer-events-auto"
-            : "opacity-0 translate-y-4 pointer-events-none"
-        )}
-        aria-live="polite"
-      >
-        <div className="flex items-center gap-2 sm:gap-3 rounded-full border border-border/40 bg-surface/95 px-4 py-2 sm:px-5 sm:py-3 shadow-lg backdrop-blur-sm pointer-events-auto">
-          <Music className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-accent-strong" />
-          <span className="text-[11px] sm:text-sm font-sans text-foreground/80 whitespace-nowrap">
-            ¿Música de fondo?
-          </span>
-          <div className="flex gap-1.5 sm:gap-2">
-            <button
-              onClick={handleYes}
-              className="rounded-full bg-accent-strong px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-white transition hover:opacity-80 disabled:opacity-40"
-            >
-              Sí
-            </button>
-            <button
-              onClick={handleNo}
-              className="rounded-full border border-border/60 px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-foreground/60 transition hover:text-foreground"
-            >
-              {/* On mobile use shorter "No", on desktop "No, gracias" */}
-              <span className="hidden sm:inline">No, gracias</span>
-              <span className="sm:hidden">No</span>
-            </button>
+      {showBanner && (
+        <div
+          className="fixed bottom-28 sm:bottom-6 left-1/2 -translate-x-1/2 z-[70] transition-all duration-500 animate-in fade-in slide-in-from-bottom-4"
+          aria-live="polite"
+        >
+          <div className="flex items-center gap-2 sm:gap-3 rounded-full border border-border/40 bg-surface/95 px-4 py-2 sm:px-5 sm:py-3 shadow-lg backdrop-blur-sm pointer-events-auto">
+            <Music className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-accent-strong" />
+            <span className="text-[11px] sm:text-sm font-sans text-foreground/80 whitespace-nowrap">
+              ¿Música de fondo?
+            </span>
+            <div className="flex gap-1.5 sm:gap-2">
+              <button
+                onClick={handleYes}
+                className="rounded-full bg-accent-strong px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-white transition hover:opacity-80 disabled:opacity-40"
+              >
+                Sí
+              </button>
+              <button
+                onClick={handleNo}
+                className="rounded-full border border-border/60 px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-foreground/60 transition hover:text-foreground"
+              >
+                <span className="hidden sm:inline">No, gracias</span>
+                <span className="sm:hidden">No</span>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Floating toggle button */}
       {buttonVisible && (

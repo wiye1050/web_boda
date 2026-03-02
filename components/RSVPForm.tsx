@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { firebaseClient } from "@/lib/firebase";
 import { DEFAULT_PUBLIC_CONTENT, type RsvpFormCopy } from "@/lib/publicContent";
 import { sendConfirmationEmail } from "@/app/actions/sendConfirmation";
+import { cn } from "@/lib/utils";
 import confetti from "canvas-confetti";
 
 type RSVPStatus = "idle" | "loading" | "success" | "error";
@@ -145,7 +146,7 @@ export function RSVPForm({
     (form.needsTransport === "si"
       ? form.transportSeats.trim().length > 0 &&
         !Number.isNaN(seatsRequested) &&
-        seatsRequested <= (Number.isNaN(guestsNumber) ? 0 : guestsNumber)
+        seatsRequested <= Math.max(Number.isNaN(guestsNumber) ? 0 : guestsNumber, 1)
       : true);
 
   function handleChange<K extends keyof FormState>(
@@ -264,7 +265,7 @@ export function RSVPForm({
         fullName: form.fullName.trim(),
         email: form.email.trim(),
         phone: phoneDigits,
-        attendance: form.attendance!, // asegurado por validación previa
+        attendance: form.attendance!,
         guests: attending ? guestsNumber : 0,
         guestNames: form.guestNames.trim(),
         preboda: form.preboda ?? "no",
@@ -294,7 +295,7 @@ export function RSVPForm({
         needsTransport: form.needsTransport ?? "no",
       });
       toast.success("¡Confirmación recibida correctamente!");
-      // 🎉 Confetti celebration
+      
       if (form.attendance === "si") {
         const colors = ["#8b7e74", "#d4af37", "#b89d7b", "#f8f5f2", "#5b634a"];
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors });
@@ -309,7 +310,6 @@ export function RSVPForm({
         );
       }
 
-      // Enviar email de confirmación (no bloqueante visualmente)
       try {
         await sendConfirmationEmail({
           fullName: form.fullName.trim(),
@@ -320,23 +320,14 @@ export function RSVPForm({
         });
       } catch (emailError) {
         console.error("Error enviando email de confirmación", emailError);
-        // Omitimos mostrar un toast de error general, porque el RSVP ya se guardó correctamente en Firebase.
       }
     } catch (error) {
       console.error("Error guardando RSVP", error);
       setStatus("error");
 
-      if (error instanceof Error) {
-        const msg = error.message.includes("Faltan variables")
-          ? "Parece que hay un problema de configuración. Escríbenos por WhatsApp mientras lo solucionamos."
-          : "No pudimos guardar tu respuesta. Inténtalo de nuevo en unos minutos o contáctanos directamente.";
-        setErrorMessage(msg);
-        toast.error(msg);
-      } else {
-        const msg = "No pudimos guardar tu respuesta. Inténtalo de nuevo en unos minutos o contáctanos directamente.";
-        setErrorMessage(msg);
-        toast.error(msg);
-      }
+      const msg = "No pudimos guardar tu respuesta. Inténtalo de nuevo en unos minutos o contáctanos directamente.";
+      setErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setTimeout(() => setStatus("idle"), 6000);
     }
@@ -358,415 +349,203 @@ export function RSVPForm({
           onChange={(event) => setBotField(event.target.value)}
         />
       </label>
-      <div className="grid gap-6 md:grid-cols-2">
-        {submittedInfo && status === "success" && (
-          <div className="md:col-span-2 flex flex-col items-center justify-center gap-4 rounded-[24px] border border-emerald-400/40 bg-emerald-500/10 p-8 text-center shadow-sm transition-all animate-in fade-in zoom-in duration-500">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 shadow-md animate-bounce">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2.5}
-                stroke="currentColor"
-                className="h-8 w-8"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4.5 12.75l6 6 9-13.5"
-                />
-              </svg>
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-emerald-800">
-                ¡Gracias {submittedInfo.fullName.split(" ")[0]}!
-              </h3>
-              <p className="mt-2 text-sm text-emerald-700">
-                Hemos recibido tu confirmación correctamente.
-              </p>
-            </div>
-            
-            <div className="mt-2 w-full max-w-sm rounded-xl bg-white/60 p-4 text-emerald-900 shadow-sm border border-emerald-200/50">
-              <ul className="space-y-2 text-sm">
-                <li className="flex justify-between border-b border-emerald-200/50 pb-2">
-                  <span className="font-semibold">Asistencia:</span>
-                  <span>{submittedInfo.attendance === "si" ? "Sí, asistiré" : "No podré asistir"}</span>
-                </li>
-                 {submittedInfo.attendance === "si" && (
-                   <>
-                    <li className="flex justify-between border-b border-emerald-200/50 pb-2">
-                      <span className="font-semibold">Adultos:</span>
-                      <span>{submittedInfo.guests}</span>
-                    </li>
-                    <li className="flex justify-between pt-1">
-                      <span className="font-semibold">Transporte:</span>
-                      <span>{submittedInfo.needsTransport === "si" ? "Sí" : "No"}</span>
-                    </li>
-                   </>
-                 )}
-              </ul>
-            </div>
 
-             <p className="mt-2 text-xs text-emerald-600/80">
-              Te hemos enviado un email con el resumen.
-            </p>
+      {submittedInfo && status === "success" ? (
+        <div className="flex flex-col items-center justify-center gap-6 rounded-[32px] border border-emerald-400/30 bg-emerald-500/5 p-10 text-center shadow-sm animate-in fade-in zoom-in duration-500">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 shadow-inner">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-10 w-10">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
           </div>
-        )}
-        <label className="flex flex-col gap-2 text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            {copy.fullNameLabel}
-          </span>
-          <input
-            name="fullName"
-            autoComplete="name"
-            required
-            value={form.fullName}
-            onChange={(event) => handleChange("fullName", event.target.value)}
-            placeholder={copy.fullNamePlaceholder}
-            className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
-          />
-        </label>
-
-        <label className="flex flex-col gap-2 text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            {copy.emailLabel}
-          </span>
-          <input
-            type="email"
-            name="email"
-            autoComplete="email"
-            value={form.email}
-            onChange={(event) => handleChange("email", event.target.value)}
-            placeholder={copy.emailPlaceholder}
-            className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
-          />
-          {!emailValid && form.email.length > 0 && (
-            <span className="text-xs text-primary">
-              {copy.emailError}
-            </span>
-          )}
-        </label>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <label className="flex flex-col gap-2 text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            {copy.phoneLabel}
-          </span>
-          <input
-            type="tel"
-            name="phone"
-            autoComplete="tel"
-            required
-            value={form.phone}
-            onChange={(event) => handleChange("phone", event.target.value)}
-            placeholder={copy.phonePlaceholder}
-            className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
-          />
-          {!phoneValid && form.phone.length > 0 && (
-            <span className="text-xs text-primary">
-              {copy.phoneError}
-            </span>
-          )}
-        </label>
-
-        <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-center shadow-sm">
-          <legend className="mx-auto text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-            {copy.attendanceLegend}
-          </legend>
-          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap justify-center">
-            {["si", "no"].map((value) => (
-              <label
-                key={value}
-                className={[
-                  radioBaseClasses,
-                  "min-w-[160px]",
-                  form.attendance === value
-                    ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                    : "border-border bg-surface text-muted hover:border-primary/60 hover:text-primary",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                <input
-                  className="sr-only"
-                  type="radio"
-                  name="attendance"
-                  value={value}
-                  checked={form.attendance === value}
-                  onChange={(event) =>
-                    handleChange(
-                      "attendance",
-                      event.target.value as FormState["attendance"],
-                    )
-                  }
-                />
-                {value === "si"
-                  ? copy.attendanceYesLabel
-                  : copy.attendanceNoLabel}
-              </label>
-            ))}
+          <div>
+            <h3 className="text-2xl font-bold text-emerald-900">¡Gracias {submittedInfo.fullName.split(" ")[0]}!</h3>
+            <p className="mt-2 text-base text-emerald-700/80">Hemos recibido tu respuesta correctamente.</p>
           </div>
-        </fieldset>
-      </div>
-
-      {attending && (
-        <div className="grid gap-6">
-          <label className="flex flex-col gap-2 text-center">
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-              {copy.guestsLabel}
-            </span>
-            <input
-              name="guests"
-              inputMode="numeric"
-              min={1}
-              required
-              value={form.guests}
-              onChange={(event) => handleChange("guests", event.target.value)}
-              placeholder={copy.guestsPlaceholderYes}
-              className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
-            />
-            <span className="text-xs text-muted text-center">{copy.guestsHelper}</span>
-            {showGuestError && (
-              <span className="text-xs text-primary">
-                {copy.guestsError}
-              </span>
-            )}
-          </label>
-        </div>
-      )}
-      {attending && (
-        <div
-          id="rsvp-advanced"
-          className="grid gap-6 rounded-[24px] border border-border/80 bg-surface/90 p-6 md:grid-cols-2 text-center"
-        >
-          <label className="flex flex-col gap-2 text-center">
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-              {copy.guestNamesLabel}
-            </span>
-            <textarea
-              name="guestNames"
-              value={form.guestNames}
-              onChange={(event) => handleChange("guestNames", event.target.value)}
-              rows={3}
-              placeholder={copy.guestNamesPlaceholder}
-              className="min-h-[100px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
-              disabled={!attending}
-          />
-        </label>
-
-        <label className="md:col-span-2 flex items-start justify-center gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-center text-sm text-foreground">
-          <input
-            type="checkbox"
-            className="mt-1 h-4 w-4 rounded border-border bg-background accent-primary"
-            checked={form.reminderOptIn}
-            onChange={(event) => handleChange("reminderOptIn", event.target.checked)}
-          />
-          <span>
-            Quiero recordatorio antes de la boda (usaremos tu teléfono o email).
-          </span>
-        </label>
-          <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-center shadow-sm">
-            <legend className="mx-auto text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-              {copy.prebodaLegend}
-            </legend>
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap justify-center">
-              {["si", "no"].map((value) => (
-                <label
-                  key={value}
-                  className={[
-                    radioBaseClasses,
-                    "min-w-[160px]",
-                    form.preboda === value
-                      ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                      : "border-border bg-surface text-muted hover:border-primary/60 hover:text-primary",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  <input
-                    className="sr-only"
-                    type="radio"
-                    name="preboda"
-                    value={value}
-                    checked={form.preboda === value}
-                    onChange={(event) =>
-                      handleChange(
-                        "preboda",
-                        event.target.value as FormState["preboda"],
-                      )
-                    }
-                  />
-                  {value === "si" ? copy.prebodaYesLabel : copy.prebodaNoLabel}
-                </label>
-              ))}
-            </div>
-            <p className="text-xs text-muted">{copy.prebodaNote}</p>
-          </fieldset>
-
-          <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-center shadow-sm">
-            <legend className="mx-auto text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-              {copy.transportLegend}
-            </legend>
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap justify-center">
-              {["no", "si"].map((value) => (
-                <label
-                  key={value}
-                  className={[
-                    radioBaseClasses,
-                    "min-w-[160px]",
-                    form.needsTransport === value
-                      ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                      : "border-border bg-surface text-muted hover:border-primary/60 hover:text-primary",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  <input
-                    className="sr-only"
-                    type="radio"
-                    name="needsTransport"
-                    value={value}
-                    checked={form.needsTransport === value}
-                    onChange={(event) =>
-                      handleChange(
-                        "needsTransport",
-                        event.target.value as FormState["needsTransport"],
-                      )
-                    }
-                  />
-                  {value === "si"
-                    ? copy.transportYesLabel
-                    : copy.transportNoLabel}
-                </label>
-              ))}
-            </div>
-            <p className="text-xs text-muted">{copy.transportNote}</p>
-          </fieldset>
-
-          {form.needsTransport === "si" && (
-            <label className="flex flex-col gap-2 text-center md:col-span-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                {copy.transportSeatsLabel}
-              </span>
-              <input
-                name="transportSeats"
-                inputMode="numeric"
-                min={1}
-                max={attending && !Number.isNaN(guestsNumber) ? guestsNumber : undefined}
-                required
-                value={form.transportSeats}
-                onChange={(event) =>
-                  handleChange("transportSeats", event.target.value)
-                }
-                placeholder={copy.transportSeatsPlaceholder}
-                className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
-              />
-              {showSeatsError && (
-                <span className="text-xs text-primary">
-                  {copy.transportSeatsError}
-                </span>
+          <div className="w-full max-w-sm rounded-[24px] bg-white/40 p-6 text-emerald-900 shadow-sm border border-emerald-200/40 backdrop-blur-sm">
+            <ul className="space-y-3 text-sm text-center">
+              <li className="flex justify-between border-b border-emerald-200/30 pb-3">
+                <span className="font-medium text-emerald-700">Asistencia:</span>
+                <span className="font-bold">{submittedInfo.attendance === "si" ? "Sí, asistiré" : "No podré asistir"}</span>
+              </li>
+              {submittedInfo.attendance === "si" && (
+                <>
+                  <li className="flex justify-between border-b border-emerald-200/30 pb-3">
+                    <span className="font-medium text-emerald-700">Adultos:</span>
+                    <span className="font-bold">{submittedInfo.guests}</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span className="font-medium text-emerald-700">Transporte:</span>
+                    <span className="font-bold">{submittedInfo.needsTransport === "si" ? "Sí" : "No"}</span>
+                  </li>
+                </>
               )}
+            </ul>
+          </div>
+          <p className="text-xs text-emerald-600/70 italic">Te hemos enviado un email con el resumen.</p>
+          <button
+            type="button"
+            onClick={() => { setSubmittedInfo(null); setStatus("idle"); }}
+            className="mt-4 text-xs font-semibold uppercase tracking-widest text-emerald-700 hover:underline"
+          >
+            Enviar otra respuesta
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="grid gap-6 md:grid-cols-2">
+            <label className="flex flex-col gap-2 text-center">
+              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">{copy.fullNameLabel}</span>
+              <input 
+                name="fullName" 
+                autoComplete="name" 
+                required 
+                value={form.fullName} 
+                onChange={(e) => handleChange("fullName", e.target.value)} 
+                placeholder={copy.fullNamePlaceholder} 
+                className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center" 
+              />
             </label>
+            <label className="flex flex-col gap-2 text-center">
+              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">{copy.emailLabel}</span>
+              <input 
+                type="email" 
+                name="email" 
+                autoComplete="email" 
+                value={form.email} 
+                onChange={(e) => handleChange("email", e.target.value)} 
+                placeholder={copy.emailPlaceholder} 
+                className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center" 
+              />
+              {!emailValid && form.email.length > 0 && <span className="text-xs text-primary">{copy.emailError}</span>}
+            </label>
+            <label className="flex flex-col gap-2 text-center">
+              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">{copy.phoneLabel}</span>
+              <input 
+                type="tel" 
+                name="phone" 
+                autoComplete="tel" 
+                required 
+                value={form.phone} 
+                onChange={(e) => handleChange("phone", e.target.value)} 
+                placeholder={copy.phonePlaceholder} 
+                className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center" 
+              />
+              {!phoneValid && form.phone.length > 0 && <span className="text-xs text-primary">{copy.phoneError}</span>}
+            </label>
+            <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-5 py-5 text-center shadow-sm">
+              <legend className="mx-auto text-xs font-semibold uppercase tracking-[0.3em] text-muted">{copy.attendanceLegend}</legend>
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap justify-center">
+                {["si", "no"].map((val) => (
+                  <label 
+                    key={val} 
+                    className={radioBaseClasses + " min-w-[140px] " + (form.attendance === val ? "border-primary bg-primary text-primary-foreground shadow-sm" : "border-border bg-surface text-muted hover:border-primary/60 hover:text-primary")}
+                  >
+                    <input 
+                      className="sr-only" 
+                      type="radio" 
+                      name="attendance" 
+                      value={val} 
+                      checked={form.attendance === val} 
+                      onChange={(e) => handleChange("attendance", e.target.value as FormState["attendance"])} 
+                    />
+                    {val === "si" ? copy.attendanceYesLabel : copy.attendanceNoLabel}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          </div>
+
+          {attending && (
+            <div className="grid gap-8 animate-in fade-in slide-in-from-top-4 duration-500">
+              <div className="grid gap-6 md:grid-cols-2">
+                <label className="flex flex-col gap-2 text-center">
+                  <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">{copy.guestsLabel}</span>
+                  <input name="guests" inputMode="numeric" min={1} required value={form.guests} onChange={(e) => handleChange("guests", e.target.value)} placeholder={copy.guestsPlaceholderYes} className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center" />
+                  <span className="text-xs text-muted">{copy.guestsHelper}</span>
+                  {showGuestError && <span className="text-xs text-primary">{copy.guestsError}</span>}
+                </label>
+                <label className="flex flex-col gap-2 text-center">
+                  <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">{copy.guestNamesLabel}</span>
+                  <textarea name="guestNames" value={form.guestNames} onChange={(e) => handleChange("guestNames", e.target.value)} rows={2} placeholder={copy.guestNamesPlaceholder} className="min-h-[60px] rounded-[24px] border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10 text-center" />
+                </label>
+              </div>
+
+              <div id="rsvp-advanced" className="grid gap-6 rounded-[32px] border border-border/80 bg-surface/50 p-6 md:grid-cols-2 text-center">
+                <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-4 py-4 text-center">
+                  <legend className="mx-auto text-xs font-semibold uppercase tracking-[0.3em] text-muted">{copy.prebodaLegend}</legend>
+                  <div className="flex gap-2 justify-center">
+                    {["si", "no"].map((val) => (
+                      <label key={val} className={radioBaseClasses + " flex-1 " + (form.preboda === val ? "border-primary bg-primary text-primary-foreground shadow-sm" : "border-border bg-surface text-muted")}>
+                        <input className="sr-only" type="radio" name="preboda" value={val} checked={form.preboda === val} onChange={(e) => handleChange("preboda", e.target.value as FormState["preboda"])} />
+                        {val === "si" ? "Sí" : "No"}
+                      </label>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-muted">{copy.prebodaNote}</p>
+                </fieldset>
+
+                <fieldset className="flex flex-col gap-4 rounded-[20px] border border-border/80 bg-surface px-4 py-4 text-center">
+                  <legend className="mx-auto text-xs font-semibold uppercase tracking-[0.3em] text-muted">{copy.transportLegend}</legend>
+                  <div className="flex gap-2 justify-center">
+                    {["no", "si"].map((val) => (
+                      <label key={val} className={radioBaseClasses + " flex-1 " + (form.needsTransport === val ? "border-primary bg-primary text-primary-foreground shadow-sm" : "border-border bg-surface text-muted")}>
+                        <input className="sr-only" type="radio" name="needsTransport" value={val} checked={form.needsTransport === val} onChange={(e) => handleChange("needsTransport", e.target.value as FormState["needsTransport"])} />
+                        {val === "si" ? "Sí" : "No"}
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+
+                {form.needsTransport === "si" && (
+                  <label className="flex flex-col gap-2 text-center md:col-span-2">
+                    <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">{copy.transportSeatsLabel}</span>
+                    <input name="transportSeats" inputMode="numeric" min={1} required value={form.transportSeats} onChange={(e) => handleChange("transportSeats", e.target.value)} placeholder={copy.transportSeatsPlaceholder} className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center mx-auto max-w-[200px]" />
+                    {showSeatsError && <span className="text-xs text-primary">{copy.transportSeatsError}</span>}
+                  </label>
+                )}
+
+                <label className="flex flex-col gap-2 text-center md:col-span-2">
+                  <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">Restricciones alimenticias</span>
+                  <textarea name="dietary" value={form.dietary} onChange={(e) => handleChange("dietary", e.target.value)} rows={2} placeholder="Alergias, veganismo..." className="rounded-[24px] border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10 text-center" />
+                </label>
+                
+                <label className="md:col-span-2 flex items-start gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-sm text-left">
+                  <input type="checkbox" className="mt-1 h-4 w-4 rounded border-border bg-background accent-primary" checked={form.hairMakeup || false} onChange={(e) => handleChange("hairMakeup", e.target.checked)} />
+                  <span className="text-xs text-muted-foreground">Me interesa el servicio de <span className="font-semibold text-primary">peluquería o maquillaje</span>.</span>
+                </label>
+
+                <label className="flex flex-col gap-2 text-center md:col-span-2">
+                  <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">🎵 Una canción imprescindible</span>
+                  <input name="songRequest" value={form.songRequest} onChange={(e) => handleChange("songRequest", e.target.value)} placeholder="Ej: Flying Free..." className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center" />
+                </label>
+              </div>
+            </div>
           )}
 
-          <label className="flex flex-col gap-2 text-center md:col-span-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-              {copy.requestsLabel}
-            </span>
-            <textarea
-              name="requests"
-              value={form.requests}
-              onChange={(event) => handleChange("requests", event.target.value)}
-              rows={4}
-              placeholder={copy.requestsPlaceholder}
-              className="min-h-[160px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
-            />
-          </label>
+          <div className="flex flex-col items-center gap-6">
+            <label className="flex items-start gap-3 rounded-2xl border border-border/60 bg-background/60 px-5 py-4 text-sm text-left max-w-lg cursor-pointer transition-colors hover:bg-background/80">
+              <input type="checkbox" required className="mt-1 h-4 w-4 rounded border-border bg-background accent-primary" checked={form.acceptedTerms} onChange={(e) => handleChange("acceptedTerms", e.target.checked)} />
+              <span className="text-xs text-muted-foreground leading-relaxed">Acepto que Alba & Guille guarden mis datos para la organización de la boda según la política de privacidad.</span>
+            </label>
 
-          <label className="flex flex-col gap-2 text-center md:col-span-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-              Restricciones alimenticias
-            </span>
-            <textarea
-              name="dietary"
-              value={form.dietary}
-              onChange={(event) => handleChange("dietary", event.target.value)}
-              rows={3}
-              placeholder="Alergias, intolerancias, veganismo..."
-              className="min-h-[100px] rounded-3xl border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10 text-center"
-            />
-          </label>
-        </div>
+            <div className="flex flex-col items-center gap-4 w-full">
+              <button type="submit" disabled={!isValid || status === "loading"} className="inline-flex w-full items-center justify-center rounded-full bg-primary px-10 py-4 text-sm font-semibold uppercase tracking-[0.2em] text-primary-foreground transition hover:translate-y-[-2px] hover:shadow-xl hover:shadow-primary/20 disabled:cursor-not-allowed disabled:opacity-60 md:w-auto">
+                {status === "loading" ? copy.submitLoadingLabel : copy.submitLabel}
+              </button>
+              {status === "error" && errorMessage && <p className="text-sm text-primary font-medium">{errorMessage}</p>}
+            </div>
+          </div>
+        </>
       )}
 
-      {attending && (
-        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-           <label className="md:col-span-2 flex items-start justify-center gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-center text-sm text-foreground md:flex-1">
-            <input
-              type="checkbox"
-              className="mt-1 h-4 w-4 rounded border-border bg-background accent-primary"
-              checked={form.hairMakeup || false}
-              onChange={(event) => handleChange("hairMakeup", event.target.checked)}
-            />
-            <span>
-              Me interesa el servicio de <span className="font-semibold text-primary">peluquería o maquillaje</span> (te contactaremos para darte detalles).
-            </span>
-          </label>
-           
-          <label className="flex flex-col gap-2 text-center md:flex-1">
-            <span className="flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-              <span role="img" aria-hidden>🎵</span> Una canción que no puede faltar
-            </span>
-            <input
-              name="songRequest"
-              value={form.songRequest}
-              onChange={(event) => handleChange("songRequest", event.target.value)}
-              placeholder="Ej: Flying Free, Paquito el Chocolatero..."
-              className="rounded-full border border-border/80 bg-surface px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 text-center"
-            />
-          </label>
-        </div>
-      )}
-
-      <div className="flex flex-col items-center gap-4">
-        <label className="flex items-start gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-sm text-foreground max-w-lg transition-colors hover:bg-background/80 cursor-pointer">
-          <input
-            type="checkbox"
-            required
-            className="mt-1 h-4 w-4 rounded border-border bg-background accent-primary cursor-pointer"
-            checked={form.acceptedTerms}
-            onChange={(event) => handleChange("acceptedTerms", event.target.checked)}
-          />
-          <span className="text-xs text-muted-foreground leading-relaxed">
-            Acepto que Alba & Guille guarden mis datos para la organización de la boda. No los compartiremos con nadie más.
-          </span>
-        </label>
-      </div>
-
-      <div className="flex flex-col items-center gap-4 text-center">
-        <button
-          type="submit"
-          disabled={!isValid || status === "loading"}
-          className="inline-flex w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary-foreground transition hover:translate-y-[-1px] hover:shadow-lg hover:shadow-primary/30 disabled:cursor-not-allowed disabled:opacity-60 md:w-auto sm:tracking-[0.25em]"
-        >
-          {status === "loading" ? copy.submitLoadingLabel : copy.submitLabel}
-        </button>
-        {status === "success" && (
-          <p className="text-sm text-foreground">{copy.successMessage}</p>
-        )}
-        {status === "error" && errorMessage && (
-          <p className="text-sm text-primary">{errorMessage}</p>
-        )}
-      </div>
-
-      <div className="rounded-[20px] border border-border/80 bg-accent/70 px-5 py-4 text-center text-xs text-muted">
-        <p className="font-semibold uppercase tracking-[0.3em] text-muted">
-          {importantTitle}
-        </p>
-        <ul className="mt-3 space-y-2 text-foreground/90">
-          {importantNotes.map((note, index) => (
-            <li key={`${index}-${note}`}>· {note}</li>
+      <div className="rounded-[24px] border border-border/80 bg-accent/5 px-6 py-5 text-center text-xs">
+        <p className="font-semibold uppercase tracking-[0.3em] text-muted">{importantTitle}</p>
+        <ul className="mt-4 space-y-2 text-foreground/80">
+          {importantNotes.map((note, idx) => (
+            <li key={idx} className="flex items-start justify-center gap-2">
+              <span className="text-primary">·</span>
+              {note}
+            </li>
           ))}
         </ul>
       </div>
