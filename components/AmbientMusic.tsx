@@ -123,15 +123,15 @@ export function AmbientMusic() {
 
   return (
     <>
-      {/* Consent banner */}
+      {/* Consent banner - REPOSITIONED TO TOP */}
       {showBanner && (
         <div
-          className="fixed bottom-28 sm:bottom-6 left-1/2 -translate-x-1/2 z-[70] transition-all duration-500 animate-in fade-in slide-in-from-bottom-4"
+          className="fixed top-24 left-1/2 -translate-x-1/2 z-[70] transition-all duration-500 animate-in fade-in slide-in-from-top-4"
           aria-live="polite"
         >
           <div className="flex items-center gap-2 sm:gap-3 rounded-full border border-border/40 bg-surface/95 px-4 py-2 sm:px-5 sm:py-3 shadow-lg backdrop-blur-sm pointer-events-auto">
             <Music className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-accent-strong" />
-            <span className="text-[11px] sm:text-sm font-sans text-foreground/80 whitespace-nowrap">
+            <span className="text-[11px] sm:text-xs font-serif tracking-[0.1em] uppercase text-foreground/80 whitespace-nowrap">
               ¿Música de fondo?
             </span>
             <div className="flex gap-1.5 sm:gap-2">
@@ -145,20 +145,18 @@ export function AmbientMusic() {
                 onClick={handleNo}
                 className="rounded-full border border-border/60 px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-foreground/60 transition hover:text-foreground"
               >
-                <span className="hidden sm:inline">No, gracias</span>
-                <span className="sm:hidden">No</span>
+                No
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Floating toggle button - REPOSITIONED TO TOP LEFT */}
+      {/* Floating toggle button - RESTORED TO BOTTOM LEFT */}
       {buttonVisible && (
         <div 
           className={cn(
-            "fixed z-[60] transition-all duration-300 pointer-events-auto",
-            "top-[1.6rem] left-[1.4rem] sm:top-[1.6rem] sm:left-[calc(50%-max(300px,min(45vw,550px)))]",
+            "fixed z-[60] bottom-24 left-4 sm:bottom-10 sm:left-10 transition-all duration-300 pointer-events-auto"
           )}
         >
           <button
@@ -166,17 +164,17 @@ export function AmbientMusic() {
             disabled={!ready}
             aria-label={playing ? "Silenciar música" : "Reproducir música ambiente"}
             className={cn(
-              "group relative flex h-8 w-8 items-center justify-center rounded-full transition-all duration-500",
+              "group relative flex h-8 w-8 items-center justify-center rounded-full border shadow-sm transition-all duration-500",
               playing
-                ? "text-accent"
-                : "text-muted/40 hover:text-foreground",
+                ? "bg-accent/10 border-accent/20 text-accent hover:bg-accent/20"
+                : "bg-surface/40 border-border/20 text-muted/60 hover:text-foreground hover:bg-surface/80",
               !ready && "opacity-0 pointer-events-none"
             )}
           >
             {playing ? (
-              <Volume2 className="h-4 w-4" />
+              <Volume2 className="h-3.5 w-3.5" />
             ) : (
-              <VolumeX className="h-4 w-4" />
+              <VolumeX className="h-3.5 w-3.5" />
             )}
             {playing && (
               <span className="absolute inset-0 rounded-full animate-ping bg-accent/20 pointer-events-none" />
