@@ -40,6 +40,7 @@ function TypingDots() {
 
 export function WeddingChat() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showHint, setShowHint] = useState(false);
   const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +48,23 @@ export function WeddingChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    // Mostrar el hint después de 4 segundos
+    const timer = setTimeout(() => {
+      if (!isOpen) setShowHint(true);
+    }, 4000);
+
+    // Ocultar automáticamente después de 10 segundos adicionales si no se ha interactuado
+    const hideTimer = setTimeout(() => {
+      setShowHint(false);
+    }, 14000);
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(hideTimer);
+    };
+  }, [isOpen]);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -164,24 +182,52 @@ export function WeddingChat() {
     setIsOpen(false);
   };
 
+  const handleOpen = () => {
+    setIsOpen(true);
+    setShowHint(false);
+  };
+
   return (
     <>
       {/* Floating button */}
       <div className="fixed bottom-20 right-4 z-40 sm:bottom-8 sm:right-8">
+        <AnimatePresence>
+          {showHint && !isOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.9, x: 20 }}
+              animate={{ opacity: 1, y: 0, scale: 1, x: 0 }}
+              exit={{ opacity: 0, scale: 0.9, x: 10 }}
+              className="absolute bottom-full right-0 mb-4 w-48 pointer-events-none"
+            >
+              <div className="relative rounded-2xl bg-white p-3 shadow-xl border border-accent/20 text-center">
+                <p className="text-[11px] font-medium leading-tight text-foreground/80">
+                  ¿Alguna duda sobre la boda? <span className="text-secondary font-bold italic">Pregúntame</span>
+                </p>
+                {/* Flecha del bocadillo */}
+                <div className="absolute -bottom-1.5 right-6 h-3 w-3 rotate-45 border-r border-b border-accent/10 bg-white" />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <motion.button
           whileTap={{ scale: 0.9 }}
-          onClick={() => setIsOpen(true)}
+          whileHover={{ scale: 1.05 }}
+          onClick={handleOpen}
           aria-label="Abrir chat de asistencia"
           className={cn(
             "group relative flex h-16 w-16 items-center justify-center rounded-full transition-all duration-300 bg-transparent border-none outline-none shadow-none",
             isOpen && "opacity-0 pointer-events-none scale-95"
           )}
         >
-          <div className="absolute inset-0 rounded-full overflow-hidden flex items-center justify-center">
+          {/* Aura pulsante sutil */}
+          <span className="absolute inset-0 rounded-full bg-accent/20 animate-pulse opacity-40 scale-110" />
+          
+          <div className="absolute inset-0 rounded-full overflow-hidden flex items-center justify-center border-2 border-accent/10 bg-white/50 backdrop-blur-sm group-hover:border-accent/30 transition-colors">
              <img 
                src="/images/ai-logo.png" 
                alt="AI Assistant" 
-               className="h-[145%] w-[145%] max-w-none object-cover mix-blend-multiply brightness-[1.08] contrast-[1.12] grayscale-[0.05]"
+               className="h-[145%] w-[145%] max-w-none object-cover mix-blend-multiply brightness-[1.1] contrast-[1.1] grayscale-[0.05] group-hover:scale-110 transition-transform duration-500"
              />
           </div>
           
