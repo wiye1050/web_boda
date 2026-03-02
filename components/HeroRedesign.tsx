@@ -43,7 +43,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
             initial={{ opacity: 0, y: 20, filter: "blur(5px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ delay: 0.3, duration: 1.5, ease: "easeOut" }}
-            className="relative w-[125%] -ml-[12.5%] max-w-[420px] md:max-w-[550px] md:w-full md:ml-0 h-[65vh] min-h-[580px] md:min-h-[750px] mix-blend-multiply [&>img]:object-contain [&>img]:object-center"
+            className="relative w-full max-w-[420px] md:max-w-[550px] h-[65vh] min-h-[580px] md:min-h-[750px] mix-blend-multiply [&>img]:object-contain [&>img]:object-center"
             style={{
               // Fallback inline style for Webkit support, but the actual responsive magic happens via CSS Variables or utility classes
               WebkitMaskImage: "radial-gradient(ellipse 90% 140% at center, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)",
