@@ -27,12 +27,12 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
         className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center gap-8 md:gap-12"
       >
         {/* Names & Date Header */}
-        <div className="flex flex-col items-center gap-4">
-          <h1 className="!font-display text-5xl md:text-7xl lg:text-8xl text-foreground font-light tracking-tight">
-            Alba <span className="text-secondary italic">&</span> Guille
+        <div className="flex flex-col items-center gap-2 md:gap-4">
+          <h1 className="font-script text-6xl md:text-8xl lg:text-9xl text-foreground font-normal leading-tight">
+            Alba <span className="text-accent italic">&</span> Guille
           </h1>
-          <div className="h-px w-24 bg-secondary/30" />
-          <h2 className="!font-display text-xl md:text-2xl lg:text-3xl text-secondary tracking-[0.2em] font-medium uppercase">
+          <div className="h-px w-16 md:w-24 bg-accent/20 my-1 md:my-2" />
+          <h2 className="font-serif text-lg md:text-xl lg:text-2xl text-muted/80 tracking-[0.3em] font-light">
             12 de Septiembre · 2026
           </h2>
         </div>

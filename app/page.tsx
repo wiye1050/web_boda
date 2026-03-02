@@ -1,3 +1,5 @@
+"use client";
+
 import { CTAButton } from "@/components/CTAButton";
 import { Footer } from "@/components/Footer";
 import { Divider } from "@/components/Divider";
@@ -9,6 +11,9 @@ import { getPublicConfig } from "@/lib/getPublicConfig";
 import { getAccommodations } from "@/lib/getAccommodations";
 import dynamic from "next/dynamic";
 import type { GiftOption } from "@/components/GiftList";
+import { useState, useEffect, Suspense } from "react";
+import { Map as MapIcon, MousePointer2, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // Dynamic Imports for performance
 const MobileBottomBar = dynamic(() => import("@/components/MobileBottomBar").then(mod => mod.MobileBottomBar));
@@ -24,45 +29,42 @@ const PracticalList = dynamic(() => import("@/components/PracticalList").then(mo
 const FaqList = dynamic(() => import("@/components/FaqList").then(mod => mod.FaqList));
 
 
-export default async function Home() {
-  let config;
-  let accommodations = [];
-  try {
-    const [configRes, accommodationsRes] = await Promise.all([
-      getPublicConfig(),
-      getAccommodations(),
-    ]);
-    config = configRes;
-    accommodations = accommodationsRes;
-  } catch (error) {
-    console.error("Critical error fetching data:", error);
-    // Fallback to a safe default if the fetch fails completely
-    const { DEFAULT_PUBLIC_CONTENT } = await import("@/lib/publicContent");
-    config = DEFAULT_PUBLIC_CONTENT;
-    accommodations = config.stayOptions;
-  }
+export default function Home() {
+  const [isMapActive, setIsMapActive] = useState(false);
+  const [config, setConfig] = useState<any>(null);
+  const [accommodations, setAccommodations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [configRes, accommodationsRes] = await Promise.all([
+          getPublicConfig(),
+          getAccommodations(),
+        ]);
+        setConfig(configRes);
+        setAccommodations(accommodationsRes);
+      } catch (error) {
+        console.error("Critical error fetching data:", error);
+        const { DEFAULT_PUBLIC_CONTENT } = await import("@/lib/publicContent");
+        setConfig(DEFAULT_PUBLIC_CONTENT);
+        setAccommodations(DEFAULT_PUBLIC_CONTENT.stayOptions);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  if (loading || !config) return null;
 
   const prebodaMapUrl = config.prebodaMapsUrl?.trim() || config.prebodaMapUrl?.trim() || (config.prebodaPlace ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(config.prebodaPlace)}` : "");
   const weddingMapUrl = config.weddingMapsUrl?.trim() || config.locationMapUrl?.trim() || (config.locationName ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(config.locationName + " " + (config.locationAddress || ""))}` : "");
   
-  const intervalMs = Number.parseInt(
-    config.heroBackgroundIntervalMs ?? "8000",
-    10,
-  );
-  const heroInterval = Number.isFinite(intervalMs) ? intervalMs : 8000;
   const hasPracticalItems = config.practicalItems.length > 0;
   const hasFaqItems = config.faqItems.length > 0;
-  const weddingMapsUrl = config.weddingMapsUrl.trim();
-  const prebodaMapsUrl = config.prebodaMapsUrl.trim();
-  const giftContactHref = config.whatsappLink.trim().length > 0
-    ? config.whatsappLink
-    : config.contactPhone.trim().length > 0
-      ? `tel:${config.contactPhone}`
-      : "";
-  const giftContactLabel =
-    config.whatsappLink.trim().length > 0
-      ? config.giftsContactWhatsappLabel
-      : config.giftsContactPhoneLabel;
+  const weddingMapsUrl = config.weddingMapsUrl?.trim();
+  const prebodaMapsUrl = config.prebodaMapsUrl?.trim();
 
   const giftOptions: GiftOption[] = [
     {
@@ -80,7 +82,7 @@ export default async function Home() {
       case "faq":
         return hasFaqItems;
       case "alojamiento":
-        return config.stayOptions.length > 0;
+        return accommodations.length > 0 || config.stayOptions.length > 0;
       case "ubicacion":
         return Boolean(
           config.locationName.trim() ||
@@ -93,19 +95,20 @@ export default async function Home() {
   };
 
   const isSectionEnabled = (sectionId: string) => {
-    const section = config.sections.find((item) => item.id === sectionId);
+    const section = config.sections.find((item: any) => item.id === sectionId);
     return Boolean(section?.enabled && sectionHasContent(sectionId));
   };
 
   const navItems = config.sections
-    .filter((section) => section.enabled && section.nav)
-    .filter((section) => sectionHasContent(section.id))
-    .sort((a, b) => a.order - b.order)
-    .map((section) => ({
+    .filter((section: any) => section.enabled && section.nav)
+    .filter((section: any) => sectionHasContent(section.id))
+    .sort((a: any, b: any) => a.order - b.order)
+    .map((section: any) => ({
       label: section.label.trim() || section.id,
       href: section.id === "media" ? "/media" : `#${section.id}`,
     }));
-  const showNotice = true; // config.noticeEnabled && config.noticeText.trim().length > 0;
+
+  const showNotice = true;
   
   return (
     <div id="top" className="flex min-h-screen flex-col">
@@ -130,9 +133,6 @@ export default async function Home() {
             locationAddress: config.locationAddress,
           }}
         />
-        <div className="py-6 hidden">
-          <Divider />
-        </div>
 
         {isSectionEnabled("preboda") && (
           <Section
@@ -140,15 +140,12 @@ export default async function Home() {
             eyebrow={config.prebodaEyebrow}
             title={config.prebodaTitle}
             description={config.prebodaDescription}
-            background="surface" // White
+            background="surface"
           >
           <FadeIn>
             <div className="mx-auto grid max-w-3xl gap-6 sm:grid-cols-2">
-              {/* Tarjeta 1: Fecha y Hora */}
               <article className="flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-border/60 bg-surface p-6 text-center shadow-[var(--shadow-soft)] sm:p-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                  Fecha
-                </p>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">Fecha</p>
                 <h3 className="mt-3 text-2xl font-display font-semibold">
                   {config.prebodaTime.replace(/\s*h\s*$/i, "")}
                 </h3>
@@ -157,14 +154,9 @@ export default async function Home() {
                 </p>
               </article>
 
-              {/* Tarjeta 2: Lugar */}
               <article className="flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-border/60 bg-surface p-6 text-center shadow-[var(--shadow-soft)] sm:p-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                  Lugar
-                </p>
-                <h3 className="mt-3 text-2xl font-display font-semibold">
-                  {config.prebodaPlace}
-                </h3>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">Lugar</p>
+                <h3 className="mt-3 text-2xl font-display font-semibold">{config.prebodaPlace}</h3>
                 {prebodaMapUrl && (
                   <CTAButton
                     href={prebodaMapUrl}
@@ -181,43 +173,26 @@ export default async function Home() {
           </Section>
         )}
 
-
-
         {isSectionEnabled("ubicacion") && (
           <Section
             id="ubicacion"
             eyebrow="La Boda"
             title="Cuándo y dónde"
             description={config.locationDescription}
-            background="surface" // White
+            background="surface"
           >
             <FadeIn>
-              {/* Bloque de Tarjetas: Fecha y Lugar (Estética unificada con Preboda) */}
               <div className="mx-auto grid max-w-3xl gap-6 sm:grid-cols-2 mb-8">
-                {/* Tarjeta 1: Fecha y Hora */}
                 <article className="flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-border/60 bg-surface p-6 text-center shadow-[var(--shadow-soft)] sm:p-8">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                    Fecha
-                  </p>
-                  <h3 className="mt-3 text-2xl font-display font-semibold">
-                    12 de septiembre · 14:00
-                  </h3>
-                  <p className="mt-3 text-xs italic text-muted">
-                    Se ruega puntualidad (procurad estar 15 min antes)
-                  </p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">Fecha</p>
+                  <h3 className="mt-3 text-2xl font-display font-semibold">12 de septiembre · 14:00</h3>
+                  <p className="mt-3 text-xs italic text-muted">Se ruega puntualidad (procurad estar 15 min antes)</p>
                 </article>
 
-                {/* Tarjeta 2: Lugar */}
                 <article className="flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-border/60 bg-surface p-6 text-center shadow-[var(--shadow-soft)] sm:p-8">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                    Lugar
-                  </p>
-                  <h3 className="mt-3 text-2xl font-display font-semibold">
-                    {config.locationName}
-                  </h3>
-                  <p className="mt-2 text-sm text-muted">
-                    {config.locationAddress}
-                  </p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">Lugar</p>
+                  <h3 className="mt-3 text-2xl font-display font-semibold">{config.locationName}</h3>
+                  <p className="mt-2 text-sm text-muted">{config.locationAddress}</p>
                   {weddingMapUrl && (
                     <CTAButton
                       href={weddingMapUrl}
@@ -231,7 +206,6 @@ export default async function Home() {
                 </article>
               </div>
 
-              {/* Bloque de Contacto */}
               <article className="rounded-[var(--radius-card)] border border-border/60 bg-surface p-6 shadow-[var(--shadow-soft)] max-w-3xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-6 overflow-hidden mt-8">
                 <h3 className="text-xl font-display font-semibold m-0 text-center md:text-left flex-shrink-0">
                   {config.locationContactTitle}
@@ -241,18 +215,12 @@ export default async function Home() {
                       <span className="text-[10px] uppercase tracking-widest text-muted">{config.locationEmailLabel}:</span>
                       <div className="flex flex-col gap-1 w-full text-center sm:text-left">
                         {config.contactEmail && (
-                          <a
-                            href={`mailto:${config.contactEmail}`}
-                            className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary truncate sm:break-all"
-                          >
+                          <a href={`mailto:${config.contactEmail}`} className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary truncate sm:break-all">
                             {config.contactEmail}
                           </a>
                         )}
                         {config.contactEmail2 && (
-                          <a
-                            href={`mailto:${config.contactEmail2}`}
-                            className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary truncate sm:break-all"
-                          >
+                          <a href={`mailto:${config.contactEmail2}`} className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary truncate sm:break-all">
                             {config.contactEmail2}
                           </a>
                         )}
@@ -262,18 +230,12 @@ export default async function Home() {
                       <span className="text-[10px] uppercase tracking-widest text-muted">{config.locationPhoneLabel}:</span>
                       <div className="flex flex-col gap-1 w-full text-center sm:text-left">
                         {config.contactPhone && (
-                          <a
-                            href={`tel:${config.contactPhone}`}
-                            className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary truncate"
-                          >
+                          <a href={`tel:${config.contactPhone}`} className="font-semibold text-foreground underline decoration-primary/40 underline-offset-4 hover:text-primary truncate">
                             {config.contactPhone}
                           </a>
                         )}
                         {config.contactPhone2 && (
-                          <a
-                            href={`tel:${config.contactPhone2}`}
-                            className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary truncate"
-                          >
+                          <a href={`tel:${config.contactPhone2}`} className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary truncate">
                             {config.contactPhone2}
                           </a>
                         )}
@@ -291,33 +253,60 @@ export default async function Home() {
             eyebrow={config.practicalEyebrow}
             title={config.practicalTitle}
             description={config.practicalDescription}
-            background="default" // Beige
+            background="default"
           >
             <FadeIn>
               <div className="grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-12">
-                {/* Lado Izquierdo: Notas del Evento */}
                 <div className="flex flex-col gap-6">
-                  <PracticalList 
-                    variant="strip"
-                    items={config.practicalItems}
-                  />
+                  <PracticalList variant="strip" items={config.practicalItems} />
                 </div>
 
-                {/* Lado Derecho: Mapa Interactivo */}
                 <div className="relative group">
                   <div className="absolute -inset-1 bg-gradient-to-r from-accent-soft/20 to-primary/10 rounded-[var(--radius-card)] blur opacity-25 group-hover:opacity-50 transition duration-1000" />
                   <div className="relative overflow-hidden rounded-[var(--radius-card)] border border-border/40 shadow-[var(--shadow-soft)] h-[400px] lg:h-[450px]">
-                    {process.env.NEXT_PUBLIC_MAPBOX_TOKEN ? (
-                      <MapboxMap />
-                    ) : config.locationMapEmbedUrl ? (
-                      <iframe
-                        src={config.locationMapEmbedUrl}
-                        className="h-full w-full border-0 grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-700"
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                        aria-label="Mapa con ubicaciones de la boda y preboda"
-                      />
-                    ) : null}
+                    
+                    {!isMapActive && (
+                      <div 
+                        className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/5 backdrop-blur-[2px] cursor-pointer group/shield"
+                        onClick={() => setIsMapActive(true)}
+                      >
+                        <div className="flex flex-col items-center gap-3 rounded-2xl bg-white/90 px-6 py-4 shadow-xl border border-border/20 group-hover/shield:scale-105 transition-transform">
+                          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                            <MapIcon className="h-6 w-6" />
+                          </div>
+                          <div className="text-center">
+                            <p className="text-sm font-semibold text-foreground">Mapa interactivo</p>
+                            <p className="text-[11px] text-muted flex items-center justify-center gap-1.5 mt-0.5">
+                              <MousePointer2 className="h-3 w-3" /> Toca para explorar
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {isMapActive && (
+                      <button 
+                        onClick={() => setIsMapActive(false)}
+                        className="absolute top-4 left-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg border border-border/20 hover:scale-110 transition-all text-foreground"
+                      >
+                        <X className="h-5 w-5" />
+                      </button>
+                    )}
+
+                    <div className={cn("h-full w-full", !isMapActive && "pointer-events-none")}>
+                      <Suspense fallback={<div className="h-full w-full bg-muted animate-pulse" />}>
+                        {process.env.NEXT_PUBLIC_MAPBOX_TOKEN ? (
+                          <MapboxMap />
+                        ) : config.locationMapEmbedUrl ? (
+                          <iframe
+                            src={config.locationMapEmbedUrl}
+                            className="h-full w-full border-0 grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-700"
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                          />
+                        ) : null}
+                      </Suspense>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -331,7 +320,7 @@ export default async function Home() {
             eyebrow={config.stayEyebrow}
             title={config.stayTitle}
             description={config.stayDescription}
-            background="surface" // White
+            background="surface"
           >
             <FadeIn>
               <StayList
@@ -349,7 +338,7 @@ export default async function Home() {
             eyebrow={config.giftsEyebrow}
             title={config.giftsTitle}
             description={config.giftsDescription}
-            background="default" // Beige
+            background="default"
             align="center"
           >
             <FadeIn>
@@ -358,18 +347,13 @@ export default async function Home() {
           </Section>
         )}
 
-        <div className="py-6 hidden">
-          <Divider />
-        </div>
-
-
         {isSectionEnabled("asistencia") && (
           <Section
             id="asistencia"
             eyebrow={config.rsvpEyebrow}
             title={config.rsvpTitle}
             description={config.rsvpDescription}
-            background="accent" // Light Gold
+            background="accent"
             align="center"
           >
             <FadeIn>
@@ -381,72 +365,35 @@ export default async function Home() {
                 />
                 <p className="mx-auto mt-2 max-w-2xl text-sm text-muted">
                   {config.rsvpContactLead}{" "}
-                  <a
-                    href={`mailto:${config.contactEmail}`}
-                    className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
-                  >
+                  <a href={`mailto:${config.contactEmail}`} className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary">
                     {config.contactEmail}
                   </a>
                   {config.contactEmail2 && (
-                    <>
-                      {" · "}
-                      <a
-                        href={`mailto:${config.contactEmail2}`}
-                        className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
-                      >
-                        {config.contactEmail2}
-                      </a>
-                    </>
+                    <> · <a href={`mailto:${config.contactEmail2}`} className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary">{config.contactEmail2}</a></>
                   )}{" "}
                   {config.rsvpContactWhatsappLead}{" "}
-                  <a
-                    href={config.whatsappLink || `tel:${config.contactPhone}`}
-                    className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
-                  >
+                  <a href={config.whatsappLink || `tel:${config.contactPhone}`} className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary">
                     {config.contactPhone}
                   </a>
                   {config.contactPhone2 && (
-                    <>
-                      {" · "}
-                      <a
-                        href={`tel:${config.contactPhone2}`}
-                        className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary"
-                      >
-                        {config.contactPhone2}
-                      </a>
-                    </>
-                  )}
-                  .
+                    <> · <a href={`tel:${config.contactPhone2}`} className="font-semibold text-foreground underline decoration-primary/50 underline-offset-4 hover:text-primary">{config.contactPhone2}</a></>
+                  )}.
                 </p>
               </div>
             </FadeIn>
           </Section>
         )}
-
-
       </main>
+
       <Footer
         brandName={config.brandName}
         targetDate={config.noticeCountdownTarget}
       />
+
       <MobileBottomBar
         confirmHref="#asistencia"
-        wedding={
-          weddingMapsUrl
-            ? {
-                name: config.weddingVenueName.trim() || "Boda",
-                url: weddingMapsUrl,
-              }
-            : null
-        }
-        preboda={
-          prebodaMapsUrl
-            ? {
-                name: config.prebodaVenueName.trim() || "Preboda",
-                url: prebodaMapsUrl,
-              }
-            : null
-        }
+        wedding={weddingMapsUrl ? { name: config.weddingVenueName.trim() || "Boda", url: weddingMapsUrl } : null}
+        preboda={prebodaMapsUrl ? { name: config.prebodaVenueName.trim() || "Preboda", url: prebodaMapsUrl } : null}
         weddingVenueName={config.weddingVenueName.trim()}
         confirmLabel={config.mobileBar.confirmLabel}
         mapsLabel={config.mobileBar.mapsLabel}
@@ -455,4 +402,3 @@ export default async function Home() {
     </div>
   );
 }
-

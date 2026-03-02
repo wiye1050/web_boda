@@ -45,11 +45,11 @@
   --color-navy: var(--navy);
 
   /* Typography Mapping */
-  --font-sans: var(--font-lato);
-  --font-serif: var(--font-playfair);
-  --font-script: var(--font-great-vibes);
+  --font-sans: var(--font-montserrat);
+  --font-serif: var(--font-cormorant);
+  --font-script: var(--font-pinyon-script);
   --font-calligraphy: var(--font-pinyon-script);
-  --font-display: var(--font-playfair);
+  --font-display: var(--font-cormorant);
 
   --spacing-section: clamp(2.5rem, 5vw, 5rem);
 

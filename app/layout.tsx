@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat, Cormorant_Garamond, Playfair_Display, Lato, Great_Vibes, Pinyon_Script } from "next/font/google";
+import { Montserrat, Cormorant_Garamond, Pinyon_Script } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { getPublicConfig } from "@/lib/getPublicConfig";
@@ -14,35 +14,21 @@ import { MusicWrapper } from "@/components/MusicWrapper";
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
+  display: "swap",
 });
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-cormorant",
-});
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
-});
-
-const lato = Lato({
-  subsets: ["latin"],
-  weight: ["300", "400", "700"],
-  variable: "--font-lato",
-});
-
-const greatVibes = Great_Vibes({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-great-vibes",
+  display: "swap",
 });
 
 const pinyonScript = Pinyon_Script({
   subsets: ["latin"],
   weight: ["400"],
   variable: "--font-pinyon-script",
+  display: "swap",
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -98,7 +84,7 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning data-scroll-behavior="smooth">
       <body
-        className={`${montserrat.variable} ${cormorant.variable} ${playfair.variable} ${lato.variable} ${greatVibes.variable} ${pinyonScript.variable} antialiased bg-background text-foreground`}
+        className={`${montserrat.variable} ${cormorant.variable} ${pinyonScript.variable} antialiased bg-background text-foreground`}
       >
         <ThemeProvider attribute="data-theme" forcedTheme="light" disableTransitionOnChange>
           <div className="relative min-h-screen bg-background">

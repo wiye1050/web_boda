@@ -300,6 +300,11 @@ export function RSVPForm({
         const colors = ["#8b7e74", "#d4af37", "#b89d7b", "#f8f5f2", "#5b634a"];
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors });
         setTimeout(() => confetti({ particleCount: 60, spread: 100, origin: { y: 0.55 }, colors }), 400);
+
+        // Feedback háptico premium si está disponible
+        if (typeof window !== "undefined" && window.navigator.vibrate) {
+          window.navigator.vibrate([50, 30, 50]);
+        }
       }
       setForm(INITIAL_STATE);
       lastSubmittedAt.current = Date.now();
@@ -411,6 +416,7 @@ export function RSVPForm({
                 type="email" 
                 name="email" 
                 autoComplete="email" 
+                inputMode="email"
                 value={form.email} 
                 onChange={(e) => handleChange("email", e.target.value)} 
                 placeholder={copy.emailPlaceholder} 
@@ -424,6 +430,7 @@ export function RSVPForm({
                 type="tel" 
                 name="phone" 
                 autoComplete="tel" 
+                inputMode="tel"
                 required 
                 value={form.phone} 
                 onChange={(e) => handleChange("phone", e.target.value)} 

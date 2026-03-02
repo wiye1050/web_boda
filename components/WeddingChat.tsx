@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { X, Send, MessageCircleHeart, Loader2, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Message = {
   id: string;
@@ -167,11 +168,12 @@ export function WeddingChat() {
     <>
       {/* Floating button */}
       <div className="fixed bottom-20 right-4 z-40 sm:bottom-8 sm:right-8">
-        <button
+        <motion.button
+          whileTap={{ scale: 0.9 }}
           onClick={() => setIsOpen(true)}
           aria-label="Abrir chat de asistencia"
           className={cn(
-            "group relative flex h-16 w-16 items-center justify-center rounded-full transition-all duration-300 hover:scale-110 bg-transparent border-none outline-none shadow-none",
+            "group relative flex h-16 w-16 items-center justify-center rounded-full transition-all duration-300 bg-transparent border-none outline-none shadow-none",
             isOpen && "opacity-0 pointer-events-none scale-95"
           )}
         >
@@ -189,112 +191,122 @@ export function WeddingChat() {
               <span className="relative inline-flex h-4 w-4 rounded-full bg-accent shadow-sm" />
             </span>
           )}
-        </button>
+        </motion.button>
       </div>
 
-      {/* Chat panel */}
-      {isOpen && (
-        <div
-          className="fixed bottom-0 right-0 z-50 flex w-full flex-col bg-surface/95 backdrop-blur-xl shadow-2xl transition-all animate-in slide-in-from-bottom duration-300 sm:bottom-8 sm:right-8 sm:w-[calc(100vw-2rem)] sm:max-w-sm sm:rounded-[var(--radius-card)] sm:border sm:border-border/30"
-          style={{ height: "min(600px, 100dvh)" }}
-        >
-          {/* Header */}
-          <div className="flex shrink-0 items-center justify-between gap-3 bg-foreground px-5 py-4 text-white sm:rounded-t-[var(--radius-card)]">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10">
-                <MessageCircleHeart className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold leading-tight">Asistente de la boda</p>
-                <p className="text-[10px] tracking-wide text-white/60">Alba &amp; Guille · 12 sep 2026</p>
-              </div>
-            </div>
-            <button
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               onClick={handleClose}
-              aria-label="Cerrar chat"
-              className="rounded-full p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
+              className="fixed inset-0 z-40 bg-black/40 backdrop-blur-md"
+            />
 
-          {/* Messages */}
-          <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4 overscroll-contain">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={cn(
-                  "flex",
-                  msg.role === "user" ? "justify-end" : "justify-start"
-                )}
-              >
-                <div
-                  className={cn(
-                    "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed",
-                    msg.role === "user"
-                      ? "rounded-tr-sm bg-foreground text-white"
-                      : "rounded-tl-sm bg-accent-bg text-foreground border border-border/30"
-                  )}
+            {/* Chat panel / Bottom Sheet */}
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              drag="y"
+              dragConstraints={{ top: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(_, info) => {
+                if (info.offset.y > 100) handleClose();
+              }}
+              className="fixed bottom-0 right-0 z-50 flex w-full flex-col bg-surface shadow-2xl sm:bottom-8 sm:right-8 sm:w-[calc(100vw-2rem)] sm:max-w-sm sm:rounded-[var(--radius-card)] sm:border sm:border-border/30 overflow-hidden"
+              style={{ height: "min(600px, 85dvh)" }}
+            >
+              {/* Mobile Drag Handle */}
+              <div className="flex w-full items-center justify-center pt-3 pb-1 sm:hidden">
+                <div className="h-1.5 w-12 rounded-full bg-muted/30" />
+              </div>
+
+              {/* Header */}
+              <div className="flex shrink-0 items-center justify-between gap-3 bg-foreground px-5 py-4 text-white">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10">
+                    <MessageCircleHeart className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold leading-tight">Asistente de la boda</p>
+                    <p className="text-[10px] tracking-wide text-white/60">Alba &amp; Guille · 12 sep 2026</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleClose}
+                  aria-label="Cerrar chat"
+                  className="rounded-full p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white"
                 >
-                  {msg.streaming && msg.content === "" ? (
-                    <TypingDots />
-                  ) : (
-                    <span className="whitespace-pre-wrap">{msg.content}</span>
-                  )}
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Messages */}
+              <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4 overscroll-contain bg-surface">
+                {messages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={cn(
+                      "flex",
+                      msg.role === "user" ? "justify-end" : "justify-start"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed",
+                        msg.role === "user"
+                          ? "rounded-tr-sm bg-foreground text-white"
+                          : "rounded-tl-sm bg-accent-bg text-foreground border border-border/30"
+                      )}
+                    >
+                      {msg.streaming && msg.content === "" ? (
+                        <TypingDots />
+                      ) : (
+                        <span className="whitespace-pre-wrap">{msg.content}</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Input */}
+              <div className="shrink-0 border-t border-border/20 p-4 pb-8 sm:pb-4 bg-surface">
+                <div className="flex items-center gap-2 rounded-full border border-border/40 bg-background px-4 py-2 focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10">
+                  <input
+                    ref={inputRef}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Escribe tu pregunta..."
+                    maxLength={500}
+                    disabled={isLoading}
+                    className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted/60 outline-none disabled:opacity-60"
+                    aria-label="Mensaje para el asistente"
+                  />
+                  <button
+                    onClick={sendMessage}
+                    disabled={!input.trim() || isLoading}
+                    aria-label="Enviar mensaje"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-foreground text-white transition disabled:opacity-40 hover:scale-105 disabled:hover:scale-100"
+                  >
+                    {isLoading ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Send className="h-3.5 w-3.5" />
+                    )}
+                  </button>
                 </div>
               </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Scroll hint */}
-          <button
-            onClick={scrollToBottom}
-            className="absolute bottom-[72px] right-4 hidden items-center gap-1 rounded-full border border-border/30 bg-surface px-3 py-1.5 text-[10px] text-muted shadow-sm transition hover:text-foreground"
-          >
-            <ChevronDown className="h-3 w-3" />
-            Bajar
-          </button>
-
-          {/* Input */}
-          <div className="shrink-0 border-t border-border/20 p-3">
-            <div className="flex items-center gap-2 rounded-full border border-border/40 bg-background px-4 py-2 focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10">
-              <input
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Escribe tu pregunta..."
-                maxLength={500}
-                disabled={isLoading}
-                className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted/60 outline-none disabled:opacity-60"
-                aria-label="Mensaje para el asistente"
-              />
-              <button
-                onClick={sendMessage}
-                disabled={!input.trim() || isLoading}
-                aria-label="Enviar mensaje"
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-foreground text-white transition disabled:opacity-40 hover:scale-105 disabled:hover:scale-100"
-              >
-                {isLoading ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <Send className="h-3.5 w-3.5" />
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Backdrop on mobile */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm sm:hidden"
-          onClick={handleClose}
-          aria-hidden="true"
-        />
-      )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 }
