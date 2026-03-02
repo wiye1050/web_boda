@@ -49,11 +49,23 @@ export function AmbientMusic() {
     };
   }, []);
 
+  // Listeners for auto-pause
+  useEffect(() => {
+    const handleGlobalPause = () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        setPlaying(false);
+      }
+    };
+
+    window.addEventListener("wb-pause-music", handleGlobalPause);
+    return () => window.removeEventListener("wb-pause-music", handleGlobalPause);
+  }, []);
+
   // Show banner after 2.5s if no preference saved yet
   useEffect(() => {
     const pref = sessionStorage.getItem(PREF_KEY);
     if (pref === "yes") {
-      // Already said yes this session - show button only
       setButtonVisible(true);
       return;
     }
@@ -141,33 +153,34 @@ export function AmbientMusic() {
         </div>
       )}
 
-      {/* Floating toggle button */}
+      {/* Floating toggle button - REPOSITIONED TO TOP LEFT */}
       {buttonVisible && (
-        <div className="fixed bottom-24 left-4 z-40 sm:bottom-10 sm:left-10">
+        <div 
+          className={cn(
+            "fixed z-[60] transition-all duration-300 pointer-events-auto",
+            "top-[1.6rem] left-[1.4rem] sm:top-[1.6rem] sm:left-[calc(50%-max(300px,min(45vw,550px)))]",
+          )}
+        >
           <button
             onClick={toggle}
             disabled={!ready}
             aria-label={playing ? "Silenciar música" : "Reproducir música ambiente"}
-            title={playing ? "Silenciar" : "Reproducir música"}
             className={cn(
-              "group relative flex h-8 w-8 items-center justify-center rounded-full border shadow-sm transition-all duration-500",
+              "group relative flex h-8 w-8 items-center justify-center rounded-full transition-all duration-500",
               playing
-                ? "bg-accent/10 border-accent/20 text-accent hover:bg-accent/20"
-                : "bg-surface/40 border-border/20 text-muted/60 hover:text-foreground hover:bg-surface/80",
-              !ready && "opacity-20 cursor-wait"
+                ? "text-accent"
+                : "text-muted/40 hover:text-foreground",
+              !ready && "opacity-0 pointer-events-none"
             )}
           >
             {playing ? (
-              <Volume2 className="h-3.5 w-3.5" />
+              <Volume2 className="h-4 w-4" />
             ) : (
-              <VolumeX className="h-3.5 w-3.5" />
+              <VolumeX className="h-4 w-4" />
             )}
             {playing && (
-              <span className="absolute inset-0 rounded-full animate-ping bg-accent/10 pointer-events-none" />
+              <span className="absolute inset-0 rounded-full animate-ping bg-accent/20 pointer-events-none" />
             )}
-            <span className="absolute left-10 whitespace-nowrap rounded-full border border-border/10 bg-surface/90 px-2 py-0.5 text-[9px] tracking-widest uppercase text-muted/80 shadow-sm opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none">
-              {playing ? "Silenciar" : "Música"}
-            </span>
           </button>
         </div>
       )}

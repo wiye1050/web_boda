@@ -40,6 +40,7 @@ export function MobileBottomBar({
   const mapsButtonRef = useRef<HTMLButtonElement>(null);
 
   async function handleShare() {
+    window.dispatchEvent(new CustomEvent("wb-pause-music"));
     setShareMessage(null);
     const targetUrl =
       shareUrl ||
@@ -84,7 +85,10 @@ export function MobileBottomBar({
             ref={mapsButtonRef}
             type="button"
             disabled={!canOpen}
-            onClick={() => setIsOpen(true)}
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent("wb-pause-music"));
+              setIsOpen(true);
+            }}
             className="flex min-h-[44px] flex-1 items-center justify-center rounded-full border border-border/80 bg-surface px-4 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
           >
             {mapsLabel}
