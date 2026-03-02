@@ -76,7 +76,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
             })}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block relative overflow-hidden bg-secondary text-white px-8 py-3 rounded-full text-[10px] md:text-xs tracking-[0.25em] hover:bg-secondary/90 transition-all duration-300 uppercase font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5"
+            className="inline-block relative overflow-hidden bg-accent text-white px-8 py-3 rounded-full text-[10px] md:text-xs tracking-[0.25em] hover:bg-accent/90 transition-all duration-300 uppercase font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5"
           >
             Añadir al Calendario
           </a>

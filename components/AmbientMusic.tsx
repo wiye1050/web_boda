@@ -14,16 +14,38 @@ export function AmbientMusic() {
   const [showBanner, setShowBanner] = useState(false);
   const [buttonVisible, setButtonVisible] = useState(false);
 
-  // Load audio
+  // Load audio and set up listeners
   useEffect(() => {
     const audio = new Audio(AUDIO_SRC);
     audio.loop = true;
     audio.volume = 0;
     audio.addEventListener("canplaythrough", () => setReady(true));
     audioRef.current = audio;
+
+    const handleVisibilityChange = () => {
+      if (document.hidden && audioRef.current) {
+        audioRef.current.pause();
+        setPlaying(false);
+      }
+    };
+
+    const handlePageHide = () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        setPlaying(false);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pagehide", handlePageHide);
+    window.addEventListener("beforeunload", handlePageHide);
+
     return () => {
       audio.pause();
       audio.src = "";
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pagehide", handlePageHide);
+      window.removeEventListener("beforeunload", handlePageHide);
     };
   }, []);
 
@@ -121,29 +143,29 @@ export function AmbientMusic() {
 
       {/* Floating toggle button */}
       {buttonVisible && (
-        <div className="fixed bottom-20 left-4 z-40 sm:bottom-8 sm:left-8">
+        <div className="fixed bottom-24 left-4 z-40 sm:bottom-10 sm:left-10">
           <button
             onClick={toggle}
             disabled={!ready}
             aria-label={playing ? "Silenciar música" : "Reproducir música ambiente"}
             title={playing ? "Silenciar" : "Reproducir música"}
             className={cn(
-              "group relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border shadow-md transition-all",
+              "group relative flex h-8 w-8 items-center justify-center rounded-full border shadow-sm transition-all duration-500",
               playing
-                ? "bg-foreground border-foreground text-white hover:bg-foreground/80"
-                : "bg-surface/90 border-border/50 text-muted hover:border-primary/30 hover:text-foreground",
-              !ready && "opacity-40 cursor-wait"
+                ? "bg-accent/10 border-accent/20 text-accent hover:bg-accent/20"
+                : "bg-surface/40 border-border/20 text-muted/60 hover:text-foreground hover:bg-surface/80",
+              !ready && "opacity-20 cursor-wait"
             )}
           >
             {playing ? (
-              <Volume2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <Volume2 className="h-3.5 w-3.5" />
             ) : (
-              <VolumeX className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <VolumeX className="h-3.5 w-3.5" />
             )}
             {playing && (
-              <span className="absolute inset-0 rounded-full animate-ping bg-foreground/20 pointer-events-none" />
+              <span className="absolute inset-0 rounded-full animate-ping bg-accent/10 pointer-events-none" />
             )}
-            <span className="absolute left-12 whitespace-nowrap rounded-full border border-border/30 bg-surface/95 px-3 py-1 text-[10px] tracking-widest uppercase text-muted shadow-sm opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none">
+            <span className="absolute left-10 whitespace-nowrap rounded-full border border-border/10 bg-surface/90 px-2 py-0.5 text-[9px] tracking-widest uppercase text-muted/80 shadow-sm opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none">
               {playing ? "Silenciar" : "Música"}
             </span>
           </button>
