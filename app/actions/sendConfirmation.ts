@@ -52,7 +52,7 @@ export async function sendConfirmationEmail(data: EmailData) {
           ¡Nos vemos pronto!
         </p>
         <p style="margin-top: 40px; font-size: 12px; color: #999;">
-          Alba & Guille · 12 de Septiembre 2025
+          Alba & Guille · 12 de Septiembre 2026
         </p>
       </div>
     `;

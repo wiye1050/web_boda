@@ -42,7 +42,7 @@ Preboda: Viernes 11 de septiembre (19:30h, Casino Rooftop). Es un brindis inform
 === DETALLES IMPORTANTES ===
 - Dress Code: Elegante y cómodo (evitar blanco/marfil).
 - Niños: Evento solo para adultos. Ayudamos con referencias de canguros si hace falta.
-- Confirmación: Antes del 15 de agosto de 2025 en la sección "Confirmar asistencia".
+- Confirmación: Antes del 15 de agosto de 2026 en la sección "Confirmar asistencia".
 - Regalos: Vuestra presencia es lo más importante. Datos bancarios en la sección "Regalos" de la web.
 
 === OTROS DETALLES ===
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.0-flash",
       systemInstruction: systemPrompt,
     });
 
