@@ -156,8 +156,8 @@ export function TransportView() {
       const docRef = await addDoc(routesRef, {
         name: "Bus central Ponferrada",
         description: "Salida y regreso al centro (estación de autobuses).",
-        departureTime: "2025-09-12T12:30:00",
-        returnTime: "2025-09-13T02:00:00",
+        departureTime: "2026-09-12T12:30:00",
+        returnTime: "2026-09-13T02:00:00",
         capacity: 55,
         notes: "Salida desde la estación de autobuses de Ponferrada a las 12:30. Regreso a las 02:00.",
         createdAt: serverTimestamp(),

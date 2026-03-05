@@ -213,7 +213,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   noticeEnabled: true,
   noticeText: "¡Nos casamos!",
   noticeCountdownEnabled: true,
-  noticeCountdownTarget: "2025-09-12T13:30:00",
+  noticeCountdownTarget: "2026-09-12T13:30:00",
   brandName: "Alba & Guille",
   headerCtaLabel: "Confirmar asistencia",
   navWeddingLabel: "La boda",

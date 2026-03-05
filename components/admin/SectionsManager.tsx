@@ -470,7 +470,7 @@ export function SectionsManager() {
                             onChange={(value) =>
                               updateField("noticeCountdownTarget", value)
                             }
-                            placeholder="Ej: 2025-06-21T18:00:00"
+                            placeholder="Ej: 2026-06-21T18:00:00"
                           />
                         </div>
                       </div>
