@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { X, Send, MessageCircleHeart, Loader2, ChevronDown } from "lucide-react";
+import { X, Send, MessageCircleHeart, Loader, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Message = {
@@ -342,7 +342,7 @@ export function WeddingChat() {
                     className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-foreground text-white transition disabled:opacity-40 hover:scale-105 disabled:hover:scale-100"
                   >
                     {isLoading ? (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      <Loader className="h-3.5 w-3.5 animate-spin" />
                     ) : (
                       <Send className="h-3.5 w-3.5" />
                     )}

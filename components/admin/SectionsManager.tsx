@@ -8,7 +8,6 @@ import {
   DEFAULT_PUBLIC_CONTENT,
   normalizePublicContent,
   serializePublicContent,
-  type FaqItem,
   type PracticalItem,
   type PublicContent,
   type SectionConfig,
@@ -41,22 +40,14 @@ const EMPTY_PRACTICAL_ITEM: PracticalItem = {
   description: "",
 };
 
-const EMPTY_FAQ_ITEM: FaqItem = {
-  question: "",
-  answer: "",
-};
-
 const SECTION_LABELS: Record<string, string> = {
   hero: "Hero (Portada)",
   preboda: "Preboda",
-  ceremonia: "La Boda",
-  ubicacion: "Ubicación",
+  ubicacion: "La Boda (Ubicación)",
   alojamiento: "Alojamiento",
   detalles: "Guía Práctica",
   regalos: "Regalos",
-  faq: "Preguntas Frecuentes",
   asistencia: "Confirmar Asistencia",
-  media: "Media & Recuerdos",
 };
 
 function sortSections(sections: SectionConfig[]) {
@@ -254,31 +245,7 @@ export function SectionsManager() {
     }));
   }
 
-  function updateFaqItem(
-    index: number,
-    field: keyof FaqItem,
-    value: string,
-  ) {
-    setContent((prev) => {
-      const next = [...prev.faqItems];
-      next[index] = { ...next[index], [field]: value };
-      return { ...prev, faqItems: next };
-    });
-  }
 
-  function addFaqItem() {
-    setContent((prev) => ({
-      ...prev,
-      faqItems: [...prev.faqItems, { ...EMPTY_FAQ_ITEM }],
-    }));
-  }
-
-  function removeFaqItem(index: number) {
-    setContent((prev) => ({
-      ...prev,
-      faqItems: prev.faqItems.filter((_, idx) => idx !== index),
-    }));
-  }
 
   function updateRsvpNote(index: number, value: string) {
     setContent((prev) => {
@@ -795,120 +762,12 @@ export function SectionsManager() {
                             updateField("prebodaDescription", value)
                           }
                         />
-                        <InputField
-                          label="Horario"
-                          value={content.prebodaTime}
-                          onChange={(value) => updateField("prebodaTime", value)}
-                        />
-                        <InputField
-                          label="Lugar"
-                          value={content.prebodaPlace}
-                          onChange={(value) => updateField("prebodaPlace", value)}
-                        />
-                        <InputField
-                          label="Link mapa preboda"
-                          value={content.prebodaMapUrl}
-                          onChange={(value) => updateField("prebodaMapUrl", value)}
-                        />
-                        <InputField
-                          label="Etiqueta tarjeta 1"
-                          value={content.prebodaCardOneLabel}
-                          onChange={(value) =>
-                            updateField("prebodaCardOneLabel", value)
-                          }
-                        />
                         <TextAreaField
-                          label="Descripción tarjeta 1"
+                          label="Descripción destacada (tarjeta)"
                           value={content.prebodaCardOneDescription}
                           onChange={(value) =>
                             updateField("prebodaCardOneDescription", value)
                           }
-                        />
-                        <InputField
-                          label="Botón tarjeta 1"
-                          value={content.prebodaCardOneCtaLabel}
-                          onChange={(value) =>
-                            updateField("prebodaCardOneCtaLabel", value)
-                          }
-                        />
-                        <InputField
-                          label="Etiqueta tarjeta 2"
-                          value={content.prebodaCardTwoLabel}
-                          onChange={(value) =>
-                            updateField("prebodaCardTwoLabel", value)
-                          }
-                        />
-                        <InputField
-                          label="Título tarjeta 2"
-                          value={content.prebodaCardTwoTitle}
-                          onChange={(value) =>
-                            updateField("prebodaCardTwoTitle", value)
-                          }
-                        />
-                        <TextAreaField
-                          label="Descripción tarjeta 2"
-                          value={content.prebodaCardTwoDescription}
-                          onChange={(value) =>
-                            updateField("prebodaCardTwoDescription", value)
-                          }
-                        />
-                      </div>
-                    )}
-
-                    {section.id === "ceremonia" && (
-                      <div className="grid gap-4">
-                        <InputField
-                          label="Eyebrow"
-                          value={content.ceremonyEyebrow}
-                          onChange={(value) =>
-                            updateField("ceremonyEyebrow", value)
-                          }
-                        />
-                        <InputField
-                          label="Título"
-                          value={content.ceremonyTitle}
-                          onChange={(value) => updateField("ceremonyTitle", value)}
-                        />
-                        <TextAreaField
-                          label="Descripción"
-                          value={content.ceremonyDescription}
-                          onChange={(value) =>
-                            updateField("ceremonyDescription", value)
-                          }
-                        />
-                        <div className="grid gap-3 sm:grid-cols-2">
-                           <InputField
-                            label="Tarjeta 1: Etiqueta"
-                            value={content.ceremonyCardOneLabel}
-                            onChange={(value) => updateField("ceremonyCardOneLabel", value)}
-                          />
-                          <InputField
-                            label="Tarjeta 1: Título"
-                            value={content.ceremonyCardOneTitle}
-                            onChange={(value) => updateField("ceremonyCardOneTitle", value)}
-                          />
-                        </div>
-                        <TextAreaField
-                          label="Tarjeta 1: Descripción"
-                          value={content.ceremonyCardOneDescription}
-                          onChange={(value) => updateField("ceremonyCardOneDescription", value)}
-                        />
-                         <div className="grid gap-3 sm:grid-cols-2">
-                           <InputField
-                            label="Tarjeta 2: Etiqueta"
-                            value={content.ceremonyCardTwoLabel}
-                            onChange={(value) => updateField("ceremonyCardTwoLabel", value)}
-                          />
-                          <InputField
-                            label="Tarjeta 2: Título"
-                            value={content.ceremonyCardTwoTitle}
-                            onChange={(value) => updateField("ceremonyCardTwoTitle", value)}
-                          />
-                        </div>
-                        <TextAreaField
-                          label="Tarjeta 2: Descripción"
-                          value={content.ceremonyCardTwoDescription}
-                          onChange={(value) => updateField("ceremonyCardTwoDescription", value)}
                         />
                       </div>
                     )}
@@ -1085,44 +944,9 @@ export function SectionsManager() {
                           }
                         />
                         <InputField
-                          label="Mesa de regalos: título"
-                          value={content.giftsRegistryTitle}
-                          onChange={(value) =>
-                            updateField("giftsRegistryTitle", value)
-                          }
-                        />
-                        <TextAreaField
-                          label="Mesa de regalos: descripción"
-                          value={content.giftsRegistryDescription}
-                          onChange={(value) =>
-                            updateField("giftsRegistryDescription", value)
-                          }
-                        />
-                        <InputField
-                          label="Mesa de regalos: botón"
-                          value={content.giftsRegistryCtaLabel}
-                          onChange={(value) =>
-                            updateField("giftsRegistryCtaLabel", value)
-                          }
-                        />
-                        <InputField
-                          label="Mesa de regalos: link"
+                          label="Regalo: link"
                           value={content.giftLink}
                           onChange={(value) => updateField("giftLink", value)}
-                        />
-                        <InputField
-                          label="CTA contacto WhatsApp"
-                          value={content.giftsContactWhatsappLabel}
-                          onChange={(value) =>
-                            updateField("giftsContactWhatsappLabel", value)
-                          }
-                        />
-                        <InputField
-                          label="CTA contacto teléfono"
-                          value={content.giftsContactPhoneLabel}
-                          onChange={(value) =>
-                            updateField("giftsContactPhoneLabel", value)
-                          }
                         />
                         <InputField
                           label="Regalo privado: título"
@@ -1139,64 +963,7 @@ export function SectionsManager() {
                       </div>
                     )}
 
-                    {section.id === "faq" && (
-                      <div className="grid gap-6">
-                        <InputField
-                          label="Eyebrow"
-                          value={content.faqEyebrow}
-                          onChange={(value) => updateField("faqEyebrow", value)}
-                        />
-                        <InputField
-                          label="Título"
-                          value={content.faqTitle}
-                          onChange={(value) => updateField("faqTitle", value)}
-                        />
-                        <TextAreaField
-                          label="Descripción"
-                          value={content.faqDescription}
-                          onChange={(value) =>
-                            updateField("faqDescription", value)
-                          }
-                        />
-                        <div className="grid gap-4">
-                          {content.faqItems.map((item, index) => (
-                            <div
-                              key={`${item.question}-${index}`}
-                              className="grid gap-3 rounded-2xl border border-border/70 bg-surface/70 p-4"
-                            >
-                              <InputField
-                                label="Pregunta"
-                                value={item.question}
-                                onChange={(value) =>
-                                  updateFaqItem(index, "question", value)
-                                }
-                              />
-                              <TextAreaField
-                                label="Respuesta"
-                                value={item.answer}
-                                onChange={(value) =>
-                                  updateFaqItem(index, "answer", value)
-                                }
-                              />
-                              <button
-                                type="button"
-                                onClick={() => removeFaqItem(index)}
-                                className="w-fit rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-                              >
-                                Eliminar
-                              </button>
-                            </div>
-                          ))}
-                          <button
-                            type="button"
-                            onClick={addFaqItem}
-                            className="w-fit rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-                          >
-                            Añadir pregunta
-                          </button>
-                        </div>
-                      </div>
-                    )}
+
 
                     {section.id === "asistencia" && (
                       <div className="grid gap-6">

@@ -10,31 +10,36 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import type { BudgetItem } from "./useBudget";
+import { type Vendor } from "./useVendors";
 import { formatCurrency } from "./utils/formatCurrency";
 
 type BudgetChartProps = {
-  items: BudgetItem[];
+  items: Vendor[];
 };
 
 export function BudgetChart({ items }: BudgetChartProps) {
   // Aggregate data by category
   const data = items.reduce((acc, item) => {
-    const category = item.category || "Otros";
+    const category = item.category || "otros";
     const existing = acc.find((d) => d.name === category);
     
+    // For vendors, we treat costEstimate as the "real" cost if it exists, 
+    // and paidAmount as the progress.
+    const estimado = item.costEstimate || 0;
+    const pagado = item.paidAmount || 0;
+
     if (existing) {
-      existing.estimado += item.estimate || 0;
-      existing.real += item.actual || 0;
+      existing.estimado += estimado;
+      existing.pagado += pagado;
     } else {
       acc.push({
-        name: category,
-        estimado: item.estimate || 0,
-        real: item.actual || 0,
+        name: category.charAt(0).toUpperCase() + category.slice(1),
+        estimado,
+        pagado,
       });
     }
     return acc;
-  }, [] as Array<{ name: string; estimado: number; real: number }>);
+  }, [] as Array<{ name: string; estimado: number; pagado: number }>);
 
   // Sort by highest estimated cost
   data.sort((a, b) => b.estimado - a.estimado);
@@ -76,14 +81,14 @@ export function BudgetChart({ items }: BudgetChartProps) {
           />
           <Bar 
             dataKey="estimado" 
-            name="Estimado" 
+            name="Presupuesto" 
             fill="#94a3b8" 
             radius={[4, 4, 0, 0]} 
             maxBarSize={50}
           />
           <Bar 
-            dataKey="real" 
-            name="Real (Comprometido)" 
+            dataKey="pagado" 
+            name="Pagado" 
             fill="#d4a373" 
             radius={[4, 4, 0, 0]} 
             maxBarSize={50}

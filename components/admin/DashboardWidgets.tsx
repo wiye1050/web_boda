@@ -90,10 +90,10 @@ function QuickActionsWidget() {
            <ArrowRight size={12} className="opacity-50" />
          </Link>
          <Link 
-          href="/admin/mesas" 
+          href="/admin/organizacion" 
           className="flex items-center justify-between rounded-lg bg-accent/40 px-3 py-2 text-xs font-medium transition hover:bg-accent hover:text-primary"
          >
-           <span>Mesas</span>
+           <span>Organización</span>
            <ArrowRight size={12} className="opacity-50" />
          </Link>
           <Link 
@@ -126,7 +126,7 @@ function PendingTasksWidget() {
           Tareas
         </h3>
         <Link 
-          href="/admin/tareas" 
+          href="/admin/organizacion" 
           className="text-[9px] font-semibold uppercase tracking-wider text-primary hover:underline"
         >
           Ver todas
@@ -160,11 +160,11 @@ function PendingTasksWidget() {
             </div>
           ))}
           <Link 
-            href="/admin/tareas"
+            href="/admin/organizacion"
             className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-md border border-dashed border-border py-1.5 text-[10px] text-muted-foreground transition hover:border-primary hover:text-primary"
           >
             <Plus size={10} />
-            Añadir
+            Gestión
           </Link>
         </div>
       )}

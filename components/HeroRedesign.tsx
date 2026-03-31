@@ -6,6 +6,45 @@ import { getGoogleCalendarUrl } from "@/lib/calendar";
 import { ChevronDown } from "lucide-react";
 import { useState, useEffect } from "react";
 
+const chars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+
+const ScrambleText = ({ text, delay = 0, duration = 2, className = "" }: { text: string, delay?: number, duration?: number, className?: string }) => {
+  const [displayText, setDisplayText] = useState("");
+  
+  useEffect(() => {
+    let frame: number;
+    const startTime = Date.now() + (delay * 1000);
+    
+    const animate = () => {
+      const now = Date.now();
+      if (now < startTime) {
+        frame = requestAnimationFrame(animate);
+        return;
+      }
+      
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / (duration * 1000), 1);
+      
+      const scrambled = text.split("").map((char, i) => {
+        if (char === " " || char === "·") return char;
+        if (progress >= (i / text.length)) return char;
+        return chars[Math.floor(Math.random() * chars.length)];
+      }).join("");
+      
+      setDisplayText(scrambled);
+      
+      if (progress < 1) {
+        frame = requestAnimationFrame(animate);
+      }
+    };
+    
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [text, delay, duration]);
+
+  return <span className={className}>{displayText}</span>;
+};
+
 type HeroRedesignProps = {
   config: {
     heroTitle: string;
@@ -23,11 +62,11 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
     setIsLoaded(true);
   }, []);
 
-  // Animación del pincel: Varias pinceladas que se revelan en secuencia
+  // Animación del pincel: Varias pinceladas que se revelan en secuencia MUCHO más lenta
   const brushStrokes = [
-    { id: 1, mask: "/images/masks/brush_stroke_1.png", delay: 0.2, duration: 2, scale: 1.2, rotate: 0, position: "center" },
-    { id: 2, mask: "/images/masks/brush_stroke_2.png", delay: 1.2, duration: 2.2, scale: 1.5, rotate: 180, position: "center" },
-    { id: 3, mask: "/images/masks/brush.png", delay: 2.2, duration: 2.5, scale: 2.5, rotate: 45, position: "center" },
+    { id: 1, mask: "/images/masks/brush_stroke_1.png", delay: 1, duration: 6, scale: 1.2, rotate: 0, position: "center" },
+    { id: 2, mask: "/images/masks/brush_stroke_2.png", delay: 2.5, duration: 7, scale: 1.5, rotate: 180, position: "center" },
+    { id: 3, mask: "/images/masks/brush.png", delay: 4, duration: 8.5, scale: 2.5, rotate: 45, position: "center" },
   ];
 
   return (
@@ -46,7 +85,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
               visible: { 
                 opacity: 1, 
                 y: 0,
-                transition: { delay: 3.5, duration: 1.2, ease: [0.22, 1, 0.36, 1] }
+                transition: { delay: 1, duration: 2, ease: [0.22, 1, 0.36, 1] }
               }
             }}
             className="group relative font-script text-6xl md:text-8xl lg:text-9xl text-foreground font-normal leading-tight px-4"
@@ -58,7 +97,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
               animate={isLoaded ? { 
                 x: "100%", 
                 opacity: [0, 0.4, 0],
-                transition: { delay: 5, duration: 2, repeat: Infinity, repeatDelay: 4 } 
+                transition: { delay: 3, duration: 2, repeat: Infinity, repeatDelay: 4 } 
               } : {}}
               className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-r from-transparent via-accent/30 to-transparent skew-x-[-20deg]"
             />
@@ -70,25 +109,31 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
               visible: { 
                 scaleX: 1, 
                 opacity: 1,
-                transition: { delay: 4.2, duration: 1, ease: "easeOut" }
+                transition: { delay: 2.2, duration: 1.5, ease: "easeOut" }
               }
             }}
             className="h-px w-16 md:w-24 bg-accent/20 my-1 md:my-2 origin-center" 
           />
 
-          <motion.h2 
-            variants={{
-              hidden: { opacity: 0, letterSpacing: "1em" },
-              visible: { 
-                opacity: 1, 
-                letterSpacing: "0.3em",
-                transition: { delay: 4.5, duration: 1.5, ease: "easeOut" }
-              }
-            }}
-            className="font-serif text-lg md:text-xl lg:text-2xl text-muted/80 font-light"
-          >
-            12 de Septiembre · 2026
-          </motion.h2>
+          {/* Date Container: Isolated to prevent layout shifts */}
+          <div className="relative min-h-[1.5rem] md:min-h-[2.5rem] flex items-center justify-center overflow-visible">
+            <motion.div
+              variants={{
+                hidden: { opacity: 0 },
+                visible: { 
+                  opacity: 1, 
+                  transition: { delay: 3.5, duration: 1 }
+                }
+              }}
+            >
+              <ScrambleText 
+                text="12 de Septiembre · 2026" 
+                delay={3.8} 
+                duration={2.5}
+                className="font-serif text-lg md:text-xl lg:text-2xl text-muted/80 font-light tracking-[0.3em]"
+              />
+            </motion.div>
+          </div>
         </div>
 
         {/* Central Illustration with Multi-Brush Reveal */}
@@ -105,9 +150,6 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
                   transition: { delay: stroke.delay }
                 } : {}}
                 className="absolute inset-0"
-                style={{
-                  // El contenedor externo solo maneja la opacidad y la posición absoluta
-                }}
               >
                 <motion.div
                   animate={isLoaded ? { 
@@ -141,7 +183,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
             <motion.div
               animate={isLoaded ? {
                 scale: [1, 1.05, 1],
-                transition: { duration: 25, repeat: Infinity, ease: "linear" }
+                transition: { duration: 35, repeat: Infinity, ease: "linear" }
               } : {}}
               className="absolute inset-0 -z-10 bg-background/5"
             />

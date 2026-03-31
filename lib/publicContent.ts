@@ -19,11 +19,6 @@ export type PracticalItem = {
   description: string;
 };
 
-export type FaqItem = {
-  question: string;
-  answer: string;
-};
-
 export type RsvpFormCopy = {
   fullNameLabel: string;
   fullNamePlaceholder: string;
@@ -125,21 +120,7 @@ export type PublicContent = {
   prebodaEyebrow: string;
   prebodaTitle: string;
   prebodaDescription: string;
-  prebodaCardOneLabel: string;
   prebodaCardOneDescription: string;
-  prebodaCardOneCtaLabel: string;
-  prebodaCardTwoLabel: string;
-  prebodaCardTwoTitle: string;
-  prebodaCardTwoDescription: string;
-  ceremonyEyebrow: string;
-  ceremonyTitle: string;
-  ceremonyDescription: string;
-  ceremonyCardOneLabel: string;
-  ceremonyCardOneTitle: string;
-  ceremonyCardOneDescription: string;
-  ceremonyCardTwoLabel: string;
-  ceremonyCardTwoTitle: string;
-  ceremonyCardTwoDescription: string;
   practicalEyebrow: string;
   practicalTitle: string;
   practicalDescription: string;
@@ -152,11 +133,6 @@ export type PublicContent = {
   giftsEyebrow: string;
   giftsTitle: string;
   giftsDescription: string;
-  giftsRegistryTitle: string;
-  giftsRegistryDescription: string;
-  giftsRegistryCtaLabel: string;
-  giftsContactWhatsappLabel: string;
-  giftsContactPhoneLabel: string;
   giftsBankTitle: string;
   giftsBankDescription: string;
   rsvpEyebrow: string;
@@ -167,10 +143,6 @@ export type PublicContent = {
   rsvpImportantTitle: string;
   rsvpImportantNotes: string[];
   rsvpForm: RsvpFormCopy;
-  faqEyebrow: string;
-  faqTitle: string;
-  faqDescription: string;
-  faqItems: FaqItem[];
   locationEyebrow: string;
   locationTitle: string;
   locationDescription: string;
@@ -199,14 +171,11 @@ export type PublicContent = {
 
 export const DEFAULT_SECTIONS: SectionConfig[] = [
   { id: "preboda", label: "Preboda", enabled: true, nav: true, order: 1 },
-  { id: "ceremonia", label: "La boda", enabled: true, nav: true, order: 2 },
+  { id: "ubicacion", label: "La boda", enabled: true, nav: true, order: 2 },
   { id: "detalles", label: "Guía práctica", enabled: true, nav: true, order: 3 },
   { id: "alojamiento", label: "Alojamiento", enabled: true, nav: true, order: 4 },
   { id: "regalos", label: "Regalos", enabled: true, nav: true, order: 5 },
-  { id: "media", label: "Media", enabled: true, nav: true, order: 6 },
-  { id: "faq", label: "FAQ", enabled: true, nav: true, order: 7 },
-  { id: "asistencia", label: "Confirmar asistencia", enabled: true, nav: true, order: 8 },
-  { id: "ubicacion", label: "Ubicación", enabled: true, nav: true, order: 9 },
+  { id: "asistencia", label: "Confirmar asistencia", enabled: true, nav: true, order: 6 },
 ];
 
 export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
@@ -241,34 +210,19 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   prebodaPlace: "Casino Rooftop Ponferrada",
   prebodaTime: "11 de septiembre · 19:30",
   prebodaMapUrl: "",
-  contactEmail: "hola@tudominio.com",
-  contactEmail2: "",
-  contactPhone: "+34 000 000 000",
-  contactPhone2: "",
-  whatsappLink: "https://wa.me/34000000000",
+  contactEmail: "guillemenendez1050@gmail.com",
+  contactEmail2: "varelamaciasalba@gmail.com",
+  contactPhone: "+34 696 408 689",
+  contactPhone2: "+34 695 438 798",
+  whatsappLink: "https://wa.me/34696408689",
   giftLink: "",
   prebodaEyebrow: "Preboda",
   prebodaTitle: "Nos vemos el día antes",
   prebodaDescription:
     "Quedamos para brindar juntos la víspera. Un rato tranquilo para vernos con calma.",
-  prebodaCardOneLabel: "Fecha",
   prebodaCardOneDescription:
     "Un brindis para calentar motores.",
-  prebodaCardOneCtaLabel: "Cómo llegar",
-  prebodaCardTwoLabel: "Lugar",
-  prebodaCardTwoTitle: "",
-  prebodaCardTwoDescription: "",
-  ceremonyEyebrow: "La boda",
-  ceremonyTitle: "",
-  ceremonyDescription: "",
-  ceremonyCardOneLabel: "Cómo llegar",
-  ceremonyCardOneTitle: "Accesos y parking",
-  ceremonyCardOneDescription:
-    "La finca está a 10 minutos del centro. Hay parking dentro del recinto.",
-  ceremonyCardTwoLabel: "Solo adultos",
-  ceremonyCardTwoTitle: "Celebración para adultos",
-  ceremonyCardTwoDescription:
-    "Queremos un día tranquilo, por eso será una celebración solo para adultos.",
+
   practicalEyebrow: "",
   practicalTitle: "Detalles",
   practicalDescription:
@@ -310,45 +264,11 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   stayDescription:
     "Te dejamos algunas opciones cercanas para dormir cómodamente.",
   stayLinkLabel: "Ver mapa",
-  stayOptions: [
-    {
-      id: "ac-ponferrada",
-      name: "Hotel AC Ponferrada",
-      type: "Hotel",
-      description: "Moderno y céntrico, ideal si quieres explorar la ciudad a pie.",
-      distance: "10 minutos en coche",
-      link: "https://www.google.com/maps/search/?api=1&query=42.5512,-6.5985",
-      hasBlock: false,
-    },
-    {
-      id: "rock-suites",
-      name: "The Rock Suites & Spa",
-      type: "Hotel",
-      description: "Habitaciones amplias, spa y desayuno hasta tarde para recuperarse de la fiesta.",
-      distance: "12 minutos en coche",
-      link: "https://www.google.com/maps/search/?api=1&query=42.5451,-6.5932",
-      hasBlock: false,
-    },
-    {
-      id: "casa-lago",
-      name: "Casa Rural Lago de Carucedo",
-      type: "Casa Rural",
-      description: "Opción tranquila en plena naturaleza, perfecta para grupos.",
-      distance: "18 minutos en coche",
-      link: "https://www.google.com/maps/search/?api=1&query=42.4855,-6.7725",
-      hasBlock: false,
-    },
-  ],
+  stayOptions: [],
   giftsEyebrow: "Regalos",
   giftsTitle: "Tu presencia es el mejor regalo",
   giftsDescription:
     "Si quieres tener un detalle, aquí tienes algunas opciones.",
-  giftsRegistryTitle: "Mesa de regalos",
-  giftsRegistryDescription:
-    "Una lista con algunas ideas para el nuevo hogar.",
-  giftsRegistryCtaLabel: "Ver lista",
-  giftsContactWhatsappLabel: "Escribir por WhatsApp",
-  giftsContactPhoneLabel: "Llamar por teléfono",
   giftsBankTitle: "Regalo privado",
   giftsBankDescription:
     "Si prefieres un detalle directo, escríbenos y te contamos.",
@@ -403,27 +323,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     successMessage:
       "¡Gracias! Recibimos tu confirmación. Te escribiremos pronto con más detalles.",
   },
-  faqEyebrow: "FAQ",
-  faqTitle: "Preguntas frecuentes",
-  faqDescription:
-    "Resolvemos las dudas más comunes.",
-  faqItems: [
-    {
-      question: "¿Hay dress code?",
-      answer:
-        "Elegante y cómodo. Evita blanco o marfil.",
-    },
-    {
-      question: "¿Puedo ir con niños?",
-      answer:
-        "Será solo para adultos. Si necesitas ayuda, escríbenos.",
-    },
-    {
-      question: "¿Hasta cuándo puedo confirmar?",
-      answer:
-        "Antes del 15 de agosto.",
-    },
-  ],
+
   locationEyebrow: "Cómo llegar",
   locationTitle: "Ubicación y contacto",
   locationDescription:
@@ -572,28 +472,7 @@ export function parsePracticalItems(raw: unknown): PracticalItem[] {
   return combined.length > 0 ? combined : defaults;
 }
 
-export function parseFaqItems(raw: unknown): FaqItem[] {
-  const parsed = Array.isArray(raw) ? raw : safeJsonParse(raw);
-  if (!Array.isArray(parsed)) {
-    return DEFAULT_PUBLIC_CONTENT.faqItems;
-  }
-  if (parsed.length === 0) {
-    return [];
-  }
 
-  const cleaned = parsed
-    .map((item) => (item && typeof item === "object" ? item : {}))
-    .map((item) => {
-      const record = item as Record<string, unknown>;
-      return {
-        question: normalizeString(record.question, ""),
-        answer: normalizeString(record.answer, ""),
-      };
-    })
-    .filter((item) => item.question || item.answer);
-
-  return cleaned.length > 0 ? cleaned : DEFAULT_PUBLIC_CONTENT.faqItems;
-}
 
 export function parseSections(raw: unknown): SectionConfig[] {
   const parsed = Array.isArray(raw) ? raw : safeJsonParse(raw);
@@ -811,66 +690,11 @@ export function normalizePublicContent(
       data.prebodaDescription,
       DEFAULT_PUBLIC_CONTENT.prebodaDescription,
     ),
-    prebodaCardOneLabel: normalizeString(
-      data.prebodaCardOneLabel,
-      DEFAULT_PUBLIC_CONTENT.prebodaCardOneLabel,
-    ),
     prebodaCardOneDescription: normalizeString(
       data.prebodaCardOneDescription,
       DEFAULT_PUBLIC_CONTENT.prebodaCardOneDescription,
     ),
-    prebodaCardOneCtaLabel: normalizeString(
-      data.prebodaCardOneCtaLabel,
-      DEFAULT_PUBLIC_CONTENT.prebodaCardOneCtaLabel,
-    ),
-    prebodaCardTwoLabel: normalizeString(
-      data.prebodaCardTwoLabel,
-      DEFAULT_PUBLIC_CONTENT.prebodaCardTwoLabel,
-    ),
-    prebodaCardTwoTitle: normalizeString(
-      data.prebodaCardTwoTitle,
-      DEFAULT_PUBLIC_CONTENT.prebodaCardTwoTitle,
-    ),
-    prebodaCardTwoDescription: normalizeString(
-      data.prebodaCardTwoDescription,
-      DEFAULT_PUBLIC_CONTENT.prebodaCardTwoDescription,
-    ),
-    ceremonyEyebrow: normalizeString(
-      data.ceremonyEyebrow,
-      DEFAULT_PUBLIC_CONTENT.ceremonyEyebrow,
-    ),
-    ceremonyTitle: normalizeString(
-      data.ceremonyTitle,
-      DEFAULT_PUBLIC_CONTENT.ceremonyTitle,
-    ),
-    ceremonyDescription: normalizeString(
-      data.ceremonyDescription,
-      DEFAULT_PUBLIC_CONTENT.ceremonyDescription,
-    ),
-    ceremonyCardOneLabel: normalizeString(
-      data.ceremonyCardOneLabel,
-      DEFAULT_PUBLIC_CONTENT.ceremonyCardOneLabel,
-    ),
-    ceremonyCardOneTitle: normalizeString(
-      data.ceremonyCardOneTitle,
-      DEFAULT_PUBLIC_CONTENT.ceremonyCardOneTitle,
-    ),
-    ceremonyCardOneDescription: normalizeString(
-      data.ceremonyCardOneDescription,
-      DEFAULT_PUBLIC_CONTENT.ceremonyCardOneDescription,
-    ),
-    ceremonyCardTwoLabel: normalizeString(
-      data.ceremonyCardTwoLabel,
-      DEFAULT_PUBLIC_CONTENT.ceremonyCardTwoLabel,
-    ),
-    ceremonyCardTwoTitle: normalizeString(
-      data.ceremonyCardTwoTitle,
-      DEFAULT_PUBLIC_CONTENT.ceremonyCardTwoTitle,
-    ),
-    ceremonyCardTwoDescription: normalizeString(
-      data.ceremonyCardTwoDescription,
-      DEFAULT_PUBLIC_CONTENT.ceremonyCardTwoDescription,
-    ),
+
     practicalEyebrow: normalizeString(
       data.practicalEyebrow,
       DEFAULT_PUBLIC_CONTENT.practicalEyebrow,
@@ -913,26 +737,7 @@ export function normalizePublicContent(
       data.giftsDescription,
       DEFAULT_PUBLIC_CONTENT.giftsDescription,
     ),
-    giftsRegistryTitle: normalizeString(
-      data.giftsRegistryTitle,
-      DEFAULT_PUBLIC_CONTENT.giftsRegistryTitle,
-    ),
-    giftsRegistryDescription: normalizeString(
-      data.giftsRegistryDescription,
-      DEFAULT_PUBLIC_CONTENT.giftsRegistryDescription,
-    ),
-    giftsRegistryCtaLabel: normalizeString(
-      data.giftsRegistryCtaLabel,
-      DEFAULT_PUBLIC_CONTENT.giftsRegistryCtaLabel,
-    ),
-    giftsContactWhatsappLabel: normalizeString(
-      data.giftsContactWhatsappLabel,
-      DEFAULT_PUBLIC_CONTENT.giftsContactWhatsappLabel,
-    ),
-    giftsContactPhoneLabel: normalizeString(
-      data.giftsContactPhoneLabel,
-      DEFAULT_PUBLIC_CONTENT.giftsContactPhoneLabel,
-    ),
+
     giftsBankTitle: normalizeString(
       data.giftsBankTitle,
       DEFAULT_PUBLIC_CONTENT.giftsBankTitle,
@@ -970,16 +775,7 @@ export function normalizePublicContent(
       data.rsvpForm,
       DEFAULT_PUBLIC_CONTENT.rsvpForm,
     ),
-    faqEyebrow: normalizeString(
-      data.faqEyebrow,
-      DEFAULT_PUBLIC_CONTENT.faqEyebrow,
-    ),
-    faqTitle: normalizeString(data.faqTitle, DEFAULT_PUBLIC_CONTENT.faqTitle),
-    faqDescription: normalizeString(
-      data.faqDescription,
-      DEFAULT_PUBLIC_CONTENT.faqDescription,
-    ),
-    faqItems: parseFaqItems(data.faqItems),
+
     locationEyebrow: normalizeString(
       data.locationEyebrow,
       DEFAULT_PUBLIC_CONTENT.locationEyebrow,
@@ -1101,7 +897,7 @@ export function serializePublicContent(content: PublicContent) {
     practicalItems: JSON.stringify(content.practicalItems),
     stayOptions: JSON.stringify(content.stayOptions),
     rsvpImportantNotes: JSON.stringify(content.rsvpImportantNotes),
-    faqItems: JSON.stringify(content.faqItems),
+
     heroBackgroundImages: JSON.stringify(content.heroBackgroundImages),
     sections: content.sections,
   };

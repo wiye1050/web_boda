@@ -8,12 +8,9 @@ import { useAuth } from "@/components/admin/AuthContext";
 
 const NAV_LINKS = [
   { href: "/admin", label: "Dashboard" },
-  { href: "/admin/plan", label: "Plan" },
-  { href: "/admin/proveedores", label: "Proveedores" },
+  { href: "/admin/organizacion", label: "Organización" },
   { href: "/admin/alojamientos", label: "Alojamientos" },
-  { href: "/admin/presupuesto", label: "Presupuesto" },
   { href: "/admin/rsvps", label: "RSVPs" },
-  { href: "/admin/mesas", label: "Mesas" },
   { href: "/admin/galeria", label: "Fotos" },
   { href: "/admin/transporte", label: "Transporte" },
   { href: "/admin/secciones", label: "Secciones" },

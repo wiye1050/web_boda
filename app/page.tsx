@@ -26,7 +26,6 @@ const MapboxMap = dynamic(() => import("@/components/MapboxMap").then(mod => mod
 const StayList = dynamic(() => import("@/components/StayList").then(mod => mod.StayList));
 const GiftList = dynamic(() => import("@/components/GiftList").then(mod => mod.GiftList));
 const PracticalList = dynamic(() => import("@/components/PracticalList").then(mod => mod.PracticalList));
-const FaqList = dynamic(() => import("@/components/FaqList").then(mod => mod.FaqList));
 
 
 export default function Home() {
@@ -62,7 +61,6 @@ export default function Home() {
   const weddingMapUrl = config.weddingMapsUrl?.trim() || config.locationMapUrl?.trim() || (config.locationName ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(config.locationName + " " + (config.locationAddress || ""))}` : "");
   
   const hasPracticalItems = config.practicalItems.length > 0;
-  const hasFaqItems = config.faqItems.length > 0;
   const weddingMapsUrl = config.weddingMapsUrl?.trim();
   const prebodaMapsUrl = config.prebodaMapsUrl?.trim();
 
@@ -79,8 +77,7 @@ export default function Home() {
     switch (sectionId) {
       case "detalles":
         return hasPracticalItems;
-      case "faq":
-        return hasFaqItems;
+
       case "alojamiento":
         return accommodations.length > 0 || config.stayOptions.length > 0;
       case "ubicacion":
