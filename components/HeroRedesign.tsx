@@ -70,7 +70,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
   ];
 
   return (
-    <header className="relative min-h-screen w-full flex flex-col items-center justify-center text-center px-4 pt-32 pb-32 bg-background overflow-hidden">
+    <header className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center text-center px-4 pt-32 pb-32 bg-background overflow-hidden">
       
       <motion.div 
         initial="hidden"

@@ -73,11 +73,11 @@ export function MobileBottomBar({
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/70 bg-surface/90 px-4 py-3 backdrop-blur sm:hidden">
-        <div className="mx-auto grid w-full max-w-6xl grid-cols-3 gap-3 pb-[env(safe-area-inset-bottom)]">
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/70 bg-surface/95 px-4 pt-3 pb-[calc(1rem+env(safe-area-inset-bottom))] backdrop-blur-md sm:hidden">
+        <div className="mx-auto grid w-full max-w-6xl grid-cols-3 gap-3">
           <a
             href={confirmHref}
-            className="flex min-h-[44px] flex-1 items-center justify-center rounded-full bg-accent px-4 text-xs font-semibold uppercase tracking-[0.3em] text-primary-foreground shadow-lg shadow-accent/30"
+            className="flex min-h-[48px] items-center justify-center rounded-full bg-accent px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-lg shadow-accent/20 active:scale-95 transition-transform"
           >
             {confirmLabel}
           </a>
@@ -89,14 +89,14 @@ export function MobileBottomBar({
               window.dispatchEvent(new CustomEvent("wb-pause-music"));
               setIsOpen(true);
             }}
-            className="flex min-h-[44px] flex-1 items-center justify-center rounded-full border border-border/80 bg-surface px-4 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-accent/60 hover:text-accent disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-[48px] items-center justify-center rounded-full border border-border/50 bg-white/50 px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition active:scale-95 disabled:opacity-50"
           >
             {mapsLabel}
           </button>
           <button
             type="button"
             onClick={handleShare}
-            className="flex min-h-[44px] flex-1 items-center justify-center rounded-full border border-border/80 bg-surface px-4 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-accent/60 hover:text-accent"
+            className="flex min-h-[48px] items-center justify-center rounded-full border border-border/50 bg-white/50 px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition active:scale-95"
           >
             Compartir
           </button>

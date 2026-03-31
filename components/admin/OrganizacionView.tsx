@@ -171,11 +171,11 @@ export function OrganizacionView() {
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">Presupuesto Estimado</p>
                 <p className="mt-2 text-2xl font-semibold">{formatCurrency(totals.costEstimate)}</p>
               </div>
-              <div className="rounded-[32px] border border-border/50 bg-surface p-6 shadow-sm border-emerald-500/10">
+              <div className="rounded-[32px] border border-emerald-500/10 bg-surface p-6 shadow-sm">
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">Total Pagado</p>
                 <p className="mt-2 text-2xl font-semibold text-emerald-500">{formatCurrency(totals.paidAmount)}</p>
               </div>
-              <div className="rounded-[32px] border border-border/50 bg-surface p-6 shadow-sm border-primary/10">
+              <div className="rounded-[32px] border border-primary/10 bg-surface p-6 shadow-sm">
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">Pendiente</p>
                 <p className="mt-2 text-2xl font-semibold text-primary">{formatCurrency(totals.costEstimate - totals.paidAmount)}</p>
               </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { X, Send, MessageCircleHeart, Loader, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -224,9 +225,12 @@ export function WeddingChat() {
           <span className="absolute inset-0 rounded-full bg-accent/20 animate-pulse opacity-40 scale-110" />
           
           <div className="absolute inset-0 rounded-full overflow-hidden flex items-center justify-center border-2 border-accent/10 bg-white/50 backdrop-blur-sm group-hover:border-accent/30 transition-colors">
-             <img 
+             <Image 
                src="/images/ai-logo.png" 
                alt="AI Assistant" 
+               width={92}
+               height={92}
+               priority
                className="h-[145%] w-[145%] max-w-none object-cover mix-blend-multiply brightness-[1.1] contrast-[1.1] grayscale-[0.05] group-hover:scale-110 transition-transform duration-500"
              />
           </div>

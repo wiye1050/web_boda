@@ -49,9 +49,7 @@
   --font-serif: var(--font-cormorant);
   --font-script: var(--font-pinyon-script);
   --font-calligraphy: var(--font-pinyon-script);
-  --font-display: var(--font-cormorant);
-
-  --spacing-section: clamp(2.5rem, 5vw, 5rem);
+  --spacing-section: clamp(3rem, 10dvh, 6rem);
 
   /* Soft UI Tokens */
   --radius-card: 32px;

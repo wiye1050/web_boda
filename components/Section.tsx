@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 import { FadeIn } from "./FadeIn";
 
 type SectionBackground = "default" | "surface" | "accent";
@@ -11,6 +12,7 @@ type SectionProps = {
   description?: string;
   background?: SectionBackground;
   align?: SectionAlign;
+  className?: string;
   children: ReactNode;
 };
 
@@ -34,6 +36,7 @@ export function Section({
   description,
   background = "default",
   align = "center",
+  className,
   children,
 }: SectionProps) {
   const headingId = title && id ? `${id}-heading` : undefined;
@@ -44,14 +47,14 @@ export function Section({
       id={id}
       aria-labelledby={headingId}
       aria-describedby={descriptionId}
-      className={[
-        "relative w-full py-[calc(var(--spacing-section)*0.75)] sm:py-[var(--spacing-section)]",
+      className={cn(
+        "relative w-full py-[var(--spacing-section)] overflow-hidden",
+        "flex flex-col items-center justify-center",
         backgroundClassMap[background],
-      ]
-        .filter(Boolean)
-        .join(" ")}
+        className
+      )}
     >
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 sm:gap-8 sm:px-8">
+      <div className="container relative z-10 flex w-full max-w-6xl flex-col gap-6 px-4 sm:gap-8 sm:px-8">
         {(eyebrow || title || description) && (
           <header
             className={[
