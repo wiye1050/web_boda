@@ -56,12 +56,12 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: config.brandName,
       images: [
         {
-          url: "https://web-boda-delta.vercel.app/photos/hero/share-boda0.png",
-          secureUrl: "https://web-boda-delta.vercel.app/photos/hero/share-boda0.png",
+          url: "https://web-boda-delta.vercel.app/photos/hero/share-boda-v1.jpg",
+          secureUrl: "https://web-boda-delta.vercel.app/photos/hero/share-boda-v1.jpg",
           width: 1200,
           height: 630,
           alt: `${config.brandName} - Nuestra Boda`,
-          type: "image/png",
+          type: "image/jpeg",
         },
       ],
       locale: "es_ES",
@@ -71,7 +71,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: config.brandName,
       description: config.heroDescription,
-      images: ["https://web-boda-delta.vercel.app/photos/hero/share-boda0.png"],
+      images: ["https://web-boda-delta.vercel.app/photos/hero/share-boda-v1.jpg"],
     },
   };
 }
