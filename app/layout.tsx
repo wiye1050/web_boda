@@ -44,24 +44,24 @@ export async function generateMetadata(): Promise<Metadata> {
       default: config.brandName,
       template: `%s | ${config.brandName}`,
     },
-    description: config.heroDescription,
+    description: "¡Estáis preparados?",
     metadataBase: new URL("https://web-boda-delta.vercel.app"),
     alternates: {
       canonical: "/",
     },
     openGraph: {
       title: config.brandName,
-      description: config.heroDescription,
+      description: "¡Estáis preparados?",
       url: "https://web-boda-delta.vercel.app/",
       siteName: config.brandName,
       images: [
         {
-          url: "https://web-boda-delta.vercel.app/photos/hero/share-boda-v1.jpg",
-          secureUrl: "https://web-boda-delta.vercel.app/photos/hero/share-boda-v1.jpg",
-          width: 1200,
-          height: 630,
+          url: "https://web-boda-delta.vercel.app/logo-ag.png",
+          secureUrl: "https://web-boda-delta.vercel.app/logo-ag.png",
+          width: 1024,
+          height: 636,
           alt: `${config.brandName} - Nuestra Boda`,
-          type: "image/jpeg",
+          type: "image/png",
         },
       ],
       locale: "es_ES",
@@ -70,8 +70,8 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: config.brandName,
-      description: config.heroDescription,
-      images: ["https://web-boda-delta.vercel.app/photos/hero/share-boda-v1.jpg"],
+      description: "¡Estáis preparados?",
+      images: ["https://web-boda-delta.vercel.app/logo-ag.png"],
     },
   };
 }
