@@ -260,8 +260,7 @@ export function RSVPForm({
       const db = firebaseClient.getFirestore();
       const phoneDigits = form.phone.replace(/[^\d+]/g, "");
       const editToken = Math.random().toString(36).slice(2, 10);
-
-      await addDoc(collection(db, "rsvps"), {
+      const docRef = await addDoc(collection(db, "rsvps"), {
         fullName: form.fullName.trim(),
         email: form.email.trim(),
         phone: phoneDigits,
@@ -306,6 +305,16 @@ export function RSVPForm({
           window.navigator.vibrate([50, 30, 50]);
         }
       }
+      
+      const formPayload = {
+        fullName: form.fullName.trim(),
+        email: form.email.trim(),
+        guests: attending ? guestsNumber : 0,
+        attendance: form.attendance!,
+        transport: (form.needsTransport ?? "no") as "si" | "no",
+        rsvpId: docRef.id
+      };
+
       setForm(INITIAL_STATE);
       lastSubmittedAt.current = Date.now();
       if (typeof window !== "undefined") {
@@ -316,15 +325,9 @@ export function RSVPForm({
       }
 
       try {
-        await sendConfirmationEmail({
-          fullName: form.fullName.trim(),
-          email: form.email.trim(),
-          guests: attending ? guestsNumber : 0,
-          attendance: form.attendance!,
-          transport: form.needsTransport === "si" ? "si" : "no",
-        });
-      } catch (emailError) {
-        console.error("Error enviando email de confirmación", emailError);
+        await sendConfirmationEmail(formPayload);
+      } catch (e) {
+        console.error("Non-critical email error:", e);
       }
     } catch (error) {
       console.error("Error guardando RSVP", error);

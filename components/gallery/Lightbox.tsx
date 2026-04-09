@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 
 type LightboxProps = {
   src: string | null;
@@ -30,14 +31,16 @@ export function Lightbox({ src, alt = "Full size", onClose }: LightboxProps) {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="relative max-h-[90vh] max-w-[90vw] overflow-hidden rounded-lg shadow-2xl"
+            className="relative h-[90vh] w-[90vw] overflow-hidden rounded-lg shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={src}
               alt={alt}
-              className="max-h-[90vh] w-auto object-contain"
+              fill
+              className="object-contain"
+              sizes="90vw"
+              priority
             />
           </motion.div>
         </motion.div>

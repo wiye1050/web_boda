@@ -1,6 +1,25 @@
 "use server";
 
+import { addRsvpToCalendar } from "@/lib/googleApi";
 import nodemailer from "nodemailer";
+import { getFirestore } from "firebase-admin/firestore";
+import { initializeApp, getApps, cert } from "firebase-admin/app";
+
+// Inicialización de Firebase Admin (Singleton pattern)
+function getAdminDb() {
+  if (getApps().length === 0) {
+    // Si estamos en Vercel/Producción, usaremos las credenciales de Service Account
+    // de las variables de entorno si están disponibles, si no, intentamos conexión por defecto
+    const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY 
+      ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY) 
+      : undefined;
+
+    initializeApp({
+      credential: serviceAccount ? cert(serviceAccount) : undefined,
+    });
+  }
+  return getFirestore();
+}
 
 interface EmailData {
   fullName: string;
@@ -8,18 +27,26 @@ interface EmailData {
   guests: number;
   attendance: "si" | "no";
   transport: "si" | "no";
+  rsvpId?: string; // Permitir asociar el error a un RSVP específico
 }
 
 export async function sendConfirmationEmail(data: EmailData) {
+  const db = getAdminDb();
+  
   if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
     console.warn("Skipping email: GMAIL_USER or GMAIL_PASS not set.");
-    return;
+    await db.collection("system_logs").add({
+      type: "email_error",
+      message: "GMAIL_USER or GMAIL_PASS not set in environment variables.",
+      timestamp: new Date(),
+      rsvpId: data.rsvpId || "unknown",
+      guestName: data.fullName
+    });
+    return { success: false, error: "Missing credentials" };
   }
 
-  // Si no proporcionó email, no podemos enviar confirmación individual,
-  // pero la función no debe fallar.
   if (!data.email || !data.email.includes("@")) {
-    return;
+    return { success: false, error: "Invalid email" };
   }
 
   try {
@@ -29,12 +56,14 @@ export async function sendConfirmationEmail(data: EmailData) {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_PASS,
       },
+      tls: {
+        rejectUnauthorized: false // Ayuda con algunos problemas de red
+      }
     });
 
     const subject = "Confirmación recibida - Boda Alba & Guille";
     const transportText = data.transport === "si" ? "Sí" : "No";
     
-    // Diseño simple y limpio
     const html = `
       <div style="font-family: sans-serif; color: #1a1a1a; max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; border: 1px solid #e5e5e5; border-radius: 8px;">
         <h2 style="color: #d4a373; text-transform: uppercase; letter-spacing: 2px;">¡Gracias ${data.fullName}!</h2>
@@ -64,9 +93,37 @@ export async function sendConfirmationEmail(data: EmailData) {
       html,
     });
 
-    console.log(`Confirmation email sent to ${data.email}`);
-  } catch (error) {
+    // 4. Intentar sincronización con Google Calendar (Opcional, no bloquea el email)
+    if (rsvpData.attendance === "si") {
+      try {
+        await addRsvpToCalendar({
+          fullName: rsvpData.fullName,
+          email: rsvpData.email,
+          guests: rsvpData.guests
+        });
+        console.log("Sincronización con Google Calendar exitosa");
+      } catch (calendarError: any) {
+        console.warn("Sincronización con Google Calendar omitida o fallida:", calendarError.message);
+        // No logueamos esto como error fatal porque depende de que el usuario configure las credenciales
+      }
+    }
+
+    return { success: true };
+  } catch (error: any) {
     console.error("Error sending confirmation email:", error);
-    // No lanzamos error para no romper el flujo del cliente
+    
+    // Registrar el error en Firestore para que el administrador pueda verlo en el panel
+    await db.collection("system_logs").add({
+      type: "email_failure",
+      message: error.message || "Unknown error",
+      details: error.stack || "",
+      timestamp: new Date(),
+      recipient: data.email,
+      guestName: data.fullName,
+      rsvpId: data.rsvpId || "unknown"
+    });
+
+    return { success: false, error: "SMTP Error" };
   }
 }
+

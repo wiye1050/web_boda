@@ -57,7 +57,10 @@ export function TopBar({
         isScrolled ? "top-2" : "top-6"
       )}>
         <div className="mx-auto max-w-6xl px-4 sm:px-6 pointer-events-auto">
-          <div className="bg-white/95 backdrop-blur-md rounded-full px-4 sm:px-8 py-3 shadow-sm border border-gray-100 flex justify-between items-center transition-all">
+          <div className={cn(
+            "backdrop-blur-xl rounded-full px-4 sm:px-8 py-3 shadow-lg shadow-black/5 border border-white/20 flex justify-between items-center transition-all duration-500",
+            isScrolled ? "bg-white/80 py-2.5 shadow-xl shadow-black/10" : "bg-white/40 shadow-sm"
+          )}>
             
             {/* LEFT: Nav Links (Desktop) */}
             <div className="hidden md:flex flex-1 justify-start space-x-6 lg:space-x-8">
@@ -65,9 +68,10 @@ export function TopBar({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="font-serif text-[10px] lg:text-[11px] tracking-[0.15em] text-foreground hover:text-primary transition-colors uppercase font-medium"
+                  className="group relative font-serif text-[10px] lg:text-[11px] tracking-[0.2em] text-foreground/80 hover:text-primary transition-colors uppercase font-bold"
                 >
                   {item.label}
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-primary transition-all duration-300 group-hover:w-full" />
                 </Link>
               ))}
             </div>
@@ -97,9 +101,10 @@ export function TopBar({
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="font-serif text-[10px] lg:text-[11px] tracking-[0.15em] text-foreground hover:text-primary transition-colors uppercase font-medium"
+                    className="group relative font-serif text-[10px] lg:text-[11px] tracking-[0.2em] text-foreground/80 hover:text-primary transition-colors uppercase font-bold"
                   >
                     {item.label}
+                    <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-primary transition-all duration-300 group-hover:w-full" />
                   </Link>
                 ))}
               </div>

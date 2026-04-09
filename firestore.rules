@@ -619,6 +619,12 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    match /system_logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if false; // Only from admin SDK (Server Actions)
+      allow update, delete: if isAdmin();
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

@@ -2,8 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useWeddingTasks } from "./useWeddingTasks";
-import {  Calendar, Check, Clock, Plus, ArrowRight } from "lucide-react";
+import { useSystemLogs } from "./useSystemLogs";
+import { syncPendingTasksAction } from "@/app/actions/syncTasks";
+import {  Calendar, Check, Clock, Plus, ArrowRight, AlertTriangle, MailWarning, RefreshCw } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export function DashboardWidgets() {
   return (
@@ -12,6 +15,7 @@ export function DashboardWidgets() {
       <div className="flex flex-col gap-4 lg:col-span-1">
         <CountdownWidget targetDate="2026-09-12T13:30:00" />
         <QuickActionsWidget />
+        <SystemLogsWidget />
       </div>
 
       {/* Columna Derecha: Tareas pendientes */}
@@ -21,6 +25,36 @@ export function DashboardWidgets() {
     </div>
   );
 }
+
+// ... existing CountdownWidget, QuickActionsWidget, PendingTasksWidget ...
+
+function SystemLogsWidget() {
+  const { logs, isLoading } = useSystemLogs(3);
+
+  if (isLoading) return <div className="h-24 rounded-[16px] bg-accent/10 animate-pulse" />;
+  if (logs.length === 0) return null;
+
+  return (
+    <div className="rounded-[16px] border border-red-200/50 bg-red-50/30 p-4 shadow-sm">
+      <div className="mb-2 flex items-center gap-2">
+        <AlertTriangle size={14} className="text-red-500" />
+        <h3 className="text-[10px] font-bold uppercase tracking-wider text-red-900/70">Estado del Sistema</h3>
+      </div>
+      <div className="flex flex-col gap-2">
+        {logs.map((log) => (
+          <div key={log.id} className="flex flex-col gap-0.5 border-l-2 border-red-300 pl-2">
+            <span className="text-[10px] font-semibold text-red-900 line-clamp-1">{log.message}</span>
+            <span className="text-[9px] text-red-700/70 flex items-center gap-1">
+              <MailWarning size={10} />
+              {log.guestName || "Sistema"} · {log.timestamp?.toDate().toLocaleDateString()}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 
 function CountdownWidget({ targetDate }: { targetDate: string }) {
   const [timeLeft, setTimeLeft] = useState<{
