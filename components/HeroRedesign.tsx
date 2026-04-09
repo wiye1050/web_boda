@@ -70,7 +70,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
   ];
 
   return (
-    <header className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center text-center px-4 pt-32 pb-32 bg-background overflow-hidden">
+    <header className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center text-center px-4 pt-20 pb-20 md:pt-32 md:pb-32 bg-background overflow-hidden">
       
       <motion.div 
         initial="hidden"
@@ -138,7 +138,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
 
         {/* Central Illustration with Multi-Brush Reveal */}
         <div className="relative w-full flex justify-center mt-2 mb-2 md:mt-4 md:mb-6">
-          <div className="relative w-full max-w-[420px] md:max-w-[550px] h-[65vh] min-h-[580px] md:min-h-[750px] mix-blend-multiply">
+          <div className="relative w-full max-w-[320px] md:max-w-[550px] h-[50vh] md:h-[65vh] min-h-[400px] md:min-h-[750px] mix-blend-multiply">
             
             {/* Capas de Pinceladas Coincidentes */}
             {brushStrokes.map((stroke) => (
@@ -215,7 +215,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
             })}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block relative overflow-hidden bg-accent text-white px-8 py-3 rounded-full text-[10px] md:text-xs tracking-[0.25em] hover:bg-accent/90 transition-all duration-300 uppercase font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5"
+            className="inline-block relative overflow-hidden bg-accent text-white px-10 py-4 rounded-full text-[11px] md:text-xs tracking-[0.25em] hover:bg-accent/90 transition-all duration-300 uppercase font-bold shadow-md hover:shadow-xl hover:-translate-y-1 active:scale-95"
           >
             Añadir al Calendario
           </a>

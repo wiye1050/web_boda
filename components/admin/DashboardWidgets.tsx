@@ -113,26 +113,26 @@ function CountdownWidget({ targetDate }: { targetDate: string }) {
 
 function QuickActionsWidget() {
   return (
-    <div className="rounded-[16px] border border-border/60 bg-surface p-4 shadow-sm">
+    <div className="rounded-[16px] border border-border/60 bg-surface/60 backdrop-blur-md p-4 shadow-[var(--shadow-soft)]">
        <h3 className="mb-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">Acciones</h3>
        <div className="flex flex-col gap-1.5">
          <Link 
           href="/admin/rsvps" 
-          className="flex items-center justify-between rounded-lg bg-accent/40 px-3 py-2 text-xs font-medium transition hover:bg-accent hover:text-primary"
+          className="flex items-center justify-between rounded-lg bg-background/50 border border-border/20 px-3 py-2 text-xs font-medium transition hover:bg-accent hover:text-primary hover:border-primary/20"
          >
            <span>Invitados</span>
            <ArrowRight size={12} className="opacity-50" />
          </Link>
          <Link 
           href="/admin/organizacion" 
-          className="flex items-center justify-between rounded-lg bg-accent/40 px-3 py-2 text-xs font-medium transition hover:bg-accent hover:text-primary"
+          className="flex items-center justify-between rounded-lg bg-background/50 border border-border/20 px-3 py-2 text-xs font-medium transition hover:bg-accent hover:text-primary hover:border-primary/20"
          >
            <span>Organización</span>
            <ArrowRight size={12} className="opacity-50" />
          </Link>
           <Link 
           href="/admin/galeria" 
-          className="flex items-center justify-between rounded-lg bg-accent/40 px-3 py-2 text-xs font-medium transition hover:bg-accent hover:text-primary"
+          className="flex items-center justify-between rounded-lg bg-background/50 border border-border/20 px-3 py-2 text-xs font-medium transition hover:bg-accent hover:text-primary hover:border-primary/20"
          >
            <span>Fotos</span>
            <ArrowRight size={12} className="opacity-50" />
@@ -154,11 +154,14 @@ function PendingTasksWidget() {
   if (isLoading) return <div className="h-32 rounded-[16px] bg-accent/20 animate-pulse" />;
 
   return (
-    <div className="flex h-full flex-col rounded-[16px] border border-border/60 bg-surface p-4 shadow-sm">
+    <div className="flex h-full flex-col rounded-[16px] border border-border/60 bg-surface/60 backdrop-blur-md p-4 shadow-[var(--shadow-soft)]">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
-          Tareas
-        </h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
+            Tareas
+          </h3>
+          <SyncTasksButton />
+        </div>
         <Link 
           href="/admin/organizacion" 
           className="text-[9px] font-semibold uppercase tracking-wider text-primary hover:underline"
@@ -203,5 +206,36 @@ function PendingTasksWidget() {
         </div>
       )}
     </div>
+  );
+}
+
+function SyncTasksButton() {
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const handleSync = async () => {
+    setIsSyncing(true);
+    try {
+      const result = await syncPendingTasksAction();
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error("Error al sincronizar: " + result.error);
+      }
+    } catch (e) {
+      toast.error("Error inesperado en la sincronización.");
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleSync}
+      disabled={isSyncing}
+      title="Sincronizar tareas pendientes con Google Tasks"
+      className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/50 text-accent-foreground transition hover:bg-accent hover:text-primary active:scale-95 disabled:opacity-50"
+    >
+      <RefreshCw size={10} className={isSyncing ? "animate-spin" : ""} />
+    </button>
   );
 }
