@@ -2,24 +2,7 @@
 
 import { addRsvpToCalendar } from "@/lib/googleApi";
 import nodemailer from "nodemailer";
-import { getFirestore } from "firebase-admin/firestore";
-import { initializeApp, getApps, cert } from "firebase-admin/app";
-
-// Inicialización de Firebase Admin (Singleton pattern)
-function getAdminDb() {
-  if (getApps().length === 0) {
-    // Si estamos en Vercel/Producción, usaremos las credenciales de Service Account
-    // de las variables de entorno si están disponibles, si no, intentamos conexión por defecto
-    const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY 
-      ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY) 
-      : undefined;
-
-    initializeApp({
-      credential: serviceAccount ? cert(serviceAccount) : undefined,
-    });
-  }
-  return getFirestore();
-}
+import { adminDb } from "@/lib/firebase-admin";
 
 interface EmailData {
   fullName: string;
@@ -31,11 +14,10 @@ interface EmailData {
 }
 
 export async function sendConfirmationEmail(data: EmailData) {
-  const db = getAdminDb();
   
   if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
     console.warn("Skipping email: GMAIL_USER or GMAIL_PASS not set.");
-    await db.collection("system_logs").add({
+    await adminDb.collection("system_logs").add({
       type: "email_error",
       message: "GMAIL_USER or GMAIL_PASS not set in environment variables.",
       timestamp: new Date(),
@@ -113,7 +95,7 @@ export async function sendConfirmationEmail(data: EmailData) {
     console.error("Error sending confirmation email:", error);
     
     // Registrar el error en Firestore para que el administrador pueda verlo en el panel
-    await db.collection("system_logs").add({
+    await adminDb.collection("system_logs").add({
       type: "email_failure",
       message: error.message || "Unknown error",
       details: error.stack || "",
