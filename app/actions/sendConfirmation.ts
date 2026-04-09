@@ -94,12 +94,12 @@ export async function sendConfirmationEmail(data: EmailData) {
     });
 
     // 4. Intentar sincronización con Google Calendar (Opcional, no bloquea el email)
-    if (rsvpData.attendance === "si") {
+    if (data.attendance === "si") {
       try {
         await addRsvpToCalendar({
-          fullName: rsvpData.fullName,
-          email: rsvpData.email,
-          guests: rsvpData.guests
+          fullName: data.fullName,
+          email: data.email,
+          guests: data.guests
         });
         console.log("Sincronización con Google Calendar exitosa");
       } catch (calendarError: any) {
