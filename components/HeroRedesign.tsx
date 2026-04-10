@@ -99,7 +99,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
             }}
             className="text-editorial mb-2"
           >
-            Estamos encantados de invitaros a
+            Estamos encantados de invitaros a nuestra boda
           </motion.div>
 
           <motion.h1 
