@@ -92,26 +92,16 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
       >
         {/* Names & Date Header */}
         <div className="flex flex-col items-center gap-1 md:gap-3">
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              visible: { opacity: 1, y: 0, transition: { delay: 0.5, duration: 1.5 } }
-            }}
-            className="text-editorial mb-2"
-          >
-            Estamos encantados de invitaros a nuestra boda
-          </motion.div>
-
           <motion.h1 
             variants={{
               hidden: { opacity: 0, y: 30 },
               visible: { 
                 opacity: 1, 
                 y: 0,
-                transition: { delay: 1, duration: 2, ease: [0.22, 1, 0.36, 1] }
+                transition: { delay: 0.5, duration: 2, ease: [0.22, 1, 0.36, 1] }
               }
             }}
-            className="font-serif text-4xl md:text-6xl lg:text-8xl text-foreground font-light leading-tight px-4 tracking-[0.05em]"
+            className="font-serif text-4xl md:text-6xl lg:text-8xl text-foreground font-light leading-tight px-4 tracking-[0.05em] mt-8"
           >
             <span className="relative z-10 flex justify-center items-center gap-x-6 md:gap-x-8 italic">
                Alba <span className="text-accent/60 font-script text-6xl md:text-8xl lg:text-9xl -translate-y-1 md:-translate-y-2">&amp;</span> Guille
