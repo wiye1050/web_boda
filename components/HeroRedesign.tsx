@@ -179,7 +179,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
                     src="/photos/hero/hero_ilustracion.png"
                     alt="Ilustración Alba y Guille"
                     fill
-                    className="object-contain object-center scale-[1.05]"
+                    className="object-contain object-center"
                     priority
                   />
                 </motion.div>
