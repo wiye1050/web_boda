@@ -79,7 +79,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
   ];
 
   return (
-    <header className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center text-center px-4 pt-16 pb-20 md:pt-28 md:pb-28 overflow-hidden">
+    <header className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center text-center px-4 pt-32 pb-20 md:pt-28 md:pb-28 overflow-hidden">
       
       {/* Premium Light Leak Effect */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />

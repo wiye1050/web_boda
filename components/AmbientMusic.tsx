@@ -123,10 +123,10 @@ export function AmbientMusic() {
 
   return (
     <>
-      {/* Consent banner - REPOSITIONED TO TOP */}
+      {/* Consent banner */}
       {showBanner && (
         <div
-          className="fixed top-24 left-1/2 -translate-x-1/2 z-[70] transition-all duration-500 animate-in fade-in slide-in-from-top-4"
+          className="fixed bottom-[100px] sm:bottom-24 left-1/2 -translate-x-1/2 z-[70] transition-all duration-500 animate-in fade-in slide-in-from-bottom-4"
           aria-live="polite"
         >
           <div className="flex items-center gap-2 sm:gap-3 rounded-full border border-border/40 bg-surface/95 px-4 py-2 sm:px-5 sm:py-3 shadow-lg backdrop-blur-sm pointer-events-auto">
@@ -152,11 +152,11 @@ export function AmbientMusic() {
         </div>
       )}
 
-      {/* Floating toggle button - RESTORED TO BOTTOM LEFT */}
+      {/* Floating toggle button */}
       {buttonVisible && (
         <div 
           className={cn(
-            "fixed z-[60] bottom-24 left-4 sm:bottom-10 sm:left-10 transition-all duration-300 pointer-events-auto"
+            "fixed z-[60] bottom-[100px] left-4 sm:bottom-10 sm:left-10 transition-all duration-300 pointer-events-auto"
           )}
         >
           <button
@@ -164,7 +164,7 @@ export function AmbientMusic() {
             disabled={!ready}
             aria-label={playing ? "Silenciar música" : "Reproducir música ambiente"}
             className={cn(
-              "group relative flex h-8 w-8 items-center justify-center rounded-full border shadow-sm transition-all duration-500",
+              "group relative flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full border shadow-sm transition-all duration-500",
               playing
                 ? "bg-accent/10 border-accent/20 text-accent hover:bg-accent/20"
                 : "bg-surface/40 border-border/20 text-muted/60 hover:text-foreground hover:bg-surface/80",
@@ -172,9 +172,9 @@ export function AmbientMusic() {
             )}
           >
             {playing ? (
-              <Volume2 className="h-3.5 w-3.5" />
+              <Volume2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" strokeWidth={1.5} />
             ) : (
-              <VolumeX className="h-3.5 w-3.5" />
+              <VolumeX className="h-3 w-3 sm:h-3.5 sm:w-3.5" strokeWidth={1.5} />
             )}
             {playing && (
               <span className="absolute inset-0 rounded-full animate-ping bg-accent/20 pointer-events-none" />
