@@ -126,7 +126,7 @@ export function AmbientMusic() {
       {/* Consent banner */}
       {showBanner && (
         <div
-          className="fixed bottom-[100px] sm:bottom-24 left-1/2 -translate-x-1/2 z-[70] transition-all duration-500 animate-in fade-in slide-in-from-bottom-4"
+          className="fixed top-20 sm:top-auto sm:bottom-24 left-1/2 -translate-x-1/2 z-[70] transition-all duration-500 animate-in fade-in sm:slide-in-from-bottom-4 slide-in-from-top-4"
           aria-live="polite"
         >
           <div className="flex items-center gap-2 sm:gap-3 rounded-full border border-border/40 bg-surface/95 px-4 py-2 sm:px-5 sm:py-3 shadow-lg backdrop-blur-sm pointer-events-auto">

@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { MapsChooserModal } from "@/components/MapsChooserModal";
 import { DEFAULT_PUBLIC_CONTENT, type MapsModalCopy } from "@/lib/publicContent";
 import { Sparkles, Map, Share2, Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type LocationOption = {
   name: string;
@@ -37,8 +38,28 @@ export function MobileBottomBar({
 }: MobileBottomBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [shareMessage, setShareMessage] = useState<string | null>(null);
+  const [isHidden, setIsHidden] = useState(false);
   const canOpen = Boolean(wedding?.url);
   const mapsButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const target = document.getElementById("asistencia");
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        setIsHidden(entries[0].isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0.15,
+        rootMargin: "0px",
+      }
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
 
   async function handleShare() {
     window.dispatchEvent(new CustomEvent("wb-pause-music"));
@@ -74,7 +95,12 @@ export function MobileBottomBar({
 
   return (
     <>
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-[420px] sm:hidden">
+      <div
+        className={cn(
+          "fixed left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-[420px] sm:hidden transition-all duration-700 ease-in-out",
+          isHidden ? "bottom-0 translate-y-full opacity-0 pointer-events-none" : "bottom-6 translate-y-0 opacity-100"
+        )}
+      >
         <div className="glass rounded-[2rem] px-2 py-2 flex items-center justify-between gap-1 shadow-premium border-white/20">
           <a
             href={confirmHref}

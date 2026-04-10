@@ -8,6 +8,7 @@ import { firebaseClient } from "@/lib/firebase";
 import { DEFAULT_PUBLIC_CONTENT, type RsvpFormCopy } from "@/lib/publicContent";
 import { sendConfirmationEmail } from "@/app/actions/sendConfirmation";
 import { cn } from "@/lib/utils";
+import { Check } from "lucide-react";
 import confetti from "canvas-confetti";
 
 type RSVPStatus = "idle" | "loading" | "success" | "error";
@@ -25,7 +26,6 @@ type FormState = {
   needsTransport: YesNo | null;
   transportSeats: string;
   requests: string;
-  songRequest: string;
   dietary: string;
   hairMakeup?: boolean;
   reminderOptIn: boolean;
@@ -43,7 +43,6 @@ const INITIAL_STATE: FormState = {
   needsTransport: null,
   transportSeats: "",
   requests: "",
-  songRequest: "",
   dietary: "",
   hairMakeup: false,
   reminderOptIn: false,
@@ -274,7 +273,6 @@ export function RSVPForm({
             ? Math.min(seatsRequested, Math.max(guestsNumber, 1))
             : 0,
         requests: form.requests.trim(),
-        songRequest: form.songRequest.trim(),
         dietary: form.dietary.trim(),
         hairMakeup: Boolean(form.hairMakeup),
         reminderOptIn: Boolean(form.reminderOptIn),
@@ -344,7 +342,7 @@ export function RSVPForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="mx-auto flex w-full max-w-3xl flex-col gap-10 glass rounded-[3rem] p-8 md:p-14 shadow-premium text-center border-white/40"
+      className="mx-auto flex w-full max-w-3xl flex-col gap-8 md:gap-10 glass rounded-[3rem] p-6 md:p-14 shadow-premium text-center border-white/40"
     >
       <label className="sr-only">
         No completar
@@ -400,7 +398,7 @@ export function RSVPForm({
         </div>
       ) : (
         <>
-          <div className="grid gap-10 md:grid-cols-2">
+          <div className="grid gap-6 md:gap-10 md:grid-cols-2">
             <label className="flex flex-col gap-3 text-center">
               <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.fullNameLabel}</span>
               <input 
@@ -410,7 +408,7 @@ export function RSVPForm({
                 value={form.fullName} 
                 onChange={(e) => handleChange("fullName", e.target.value)} 
                 placeholder={copy.fullNamePlaceholder} 
-                className="rounded-2xl border border-black/5 bg-white/40 px-6 py-4 text-sm text-foreground shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center font-serif italic text-lg lg:text-xl" 
+                className="placeholder:text-foreground/30 rounded-2xl border border-black/5 bg-white/40 px-6 py-4 text-sm text-foreground shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center font-serif italic text-lg lg:text-xl" 
               />
             </label>
             <label className="flex flex-col gap-3 text-center">
@@ -423,7 +421,7 @@ export function RSVPForm({
                 value={form.email} 
                 onChange={(e) => handleChange("email", e.target.value)} 
                 placeholder={copy.emailPlaceholder} 
-                className="rounded-2xl border border-black/5 bg-white/40 px-6 py-4 text-sm text-foreground shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center font-serif italic text-lg lg:text-xl" 
+                className="placeholder:text-foreground/30 rounded-2xl border border-black/5 bg-white/40 px-6 py-4 text-sm text-foreground shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center font-serif italic text-lg lg:text-xl" 
               />
               {!emailValid && form.email.length > 0 && <span className="text-xs text-primary">{copy.emailError}</span>}
             </label>
@@ -438,7 +436,7 @@ export function RSVPForm({
                 value={form.phone} 
                 onChange={(e) => handleChange("phone", e.target.value)} 
                 placeholder={copy.phonePlaceholder} 
-                className="rounded-2xl border border-black/5 bg-white/40 px-6 py-4 text-sm text-foreground shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center font-serif italic text-lg lg:text-xl" 
+                className="placeholder:text-foreground/30 rounded-2xl border border-black/5 bg-white/40 px-6 py-4 text-sm text-foreground shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center font-serif italic text-lg lg:text-xl" 
               />
               {!phoneValid && form.phone.length > 0 && <span className="text-xs text-primary">{copy.phoneError}</span>}
             </label>
@@ -471,11 +469,11 @@ export function RSVPForm({
           </div>
 
           {attending && (
-            <div className="grid gap-12 animate-in fade-in slide-in-from-top-4 duration-700">
-              <div className="grid gap-10 md:grid-cols-2">
+            <div className="grid gap-8 md:gap-12 animate-in fade-in slide-in-from-top-4 duration-700">
+              <div className="grid gap-6 md:gap-10 md:grid-cols-2">
                 <label className="flex flex-col gap-4 text-center">
                   <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.guestsLabel}</span>
-                  <input name="guests" inputMode="numeric" min={1} required value={form.guests} onChange={(e) => handleChange("guests", e.target.value)} placeholder={copy.guestsPlaceholderYes} className="rounded-2xl border border-black/5 bg-white/40 px-6 py-4 text-xl text-foreground font-serif italic shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center max-w-[120px] mx-auto" />
+                  <input name="guests" inputMode="numeric" min={1} required value={form.guests} onChange={(e) => handleChange("guests", e.target.value)} placeholder={copy.guestsPlaceholderYes} className="placeholder:text-foreground/30 rounded-2xl border border-black/5 bg-white/40 px-6 py-4 text-xl text-foreground font-serif italic shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center max-w-[120px] mx-auto" />
                   <span className="text-[10px] tracking-wider text-foreground/40">{copy.guestsHelper}</span>
                   {showGuestError && <span className="text-xs text-primary">{copy.guestsError}</span>}
                 </label>
@@ -485,7 +483,7 @@ export function RSVPForm({
                 </label>
               </div>
 
-              <div id="rsvp-advanced" className="grid gap-10 rounded-[3rem] border border-black/5 bg-black/[0.02] p-8 md:grid-cols-2 text-center shadow-inner">
+              <div id="rsvp-advanced" className="grid gap-6 md:gap-10 rounded-[3rem] border border-black/5 bg-black/[0.02] p-6 md:p-8 md:grid-cols-2 text-center shadow-inner">
                 <fieldset className="flex flex-col gap-5 rounded-[2rem] border border-black/5 bg-white/20 px-6 py-6 text-center">
                   <legend className="mx-auto text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50 px-4">{copy.prebodaLegend}</legend>
                   <div className="flex gap-3 justify-center">
@@ -520,7 +518,7 @@ export function RSVPForm({
                 {form.needsTransport === "si" && (
                   <label className="flex flex-col gap-4 text-center md:col-span-2 py-4">
                     <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.transportSeatsLabel}</span>
-                    <input name="transportSeats" inputMode="numeric" min={1} required value={form.transportSeats} onChange={(e) => handleChange("transportSeats", e.target.value)} placeholder={copy.transportSeatsPlaceholder} className="rounded-2xl border border-black/5 bg-white/40 px-6 py-4 text-xl text-foreground font-serif italic shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center mx-auto max-w-[140px]" />
+                    <input name="transportSeats" inputMode="numeric" min={1} required value={form.transportSeats} onChange={(e) => handleChange("transportSeats", e.target.value)} placeholder={copy.transportSeatsPlaceholder} className="placeholder:text-foreground/30 rounded-2xl border border-black/5 bg-white/40 px-6 py-4 text-xl text-foreground font-serif italic shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center mx-auto max-w-[140px]" />
                     {showSeatsError && <span className="text-xs text-primary">{copy.transportSeatsError}</span>}
                   </label>
                 )}
@@ -530,23 +528,26 @@ export function RSVPForm({
                   <textarea name="dietary" value={form.dietary} onChange={(e) => handleChange("dietary", e.target.value)} rows={2} placeholder="Alergias, veganismo..." className="rounded-[2rem] border border-black/5 bg-white/40 px-6 py-5 text-sm text-foreground font-serif italic shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center min-h-[100px]" />
                 </label>
                 
-                <label className="md:col-span-2 flex items-center gap-4 rounded-2xl border border-black/5 bg-white/30 px-6 py-4 text-sm text-left cursor-pointer transition-colors hover:bg-white/50">
-                  <input type="checkbox" className="h-5 w-5 rounded-lg border-black/5 bg-white accent-accent shrink-0" checked={form.hairMakeup || false} onChange={(e) => handleChange("hairMakeup", e.target.checked)} />
+                <label className="md:col-span-2 flex items-center gap-4 rounded-[2rem] border border-black/5 bg-white/30 px-6 py-5 text-sm text-left cursor-pointer transition-colors hover:bg-white/50 group">
+                  <div className="relative flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-black/10 bg-white transition-all group-hover:border-accent/40 shadow-sm">
+                    <input type="checkbox" className="peer sr-only" checked={form.hairMakeup || false} onChange={(e) => handleChange("hairMakeup", e.target.checked)} />
+                    <div className="absolute inset-0 rounded-lg bg-accent opacity-0 transition-opacity peer-checked:opacity-100" />
+                    <Check className="relative z-10 h-4 w-4 text-white opacity-0 transition-opacity peer-checked:opacity-100" strokeWidth={3} />
+                  </div>
                   <span className="text-[10px] font-semibold tracking-wider text-foreground/60 leading-relaxed uppercase">Interés en servicio de <span className="text-accent underline decoration-accent/30 underline-offset-4">peluquería o maquillaje</span></span>
-                </label>
-
-                <label className="flex flex-col gap-4 text-center md:col-span-2">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50">🎵 Una canción imprescindible</span>
-                  <input name="songRequest" value={form.songRequest} onChange={(e) => handleChange("songRequest", e.target.value)} placeholder="Ej: Flying Free..." className="rounded-full border border-black/5 bg-white/40 px-8 py-5 text-lg text-foreground font-serif italic shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center" />
                 </label>
               </div>
             </div>
           )}
 
-          <div className="flex flex-col items-center gap-10">
-            <label className="flex items-start gap-4 rounded-[2rem] border border-black/5 bg-black/[0.02] px-8 py-6 text-sm text-left max-w-xl cursor-pointer transition-all hover:bg-black/[0.04] shadow-inner">
-              <input type="checkbox" required className="mt-1 h-5 w-5 rounded-lg border-black/5 bg-white accent-accent shrink-0" checked={form.acceptedTerms} onChange={(e) => handleChange("acceptedTerms", e.target.checked)} />
-              <span className="text-[11px] font-medium text-foreground/50 leading-relaxed uppercase tracking-widest">Acepto que Alba & Guille guarden mis datos para la organización de la boda según la <span className="text-foreground/80 underline underline-offset-4 decoration-accent/40">política de privacidad</span>.</span>
+          <div className="flex flex-col items-center gap-8 md:gap-10">
+            <label className="flex items-start gap-4 rounded-[2rem] border border-black/5 bg-black/[0.02] px-6 md:px-8 py-6 text-sm text-left max-w-xl cursor-pointer transition-all hover:bg-black/[0.04] shadow-inner group">
+              <div className="relative mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-black/10 bg-white transition-all group-hover:border-accent/40 shadow-sm">
+                <input type="checkbox" required className="peer sr-only" checked={form.acceptedTerms} onChange={(e) => handleChange("acceptedTerms", e.target.checked)} />
+                <div className="absolute inset-0 rounded-lg bg-accent opacity-0 transition-opacity peer-checked:opacity-100" />
+                <Check className="relative z-10 h-4 w-4 text-white opacity-0 transition-opacity peer-checked:opacity-100" strokeWidth={3} />
+              </div>
+              <span className="text-[10px] md:text-[11px] font-medium text-foreground/50 leading-relaxed uppercase tracking-widest">Acepto que Alba & Guille guarden mis datos para la organización de la boda según la <span className="text-foreground/80 underline underline-offset-4 decoration-accent/40">política de privacidad</span>.</span>
             </label>
 
             <div className="flex flex-col items-center gap-6 w-full">
