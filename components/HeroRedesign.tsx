@@ -101,10 +101,12 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
                 transition: { delay: 0.5, duration: 2, ease: [0.22, 1, 0.36, 1] }
               }
             }}
-            className="font-serif text-4xl md:text-6xl lg:text-8xl text-foreground font-light leading-tight px-4 tracking-[0.05em] mt-8"
+            className="font-serif text-[5rem] sm:text-[7rem] md:text-8xl lg:text-[11rem] text-foreground font-medium leading-[0.8] px-4 tracking-[-0.02em] mt-8 md:mt-12 drop-shadow-md"
           >
-            <span className="relative z-10 flex justify-center items-center gap-x-6 md:gap-x-8 italic">
-               Alba <span className="text-accent/60 font-script text-6xl md:text-8xl lg:text-9xl -translate-y-1 md:-translate-y-2">&amp;</span> Guille
+            <span className="relative z-10 flex flex-col md:flex-row justify-center items-center gap-y-2 md:gap-x-12">
+               <span className="relative">Alba</span>
+               <span className="text-accent/90 font-script text-[6rem] sm:text-[8rem] md:text-[10rem] lg:text-[13rem] drop-shadow-lg -translate-y-2 md:-translate-y-4 -my-6 md:my-0">&amp;</span> 
+               <span className="relative">Guille</span>
             </span>
           </motion.h1>
 
