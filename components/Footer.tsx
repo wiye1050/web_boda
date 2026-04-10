@@ -31,10 +31,8 @@ export function Footer({
   }, [targetDate]);
 
   const [timeLeft, setTimeLeft] = useState({ total: 0, days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    setHasMounted(true);
     setTimeLeft(getTimeLeft(parsedTarget));
     
     const timer = setInterval(() => {
@@ -44,44 +42,56 @@ export function Footer({
   }, [parsedTarget]);
 
   return (
-    <footer className="bg-foreground text-white py-10 px-6 overflow-hidden relative">
-      <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
+    <footer className="relative mt-20 pt-16 pb-32 md:pb-16 px-6 overflow-hidden">
+      {/* Footer Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] aspect-[2/1] bg-foreground/5 blur-[120px] rounded-[100%] -z-10" />
 
-        {/* Countdown */}
-        <div className="flex space-x-6 md:space-x-12 mb-8 mt-2">
-          <div className="text-center">
-            <div className="text-3xl md:text-5xl font-serif text-white font-medium mb-1">
-              {timeLeft.days}
-            </div>
-            <div className="text-[9px] md:text-[11px] tracking-[0.2em] text-white/50 uppercase font-medium">Días</div>
+      <div className="max-w-4xl mx-auto">
+        <div className="glass-dark rounded-[3rem] p-10 md:p-16 shadow-premium border-white/5 flex flex-col items-center text-center">
+          
+          <div className="mb-12">
+            <h3 className="font-serif text-3xl md:text-5xl text-white/90 mb-4 bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent">
+              La cuenta atrás ha empezado
+            </h3>
+            <p className="text-[10px] md:text-xs tracking-[0.4em] text-white/40 uppercase font-sans">
+              Nos vemos el 12 de Septiembre de 2026
+            </p>
           </div>
-          <div className="text-center">
-            <div className="text-3xl md:text-5xl font-serif text-white font-medium mb-1">
-              {String(timeLeft.hours).padStart(2, '0')}
+
+          {/* Countdown */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 mb-16 w-full max-w-2xl">
+            <div className="flex flex-col items-center">
+              <span className="text-4xl md:text-6xl font-serif text-accent mb-2">{timeLeft.days}</span>
+              <span className="text-[9px] tracking-[0.2em] text-white/30 uppercase font-sans">Días</span>
             </div>
-            <div className="text-[9px] md:text-[11px] tracking-[0.2em] text-white/50 uppercase font-medium">Horas</div>
+            <div className="flex flex-col items-center border-l border-white/5 md:border-l-0">
+              <span className="text-4xl md:text-6xl font-serif text-accent mb-2">{String(timeLeft.hours).padStart(2, '0')}</span>
+              <span className="text-[9px] tracking-[0.2em] text-white/30 uppercase font-sans">Horas</span>
+            </div>
+            <div className="flex flex-col items-center border-t border-white/5 md:border-t-0 pt-8 md:pt-0">
+              <span className="text-4xl md:text-6xl font-serif text-accent mb-2">{String(timeLeft.minutes).padStart(2, '0')}</span>
+              <span className="text-[9px] tracking-[0.2em] text-white/30 uppercase font-sans">Min</span>
+            </div>
+            <div className="flex flex-col items-center border-l border-t border-white/5 md:border-t-0 md:border-l-0 pt-8 md:pt-0">
+              <span className="text-4xl md:text-6xl font-serif text-accent mb-2">{String(timeLeft.seconds).padStart(2, '0')}</span>
+              <span className="text-[9px] tracking-[0.2em] text-white/30 uppercase font-sans">Seg</span>
+            </div>
           </div>
-          <div className="text-center">
-            <div className="text-3xl md:text-5xl font-serif text-white font-medium mb-1">
-              {String(timeLeft.minutes).padStart(2, '0')}
+
+          <div className="w-12 h-[1px] bg-white/10 mb-12" />
+
+          {/* Bottom Text */}
+          <div className="flex flex-col gap-6 items-center">
+            <div className="text-[10px] tracking-[0.5em] text-white/40 uppercase leading-relaxed font-sans">
+              Hecho con ❤️ por Alba & Guille
             </div>
-            <div className="text-[9px] md:text-[11px] tracking-[0.2em] text-white/50 uppercase font-medium">Minutos</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl md:text-5xl font-serif text-white font-medium mb-1">
-              {String(timeLeft.seconds).padStart(2, '0')}
-            </div>
-            <div className="text-[9px] md:text-[11px] tracking-[0.2em] text-white/50 uppercase font-medium">Segundos</div>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="w-full h-[1px] bg-white/10 mb-8" />
-
-        {/* Bottom Text */}
-        <div className="flex flex-col md:flex-row justify-between w-full text-[9px] tracking-[0.3em] font-medium text-white uppercase gap-4 opacity-100 hover:opacity-100">
-          <span>© 2026 {brandName.toUpperCase()}</span>
-          <span>Diseñado con amor para un día inolvidable</span>
+        <div className="mt-12 text-center">
+           <p className="text-[8px] tracking-[0.2em] text-foreground/20 uppercase font-sans">
+             © 2026 - TODOS LOS DERECHOS RESERVADOS
+           </p>
         </div>
       </div>
     </footer>

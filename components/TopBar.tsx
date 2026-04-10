@@ -36,14 +36,10 @@ export function TopBar({
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 40);
     };
     window.addEventListener("scroll", handleScroll);
-    document.documentElement.style.setProperty("--topbar-height", "0rem");
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const half = Math.ceil(navItems.length / 2);
@@ -53,25 +49,25 @@ export function TopBar({
   return (
     <>
       <nav className={cn(
-        "fixed top-6 left-0 right-0 z-50 transition-all duration-300 pointer-events-none",
-        isScrolled ? "top-2" : "top-6"
+        "fixed left-0 right-0 z-[60] transition-all duration-700 pointer-events-none",
+        isScrolled ? "top-3" : "top-6"
       )}>
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 pointer-events-auto">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 pointer-events-auto">
           <div className={cn(
-            "backdrop-blur-xl rounded-full px-4 sm:px-8 py-3 shadow-lg shadow-black/5 border border-white/20 flex justify-between items-center transition-all duration-500",
-            isScrolled ? "bg-white/80 py-2.5 shadow-xl shadow-black/10" : "bg-white/40 shadow-sm"
+            "glass rounded-full px-4 sm:px-10 py-3 shadow-premium transition-all duration-700 flex justify-between items-center",
+            isScrolled ? "py-2.5 px-6 scale-[0.98] border-white/40" : "bg-white/30 backdrop-blur-md"
           )}>
             
             {/* LEFT: Nav Links (Desktop) */}
-            <div className="hidden md:flex flex-1 justify-start space-x-6 lg:space-x-8">
+            <div className="hidden md:flex flex-1 justify-start space-x-8 lg:space-x-12">
               {leftItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group relative font-serif text-[10px] lg:text-[11px] tracking-[0.2em] text-foreground/80 hover:text-primary transition-colors uppercase font-bold"
+                  className="group relative font-sans text-[10px] tracking-[0.3em] text-foreground/70 hover:text-foreground transition-colors uppercase font-bold"
                 >
                   {item.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-primary transition-all duration-300 group-hover:w-full" />
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-[1.5px] bg-accent transition-all duration-300 group-hover:w-1/2" />
                 </Link>
               ))}
             </div>
@@ -84,27 +80,28 @@ export function TopBar({
               href={isHome ? "#top" : "/"}
               className="flex items-center justify-center relative group shrink-0"
             >
+              <div className="absolute inset-0 bg-accent/10 blur-xl rounded-full scale-0 group-hover:scale-150 transition-transform duration-700" />
               <Image 
                 src="/logo-ag.png" 
                 alt="Alba & Guille Logo" 
-                width={80}
-                height={40}
-                className="h-10 w-auto object-contain transition-transform group-hover:scale-105"
+                width={85}
+                height={45}
+                className="h-9 md:h-11 w-auto object-contain transition-all duration-500 group-hover:scale-110"
                 priority
               />
             </Link>
 
             {/* RIGHT: Nav Links (Desktop) & Mobile Toggle */}
-            <div className="flex-1 flex justify-end items-center gap-4">
-              <div className="hidden md:flex space-x-6 lg:space-x-8">
+            <div className="flex-1 flex justify-end items-center gap-6">
+              <div className="hidden md:flex space-x-8 lg:space-x-12">
                 {rightItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="group relative font-serif text-[10px] lg:text-[11px] tracking-[0.2em] text-foreground/80 hover:text-primary transition-colors uppercase font-bold"
+                    className="group relative font-sans text-[10px] tracking-[0.3em] text-foreground/70 hover:text-foreground transition-colors uppercase font-bold"
                   >
                     {item.label}
-                    <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-primary transition-all duration-300 group-hover:w-full" />
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-[1.5px] bg-accent transition-all duration-300 group-hover:w-1/2" />
                   </Link>
                 ))}
               </div>
@@ -112,10 +109,10 @@ export function TopBar({
               {/* Mobile Menu Toggle */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden text-foreground p-1"
+                className="md:hidden text-foreground/80 p-2 hover:bg-white/20 rounded-full transition-colors"
                 aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
               >
-                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                {isMobileMenuOpen ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
               </button>
             </div>
           </div>
@@ -125,39 +122,36 @@ export function TopBar({
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="mx-auto max-w-6xl px-4 mt-2 md:hidden overflow-hidden pointer-events-auto"
+              initial={{ height: 0, opacity: 0, y: -10 }}
+              animate={{ height: "auto", opacity: 1, y: 0 }}
+              exit={{ height: 0, opacity: 0, y: -10 }}
+              className="mx-auto max-w-5xl px-4 mt-3 md:hidden overflow-hidden pointer-events-auto"
             >
-              <nav className="bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-lg border border-gray-100 flex flex-col gap-2">
-                {navItems.map((item) => (
-                  <Link
+              <nav className="glass rounded-[2rem] p-6 shadow-premium border-white/20 flex flex-col gap-3">
+                {navItems.map((item, idx) => (
+                  <motion.div
                     key={item.href}
-                    href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block rounded-lg px-4 py-3 text-xs font-bold uppercase tracking-widest text-foreground/80 hover:bg-primary/10 hover:text-primary transition-colors"
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: idx * 0.05 }}
                   >
-                    {item.label}
-                  </Link>
-                ))}
-                 <div className="hidden md:pt-2 md:mt-2 md:border-t md:border-border/10">
                     <Link
-                        href="#asistencia"
-                        className="flex w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-lg transition-transform hover:scale-[1.02]"
-                        onClick={() => setIsMobileMenuOpen(false)}
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block rounded-2xl px-5 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-foreground/70 hover:bg-white/40 hover:text-foreground transition-all"
                     >
-                        {ctaLabel}
+                      {item.label}
                     </Link>
-                 </div>
+                  </motion.div>
+                ))}
               </nav>
             </motion.div>
           )}
         </AnimatePresence>
       </nav>
       
-      {/* Spacer - reduced since navbar is floating */}
-      <div className="h-4 w-full" />
+      {/* Scroll indicator for the page top */}
+      <div id="top-anchor" className="h-0 w-0" />
     </>
   );
 }

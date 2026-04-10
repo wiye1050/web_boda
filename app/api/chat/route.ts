@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest } from "next/server";
 import { getPublicConfig } from "@/lib/getPublicConfig";
+import { getAccommodations } from "@/lib/getAccommodations";
 
 export const runtime = "nodejs";
 
@@ -9,10 +10,34 @@ type ChatMessage = {
   parts: { text: string }[];
 };
 
-function buildSystemPrompt(config: Awaited<ReturnType<typeof getPublicConfig>>): string {
+function buildSystemPrompt(
+  config: Awaited<ReturnType<typeof getPublicConfig>>,
+  accommodations: Awaited<ReturnType<typeof getAccommodations>>
+): string {
   const practicalText = config.practicalItems
     .map((p) => `• ${p.title}: ${p.description}`)
     .join("\n");
+
+  const accommodationText = accommodations
+    .map((a) => {
+      let desc = `• ${a.name} (${a.type})`;
+      if (a.distance) desc += ` - A ${a.distance} de la finca`;
+      if (a.hasBlock) desc += ` [ RECOMIENDAN ESTE ESPECIALMENTE - Tienen reserva de bloque ]`;
+      if (a.notes) desc += `. Nota: ${a.notes}`;
+      if (a.link) desc += `. Enlace: ${a.link}`;
+      return desc;
+    })
+    .join("\n");
+
+  let faqText = "";
+  try {
+    const faqs = JSON.parse(config.faqItems || "[]");
+    if (Array.isArray(faqs)) {
+      faqText = faqs.map((f: any) => `Q: ${f.question}\nA: ${f.answer}`).join("\n\n");
+    }
+  } catch (e) {
+    console.error("Error parsing FAQs for AI", e);
+  }
 
   const now = new Date();
   const weddingDate = new Date(2026, 8, 12); // Sep 12, 2026
@@ -28,7 +53,11 @@ function buildSystemPrompt(config: Awaited<ReturnType<typeof getPublicConfig>>):
 
 === DATOS CLAVE ===
 Boda: Sábado 12 de septiembre de 2026 (Lugar: ${config.locationName}).
-Preboda: Viernes 11 de septiembre (19:30h, Casino Rooftop). Es un brindis informal y toma de contacto. ¡Habrá sorpresas!
+Preboda: Viernes 11 de septiembre (19:30h en ${config.prebodaPlace}). Dirección: ${config.prebodaAddress}. Es un brindis informal y toma de contacto. ¡Habrá sorpresas!
+
+=== ALOJAMIENTO RECOMENDADO ===
+Alba y Guille recomiendan especialmente los que tienen reserva de bloque. Aquí tienes la lista completa de opciones que ellos han seleccionado:
+${accommodationText || "Los novios añadirán recomendaciones pronto."}
 
 === VIAJES Y CÓMO LLEGAR ===
 - Desde Ponferrada: Estamos al lado, ¡no tienes excusa! Habrá bus para volver.
@@ -40,19 +69,19 @@ Preboda: Viernes 11 de septiembre (19:30h, Casino Rooftop). Es un brindis inform
 - Si preguntan por el MENÚ, el DJ, el CRONOGRAMA detallado o detalles específicos no listados aquí: Responde que esos detalles son una SORPRESA que los novios tienen guardada con mucho cariño.
 
 === DETALLES IMPORTANTES ===
-- Dress Code: Elegante y cómodo (evitar blanco/marfil).
-- Niños: Evento solo para adultos. Ayudamos con referencias de canguros si hace falta.
-- Confirmación: Antes del 15 de agosto de 2026 en la sección "Confirmar asistencia".
+- Dress Code: Elegante (evitar blanco/marfil). Los hombres no necesitan frac, basta con traje.
+- Niños: La boda está planteada como un evento orientado a adultos, pero los niños son bienvenidos si es necesario por motivos personales. Si preguntan, diles que pueden venir y que lo indiquen en el formulario de confirmación. NO lo menciones de forma proactiva si no preguntan.
+- Confirmación: Antes del 15 de agosto de 2026 en la sección "Confirmar asistencia" de la web.
 - Regalos: Vuestra presencia es lo más importante. Datos bancarios en la sección "Regalos" de la web.
+
+=== PREGUNTAS FRECUENTES (CONOCIMIENTO INTERNO) ===
+${faqText}
 
 === OTROS DETALLES ===
 ${practicalText}
 
 === INSTRUCCIONES DE PERSONALIDAD ===
-- Sé conciso: Respuestas de máximo 2-3 frases si es posible.
-- Emojis: Usa uno o ninguno por mensaje.
-- Tono: Amable y servicial, con un toque informal pero no excesivamente bromista.
-- Si no sabes algo, remíteles a los novios. No inventes datos.`;
+${config.aiPersonalityInstruction || "Sé conciso, amable y servicial. Responde siempre en español."}`;
 }
 
 export async function POST(req: NextRequest) {
@@ -84,31 +113,101 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const config = await getPublicConfig();
-    const systemPrompt = buildSystemPrompt(config);
+    const [config, accommodations] = await Promise.all([
+      getPublicConfig(),
+      getAccommodations(),
+    ]);
+    const systemPrompt = buildSystemPrompt(config, accommodations);
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
-      systemInstruction: systemPrompt,
-    });
+    const modelsToTry = ["gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-flash", "gemini-pro"];
+    let response: Response | null = null;
+    let lastError = null;
 
-    const chat = model.startChat({
-      history: history.slice(-10), // Keep last 10 messages for context
-    });
+    for (const modelId of modelsToTry) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1/models/${modelId}:streamGenerateContent?alt=sse&key=${apiKey}`;
+        response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: `INSTRUCCIONES DE SISTEMA (Actúa según lo siguiente):\n${systemPrompt}` }]
+              },
+              {
+                role: "model",
+                parts: [{ text: "Entendido. Soy el asistente de Alba & Guille y responderé siguiendo vuestras instrucciones." }]
+              },
+              ...history.map(h => ({
+                role: h.role === "model" ? "model" : "user",
+                parts: [{ text: h.parts[0].text }]
+              })),
+              { role: "user", parts: [{ text: message.trim() }] }
+            ],
+            generationConfig: {
+              maxOutputTokens: 800,
+              temperature: 0.7,
+            }
+          })
+        });
 
-    const result = await chat.sendMessageStream(message.trim());
+        if (response.ok) break;
+        
+        const errText = await response.text();
+        console.warn(`Model ${modelId} failed: ${errText}`);
+        lastError = new Error(`Gemini API error (${modelId}): ${errText}`);
+        response = null;
+      } catch (e) {
+        lastError = e;
+        continue;
+      }
+    }
+
+    if (!response || !response.ok) {
+        throw lastError || new Error("No se pudo conectar con ningún modelo de Gemini.");
+    }
 
     const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
     const stream = new ReadableStream({
       async start(controller) {
-        for await (const chunk of result.stream) {
-          const text = chunk.text();
-          if (text) {
-            controller.enqueue(encoder.encode(text));
-          }
+        const reader = response?.body?.getReader();
+        if (!reader) {
+          controller.close();
+          return;
         }
-        controller.close();
+
+        let buffer = "";
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop() || "";
+
+            for (const line of lines) {
+              if (line.startsWith("data: ")) {
+                try {
+                  const content = line.slice(6).trim();
+                  if (content === "[DONE]") continue;
+                  
+                  const data = JSON.parse(content);
+                  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                  if (text) {
+                    controller.enqueue(encoder.encode(text));
+                  }
+                } catch (e) {}
+              }
+            }
+          }
+          controller.close();
+        } catch (e: any) {
+          console.error("Stream reader error:", e);
+          controller.error(e);
+        }
       },
     });
 
@@ -118,10 +217,22 @@ export async function POST(req: NextRequest) {
         "Transfer-Encoding": "chunked",
       },
     });
-  } catch (error) {
-    console.error("Chat error:", error);
+  } catch (error: any) {
+    const fs = require('fs');
+    const path = require('path');
+    const logPath = path.join(process.cwd(), 'scratch', 'api-error.log');
+    const errorDetail = `[${new Date().toISOString()}] Chat error: ${error.stack || error.message || error}\n`;
+    try {
+      if (!fs.existsSync(path.join(process.cwd(), 'scratch'))) fs.mkdirSync(path.join(process.cwd(), 'scratch'));
+      fs.appendFileSync(logPath, errorDetail);
+    } catch (e) {}
+
+    console.error("Chat error detail:", error);
     return new Response(
-      JSON.stringify({ error: "Error al procesar tu pregunta. Inténtalo de nuevo." }),
+      JSON.stringify({ 
+        error: "Error del asistente.",
+        details: error.message || String(error)
+      }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }

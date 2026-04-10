@@ -110,6 +110,7 @@ export type PublicContent = {
   locationMapUrl: string;
   prebodaPlace: string;
   prebodaTime: string;
+  prebodaAddress: string;
   prebodaMapUrl: string;
   contactEmail: string;
   contactPhone: string;
@@ -165,8 +166,13 @@ export type PublicContent = {
   heroBackgroundImages: string[];
   heroBackgroundIntervalMs: string;
   mobileBar: MobileBarCopy;
+  faqEyebrow: string;
+  faqTitle: string;
+  faqDescription: string;
+  faqItems: string;
   mapsModal: MapsModalCopy;
   sections: SectionConfig[];
+  aiPersonalityInstruction: string;
 };
 
 export const DEFAULT_SECTIONS: SectionConfig[] = [
@@ -209,6 +215,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   locationMapUrl: "",
   prebodaPlace: "Casino Rooftop Ponferrada",
   prebodaTime: "11 de septiembre · 19:30",
+  prebodaAddress: "Calle del Reloj, 11, 24401 Ponferrada, León",
   prebodaMapUrl: "",
   contactEmail: "guillemenendez1050@gmail.com",
   contactEmail2: "varelamaciasalba@gmail.com",
@@ -364,7 +371,12 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     prebodaWarning: "No es la ubicación de la boda",
     closeLabel: "Cerrar",
   },
+  faqEyebrow: "FAQ",
+  faqTitle: "Preguntas frecuentes",
+  faqDescription: "Resolvemos las dudas más comunes.",
+  faqItems: "[]",
   sections: DEFAULT_SECTIONS,
+  aiPersonalityInstruction: "Eres el asistente oficial de la boda de Alba y Guille. Tu tono debe ser amable, cercano y servicial. Responde siempre en castellano. Sé conciso y asegúrate de reflejar la emoción de los novios por compartir este día con sus invitados.",
 };
 
 function normalizeString(value: unknown, fallback: string) {
@@ -467,9 +479,14 @@ export function parsePracticalItems(raw: unknown): PracticalItem[] {
   const criticalItems = defaults.filter(item => criticalTitles.includes(item.title));
 
   // Combine: Critical Defaults First + Remaining DB Items
-  const combined = [...criticalItems, ...filteredCleaned];
+  // Note: "Solo adultos" and "Niños bienvenidos" are excluded from the UI list as per user request for subtleness
+  const combined = [...criticalItems, ...filteredCleaned].filter(
+    (item) => !item.title.toLowerCase().includes("niños") && !item.title.toLowerCase().includes("adultos")
+  );
 
-  return combined.length > 0 ? combined : defaults;
+  return combined.length > 0 ? combined : defaults.filter(
+    (item) => !item.title.toLowerCase().includes("niños") && !item.title.toLowerCase().includes("adultos")
+  );
 }
 
 
@@ -665,6 +682,10 @@ export function normalizePublicContent(
     prebodaTime: normalizeString(
       data.prebodaTime,
       DEFAULT_PUBLIC_CONTENT.prebodaTime,
+    ),
+    prebodaAddress: normalizeString(
+      data.prebodaAddress,
+      DEFAULT_PUBLIC_CONTENT.prebodaAddress,
     ),
     prebodaMapUrl: normalizeString(
       data.prebodaMapUrl,
@@ -884,9 +905,17 @@ export function normalizePublicContent(
       data.mapsModal,
       DEFAULT_PUBLIC_CONTENT.mapsModal,
     ),
+    faqEyebrow: normalizeString(data.faqEyebrow, DEFAULT_PUBLIC_CONTENT.faqEyebrow),
+    faqTitle: normalizeString(data.faqTitle, DEFAULT_PUBLIC_CONTENT.faqTitle),
+    faqDescription: normalizeString(data.faqDescription, DEFAULT_PUBLIC_CONTENT.faqDescription),
+    faqItems: normalizeString(data.faqItems, DEFAULT_PUBLIC_CONTENT.faqItems),
     sections: mergeSections(
       DEFAULT_PUBLIC_CONTENT.sections,
       parseSections(data.sections),
+    ),
+    aiPersonalityInstruction: normalizeString(
+      data.aiPersonalityInstruction,
+      DEFAULT_PUBLIC_CONTENT.aiPersonalityInstruction
     ),
   };
 }

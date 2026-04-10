@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { MapsChooserModal } from "@/components/MapsChooserModal";
 import { DEFAULT_PUBLIC_CONTENT, type MapsModalCopy } from "@/lib/publicContent";
+import { Sparkles, Map, Share2, Check } from "lucide-react";
 
 type LocationOption = {
   name: string;
@@ -73,39 +74,48 @@ export function MobileBottomBar({
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/70 bg-surface/95 px-4 pt-3 pb-[calc(1rem+env(safe-area-inset-bottom))] backdrop-blur-md sm:hidden">
-        <div className="mx-auto grid w-full max-w-6xl grid-cols-3 gap-3">
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-[420px] sm:hidden">
+        <div className="glass rounded-[2rem] px-2 py-2 flex items-center justify-between gap-1 shadow-premium border-white/20">
           <a
             href={confirmHref}
-            className="flex min-h-[48px] items-center justify-center rounded-full bg-accent px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-lg shadow-accent/20 active:scale-95 transition-transform"
+            className="flex-1 flex min-h-[50px] items-center justify-center rounded-full bg-foreground px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-lg active:scale-95 transition-all hover:bg-foreground/90 whitespace-nowrap"
           >
             {confirmLabel}
           </a>
           <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event('open-chat'))}
+            aria-label="Abrir Asistente IA"
+            className="flex min-h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full bg-accent/10 border border-accent/20 transition-all active:scale-95 hover:bg-accent/20"
+          >
+            <Sparkles className="h-5 w-5 text-accent animate-pulse" />
+          </button>
+          <button
             ref={mapsButtonRef}
             type="button"
             disabled={!canOpen}
+            aria-label={mapsLabel}
             onClick={() => {
               window.dispatchEvent(new CustomEvent("wb-pause-music"));
               setIsOpen(true);
             }}
-            className="flex min-h-[48px] items-center justify-center rounded-full border border-border/50 bg-white/50 px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition active:scale-95 disabled:opacity-50"
+            className="flex min-h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full bg-white/40 transition-all active:scale-95 disabled:opacity-50 hover:bg-white/60"
           >
-            {mapsLabel}
+            <Map className="h-[22px] w-[22px] text-foreground" strokeWidth={1.5} />
           </button>
           <button
             type="button"
             onClick={handleShare}
-            className="flex min-h-[48px] items-center justify-center rounded-full border border-border/50 bg-white/50 px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground transition active:scale-95"
+            aria-label="Compartir"
+            className="flex min-h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full bg-white/40 transition-all active:scale-95 hover:bg-white/60"
           >
-            Compartir
+            {shareMessage ? (
+              <Check className="h-[22px] w-[22px] text-secondary animate-pulse" strokeWidth={1.5} />
+            ) : (
+              <Share2 className="h-[22px] w-[22px] text-foreground" strokeWidth={1.5} />
+            )}
           </button>
         </div>
-        {shareMessage && (
-          <p className="mt-2 text-center text-[0.7rem] uppercase tracking-[0.2em] text-muted">
-            {shareMessage}
-          </p>
-        )}
       </div>
       <MapsChooserModal
         open={isOpen}

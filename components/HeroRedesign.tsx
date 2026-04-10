@@ -57,28 +57,51 @@ type HeroRedesignProps = {
 
 export function HeroRedesign({ config }: HeroRedesignProps) {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     setIsLoaded(true);
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({
+        x: (e.clientX / window.innerWidth - 0.5) * 20,
+        y: (e.clientY / window.innerHeight - 0.5) * 20,
+      });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // Animación del pincel: Varias pinceladas que se revelan en secuencia MUCHO más lenta
+  // Animación del pincel
   const brushStrokes = [
-    { id: 1, mask: "/images/masks/brush_stroke_1.png", delay: 1, duration: 6, scale: 1.2, rotate: 0, position: "center" },
-    { id: 2, mask: "/images/masks/brush_stroke_2.png", delay: 2.5, duration: 7, scale: 1.5, rotate: 180, position: "center" },
-    { id: 3, mask: "/images/masks/brush.png", delay: 4, duration: 8.5, scale: 2.5, rotate: 45, position: "center" },
+    { id: 1, mask: "/images/masks/brush_stroke_1.png", delay: 0.8, duration: 5, scale: 1.2, rotate: 0, position: "center" },
+    { id: 2, mask: "/images/masks/brush_stroke_2.png", delay: 1.8, duration: 6, scale: 1.5, rotate: 180, position: "center" },
+    { id: 3, mask: "/images/masks/brush.png", delay: 3, duration: 8, scale: 2.5, rotate: 45, position: "center" },
   ];
 
   return (
-    <header className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center text-center px-4 pt-20 pb-20 md:pt-32 md:pb-32 bg-background overflow-hidden">
+    <header className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center text-center px-4 pt-16 pb-20 md:pt-28 md:pb-28 overflow-hidden">
       
+      {/* Premium Light Leak Effect */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-olive/5 blur-[120px] rounded-full pointer-events-none" />
+
       <motion.div 
         initial="hidden"
         animate={isLoaded ? "visible" : "hidden"}
-        className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center gap-8 md:gap-12"
+        className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center gap-6 md:gap-10"
       >
         {/* Names & Date Header */}
-        <div className="flex flex-col items-center gap-2 md:gap-4">
+        <div className="flex flex-col items-center gap-1 md:gap-3">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0, transition: { delay: 0.5, duration: 1.5 } }
+            }}
+            className="text-editorial mb-2"
+          >
+            Estamos encantados de invitaros a
+          </motion.div>
+
           <motion.h1 
             variants={{
               hidden: { opacity: 0, y: 30 },
@@ -88,59 +111,43 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
                 transition: { delay: 1, duration: 2, ease: [0.22, 1, 0.36, 1] }
               }
             }}
-            className="group relative font-script text-6xl md:text-8xl lg:text-9xl text-foreground font-normal leading-tight px-4"
+            className="font-serif text-4xl md:text-6xl lg:text-8xl text-foreground font-light leading-tight px-4 tracking-[0.05em]"
           >
-            <span className="relative z-10">Alba <span className="text-accent italic">&</span> Guille</span>
-            {/* Shimmer Effect */}
-            <motion.div 
-              initial={{ x: "-100%", opacity: 0 }}
-              animate={isLoaded ? { 
-                x: "100%", 
-                opacity: [0, 0.4, 0],
-                transition: { delay: 3, duration: 2, repeat: Infinity, repeatDelay: 4 } 
-              } : {}}
-              className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-r from-transparent via-accent/30 to-transparent skew-x-[-20deg]"
-            />
+            <span className="relative z-10 flex justify-center items-center gap-x-6 md:gap-x-8 italic">
+               Alba <span className="text-accent/60 font-script text-6xl md:text-8xl lg:text-9xl -translate-y-1 md:-translate-y-2">&amp;</span> Guille
+            </span>
           </motion.h1>
 
+          {/* Date Container */}
           <motion.div 
             variants={{
-              hidden: { scaleX: 0, opacity: 0 },
+              hidden: { opacity: 0, scale: 0.9 },
               visible: { 
-                scaleX: 1, 
-                opacity: 1,
-                transition: { delay: 2.2, duration: 1.5, ease: "easeOut" }
+                opacity: 1, 
+                scale: 1,
+                transition: { delay: 2.5, duration: 1.2 }
               }
             }}
-            className="h-px w-16 md:w-24 bg-accent/20 my-1 md:my-2 origin-center" 
-          />
-
-          {/* Date Container: Isolated to prevent layout shifts */}
-          <div className="relative min-h-[1.5rem] md:min-h-[2.5rem] flex items-center justify-center overflow-visible">
-            <motion.div
-              variants={{
-                hidden: { opacity: 0 },
-                visible: { 
-                  opacity: 1, 
-                  transition: { delay: 3.5, duration: 1 }
-                }
-              }}
-            >
-              <ScrambleText 
-                text="12 de Septiembre · 2026" 
-                delay={3.8} 
-                duration={2.5}
-                className="font-serif text-lg md:text-xl lg:text-2xl text-muted/80 font-light tracking-[0.3em]"
-              />
-            </motion.div>
-          </div>
+            className="mt-6 md:mt-8 px-6 py-2 glass rounded-full"
+          >
+            <ScrambleText 
+              text="12 · SEPTIEMBRE · 2026" 
+              delay={3.2} 
+              duration={2}
+              className="font-sans text-[10px] md:text-xs text-foreground font-bold tracking-[0.4em] uppercase"
+            />
+          </motion.div>
         </div>
 
-        {/* Central Illustration with Multi-Brush Reveal */}
-        <div className="relative w-full flex justify-center mt-2 mb-2 md:mt-4 md:mb-6">
-          <div className="relative w-full max-w-[320px] md:max-w-[550px] h-[50vh] md:h-[65vh] min-h-[400px] md:min-h-[750px] mix-blend-multiply">
-            
-            {/* Capas de Pinceladas Coincidentes */}
+        {/* Central Illustration with Parallax */}
+        <div className="relative w-full flex justify-center mt-0 mb-0">
+          <motion.div 
+            className="relative w-full max-w-[340px] md:max-w-[600px] h-[50vh] md:h-[65vh] min-h-[420px] md:min-h-[750px] mix-blend-multiply transition-transform duration-700 ease-out"
+            style={{
+              transform: `translate3d(${mousePos.x}px, ${mousePos.y}px, 0) rotateX(${-mousePos.y * 0.1}deg) rotateY(${mousePos.x * 0.1}deg)`,
+            }}
+          >
+            {/* Capas de Pinceladas */}
             {brushStrokes.map((stroke) => (
               <motion.div
                 key={stroke.id}
@@ -153,8 +160,8 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
               >
                 <motion.div
                   animate={isLoaded ? { 
-                    maskSize: ["0% 0%", "150% 150%", "400% 400%"],
-                    transition: { delay: stroke.delay, duration: stroke.duration, ease: "easeInOut" }
+                    maskSize: ["0% 0%", "150% 150%", "450% 450%"],
+                    transition: { delay: stroke.delay, duration: stroke.duration, ease: [0.16, 1, 0.3, 1] }
                   } : {} as any}
                   className="h-full w-full relative overflow-hidden"
                   style={{
@@ -172,38 +179,33 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
                     src="/photos/hero/hero_ilustracion.png"
                     alt="Ilustración Alba y Guille"
                     fill
-                    className="object-contain object-center scale-[1.02]"
+                    className="object-contain object-center scale-[1.05]"
                     priority
                   />
                 </motion.div>
               </motion.div>
             ))}
-
-            {/* Slow Ken Burns Effect on the whole container */}
-            <motion.div
-              animate={isLoaded ? {
-                scale: [1, 1.05, 1],
-                transition: { duration: 35, repeat: Infinity, ease: "linear" }
-              } : {}}
-              className="absolute inset-0 -z-10 bg-background/5"
-            />
-          </div>
+          </motion.div>
         </div>
 
-        {/* Poetic Subtext */}
+        {/* Poetic Subtext & CTA */}
         <motion.div 
           variants={{
-            hidden: { opacity: 0 },
+            hidden: { opacity: 0, y: 20 },
             visible: { 
               opacity: 1,
-              transition: { delay: 5.5, duration: 1 }
+              y: 0,
+              transition: { delay: 5, duration: 1.5 }
             }
           }}
-          className="flex flex-col items-center gap-6 max-w-lg"
+          className="flex flex-col items-center gap-8 max-w-xl -mt-6 md:-mt-12"
         >
-          <p className="text-foreground/80 font-sans font-light leading-relaxed text-sm md:text-base italic px-4">
-            &ldquo;{config.heroDescription || "Dos caminos que se unen, una historia por escribir y mil momentos para compartir con vosotros."}&rdquo;
-          </p>
+          <div className="relative px-8 py-4">
+            <div className="absolute inset-0 bg-accent/5 blur-xl rounded-full" />
+            <p className="relative text-foreground/70 font-serif font-light leading-relaxed text-base md:text-xl italic px-4">
+              &ldquo;{config.heroDescription || "Dos caminos que se unen, una historia por escribir y mil momentos para compartir con vosotros."}&rdquo;
+            </p>
+          </div>
 
           <a
             href={getGoogleCalendarUrl({
@@ -215,9 +217,9 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
             })}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block relative overflow-hidden bg-accent text-white px-10 py-4 rounded-full text-[11px] md:text-xs tracking-[0.25em] hover:bg-accent/90 transition-all duration-300 uppercase font-bold shadow-md hover:shadow-xl hover:-translate-y-1 active:scale-95"
+            className="inline-block px-12 py-5 rounded-full bg-foreground text-white text-[10px] md:text-xs tracking-[0.3em] font-bold uppercase shadow-premium hover:shadow-2xl hover:-translate-y-1 transition-all active:scale-95"
           >
-            Añadir al Calendario
+            Guardar la Fecha
           </a>
         </motion.div>
       </motion.div>
@@ -227,15 +229,15 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
         initial={{ opacity: 0 }}
         animate={isLoaded ? { 
           opacity: 1,
-          y: [0, 8, 0],
+          y: [0, 10, 0],
           transition: { 
             opacity: { delay: 6.5, duration: 1 },
-            y: { duration: 2, repeat: Infinity }
+            y: { duration: 2.5, repeat: Infinity, ease: "easeInOut" }
           }
         } : {}}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 text-secondary/40"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 text-muted/30"
       >
-        <ChevronDown size={32} strokeWidth={1} />
+        <ChevronDown size={36} strokeWidth={1} />
       </motion.div>
     </header>
   );

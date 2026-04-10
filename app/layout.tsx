@@ -84,10 +84,10 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning data-scroll-behavior="smooth">
       <body
-        className={`${montserrat.variable} ${cormorant.variable} ${pinyonScript.variable} antialiased bg-background text-foreground`}
+        className={`${montserrat.variable} ${cormorant.variable} ${pinyonScript.variable} antialiased selection:bg-accent/30 selection:text-foreground grain-overlay`}
       >
         <ThemeProvider attribute="data-theme" forcedTheme="light" disableTransitionOnChange>
-          <div className="relative min-h-screen bg-background">
+          <div className="relative min-h-screen mesh-bg">
 
             <a
               href="#main-content"
