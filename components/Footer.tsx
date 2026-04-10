@@ -42,7 +42,7 @@ export function Footer({
   }, [parsedTarget]);
 
   return (
-    <footer className="relative mt-20 pt-16 pb-32 md:pb-16 px-6 overflow-hidden">
+    <footer className="relative mt-4 md:mt-20 pt-16 pb-32 md:pb-16 px-6 overflow-hidden">
       {/* Footer Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] aspect-[2/1] bg-foreground/5 blur-[120px] rounded-[100%] -z-10" />
 
@@ -83,7 +83,7 @@ export function Footer({
           {/* Bottom Text */}
           <div className="flex flex-col gap-6 items-center">
             <div className="text-[10px] tracking-[0.5em] text-white/40 uppercase leading-relaxed font-sans">
-              Hecho con ❤️ por Alba & Guille
+              Hecho por Alba y Guille
             </div>
           </div>
         </div>

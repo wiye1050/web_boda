@@ -117,7 +117,7 @@ export default function Home() {
           }}
         />
       )}
-      <main className="flex-1 pb-32 sm:pb-0">
+      <main className="flex-1 pb-12 sm:pb-0">
         <HeroRedesign
           config={{
             heroTitle: config.heroTitle,
