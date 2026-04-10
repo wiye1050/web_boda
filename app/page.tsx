@@ -1,5 +1,3 @@
-"use client";
-
 import { CTAButton } from "@/components/CTAButton";
 import { Footer } from "@/components/Footer";
 import { HeroRedesign } from "@/components/HeroRedesign";
@@ -8,51 +6,40 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { TopBar } from "@/components/TopBar";
 import { getPublicConfig } from "@/lib/getPublicConfig";
 import { getAccommodations } from "@/lib/getAccommodations";
+import { DEFAULT_PUBLIC_CONTENT } from "@/lib/publicContent";
 import dynamic from "next/dynamic";
 import type { GiftOption } from "@/components/GiftList";
-import { useState, useEffect, Suspense } from "react";
-import { Map as MapIcon, MousePointer2, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { MapInteractive } from "@/components/MapInteractive";
 
 // Dynamic Imports for performance
 const MobileBottomBar = dynamic(() => import("@/components/MobileBottomBar").then(mod => mod.MobileBottomBar));
 const RSVPForm = dynamic(() => import("@/components/RSVPForm").then(mod => mod.RSVPForm));
-const MapboxMap = dynamic(() => import("@/components/MapboxMap").then(mod => mod.MapboxMap));
 
 // Extracted components as dynamic imports
 const StayList = dynamic(() => import("@/components/StayList").then(mod => mod.StayList));
 const GiftList = dynamic(() => import("@/components/GiftList").then(mod => mod.GiftList));
 const PracticalList = dynamic(() => import("@/components/PracticalList").then(mod => mod.PracticalList));
 
+export const revalidate = 60; // Keep page fast but updated every minute if Firebase changes
 
-export default function Home() {
-  const [isMapActive, setIsMapActive] = useState(false);
-  const [config, setConfig] = useState<any>(null);
-  const [accommodations, setAccommodations] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+export default async function Home() {
+  let config;
+  let accommodations = [];
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [configRes, accommodationsRes] = await Promise.all([
-          getPublicConfig(),
-          getAccommodations(),
-        ]);
-        setConfig(configRes);
-        setAccommodations(accommodationsRes);
-      } catch (error) {
-        console.error("Critical error fetching data:", error);
-        const { DEFAULT_PUBLIC_CONTENT } = await import("@/lib/publicContent");
-        setConfig(DEFAULT_PUBLIC_CONTENT);
-        setAccommodations(DEFAULT_PUBLIC_CONTENT.stayOptions);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, []);
+  try {
+    const [configRes, accommodationsRes] = await Promise.all([
+      getPublicConfig(),
+      getAccommodations(),
+    ]);
+    config = configRes;
+    accommodations = accommodationsRes;
+  } catch (error) {
+    console.error("Critical error fetching data:", error);
+    config = DEFAULT_PUBLIC_CONTENT;
+    accommodations = DEFAULT_PUBLIC_CONTENT.stayOptions || [];
+  }
 
-  if (loading || !config) return null;
+  if (!config) return null;
 
   const prebodaMapUrl = config.prebodaMapsUrl?.trim() || config.prebodaMapUrl?.trim() || (config.prebodaPlace ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(config.prebodaPlace)}` : "");
   const weddingMapUrl = config.weddingMapsUrl?.trim() || config.locationMapUrl?.trim() || (config.locationName ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(config.locationName + " " + (config.locationAddress || ""))}` : "");
@@ -258,46 +245,10 @@ export default function Home() {
                 <div className="relative group">
                   <div className="absolute -inset-1 bg-accent/20 rounded-[2.5rem] blur opacity-0 group-hover:opacity-100 transition duration-1000" />
                   <div className="relative overflow-hidden rounded-[2.5rem] glass shadow-premium h-[420px] lg:h-[500px]">
-                    {!isMapActive && (
-                      <div 
-                        className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/5 backdrop-blur-[2px] cursor-pointer group/shield"
-                        onClick={() => setIsMapActive(true)}
-                      >
-                        <div className="flex flex-col items-center gap-4 rounded-3xl glass px-8 py-6 shadow-2xl group-hover/shield:scale-105 transition-transform duration-500">
-                          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent/10 text-accent">
-                            <MapIcon className="h-7 w-7" />
-                          </div>
-                          <div className="text-center">
-                            <p className="text-base font-medium text-foreground">Mapa Interactivo</p>
-                            <p className="text-xs text-foreground/50 flex items-center justify-center gap-1.5 mt-1">
-                              <MousePointer2 className="h-3 w-3" /> Toca para explorar
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    {isMapActive && (
-                      <button 
-                        onClick={() => setIsMapActive(false)}
-                        className="absolute top-6 left-6 z-20 flex h-12 w-12 items-center justify-center rounded-full glass shadow-lg hover:scale-110 transition-all text-foreground"
-                      >
-                        <X className="h-6 w-6" />
-                      </button>
-                    )}
-                    <div className={cn("h-full w-full", !isMapActive && "pointer-events-none opacity-60 grayscale-[50%]")}>
-                      <Suspense fallback={<div className="h-full w-full bg-muted animate-pulse" />}>
-                        {process.env.NEXT_PUBLIC_MAPBOX_TOKEN ? (
-                          <MapboxMap />
-                        ) : config.locationMapEmbedUrl ? (
-                          <iframe
-                            src={config.locationMapEmbedUrl}
-                            className="h-full w-full border-0 transition-opacity duration-700"
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                          />
-                        ) : null}
-                      </Suspense>
-                    </div>
+                    <MapInteractive 
+                      mapboxToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN} 
+                      embedUrl={config.locationMapEmbedUrl} 
+                    />
                   </div>
                 </div>
               </div>

@@ -61,13 +61,25 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
 
   useEffect(() => {
     setIsLoaded(true);
+    let ticking = false;
+
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth - 0.5) * 20,
-        y: (e.clientY / window.innerHeight - 0.5) * 20,
-      });
+      // Solo en escritorio para evitar cálculos innecesarios en móvil
+      if (window.innerWidth < 768) return;
+      
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setMousePos({
+            x: (e.clientX / window.innerWidth - 0.5) * 20,
+            y: (e.clientY / window.innerHeight - 0.5) * 20,
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener("mousemove", handleMouseMove);
+    
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
