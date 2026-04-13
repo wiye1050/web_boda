@@ -30,7 +30,7 @@ export function InteractiveExperience({
       type: "Cultura",
       distance: "En el centro",
       priceRange: "Ticket 6€",
-      imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Castillo_de_los_Templarios_de_Ponferrada.jpg/800px-Castillo_de_los_Templarios_de_Ponferrada.jpg",
+      imageUrl: "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Castillo_de_los_Templarios_de_Ponferrada.jpg&width=800",
       link: "https://www.ponferrada.org/turismo/es/monumentos/castillo-templarios",
     },
     {
@@ -39,7 +39,7 @@ export function InteractiveExperience({
       type: "Naturaleza",
       distance: "A 25 min",
       priceRange: "Patrimonio UNESCO",
-      imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Panor%C3%A1mica_de_Las_M%C3%A9dulas.jpg/800px-Panor%C3%A1mica_de_Las_M%C3%A9dulas.jpg",
+      imageUrl: "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Panor%C3%A1mica_de_Las_M%C3%A9dulas.jpg&width=800",
       link: "https://www.ponferrada.org/turismo/es/entorno/medulas",
     },
     {
@@ -48,7 +48,7 @@ export function InteractiveExperience({
       type: "Pueblo",
       distance: "A 30 min",
       priceRange: "Pueblo más bonito",
-      imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Pe%C3%B1alba_de_Santiago.jpg/800px-Pe%C3%B1alba_de_Santiago.jpg",
+      imageUrl: "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Pe%C3%B1alba_de_Santiago.jpg&width=800",
       link: "https://www.ponferrada.org/turismo/es/entorno/penalba-santiago",
     },
     {
@@ -57,7 +57,7 @@ export function InteractiveExperience({
       type: "Pueblo",
       distance: "A 10 min",
       priceRange: "Camino de Santiago",
-      imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Molinaseca_puente_romano.jpg/800px-Molinaseca_puente_romano.jpg",
+      imageUrl: "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Molinaseca_puente_romano.jpg&width=800",
       link: "https://www.turismocastillayleon.com/es/rural-naturaleza/pueblos-con-encanto/molinaseca",
     },
     {
