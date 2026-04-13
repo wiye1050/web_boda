@@ -88,37 +88,37 @@ export function InteractiveExperience({
           <button
             onClick={() => setActiveCategory("info")}
             className={cn(
-              "flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap",
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
               activeCategory === "info" 
-                ? "bg-accent text-white shadow-md" 
+                ? "bg-accent text-white shadow-sm" 
                 : "text-muted hover:text-foreground"
             )}
           >
-            <Info className="h-3.5 w-3.5" />
+            <Info className="h-3 w-3" />
             Info
           </button>
           <button
             onClick={() => setActiveCategory("accommodation")}
             className={cn(
-              "flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap",
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
               activeCategory === "accommodation" 
-                ? "bg-accent text-white shadow-md" 
+                ? "bg-accent text-white shadow-sm" 
                 : "text-muted hover:text-foreground"
             )}
           >
-            <BedDouble className="h-3.5 w-3.5" />
+            <BedDouble className="h-3 w-3" />
             Dormir
           </button>
           <button
             onClick={() => setActiveCategory("tourism")}
             className={cn(
-              "flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap",
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
               activeCategory === "tourism" 
-                ? "bg-accent text-white shadow-md" 
+                ? "bg-accent text-white shadow-sm" 
                 : "text-muted hover:text-foreground"
             )}
           >
-            <Camera className="h-3.5 w-3.5" />
+            <Camera className="h-3 w-3" />
             Qué hacer
           </button>
         </div>
@@ -140,7 +140,7 @@ export function InteractiveExperience({
                             <h4 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-4">
                                 <Info className="h-3 w-3" /> Info Práctica
                             </h4>
-                            <p className="text-xs text-muted leading-relaxed mb-6 italic">
+                            <p className="text-[11px] text-muted leading-relaxed mb-6 italic">
                                 Detalles importantes para vuestro viaje y estancia durante el evento.
                             </p>
                             <PracticalList variant="strip" items={practicalItems} />
@@ -158,14 +158,14 @@ export function InteractiveExperience({
                             <h4 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-4">
                                 <BedDouble className="h-3 w-3" /> Opciones de Alojamiento
                             </h4>
-                            <p className="text-xs text-muted leading-relaxed mb-6 italic">
+                            <p className="text-[11px] text-muted leading-relaxed mb-6 italic">
                                 Hemos seleccionado los mejores hoteles cercanos al evento con tarifas preferenciales.
                             </p>
                             <StayList
                                 items={accommodations}
                                 linkLabel="Ver hotel"
                                 showViewAll={false}
-                                variant="minimal"
+                                variant="compact"
                             />
                          </div>
                     </motion.div>
@@ -181,7 +181,7 @@ export function InteractiveExperience({
                             <h4 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-4">
                                 <Coffee className="h-3 w-3" /> Recomendaciones
                             </h4>
-                            <p className="text-xs text-muted leading-relaxed mb-6 italic">
+                            <p className="text-[11px] text-muted leading-relaxed mb-6 italic">
                                 Ponferrada y el Bierzo tienen lugares mágicos. Aquí os dejamos unos imprescindibles que no os podéis perder.
                             </p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -193,7 +193,15 @@ export function InteractiveExperience({
                                         rel="noopener noreferrer"
                                         className="group relative h-40 overflow-hidden rounded-2xl bg-surface border border-border/40 shadow-sm transition-all hover:-translate-y-1"
                                     >
-                                        <img src={item.imageUrl} alt={item.name} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                        <img 
+                                            src={`${item.imageUrl}?auto=format&fit=crop&q=80&w=600`} 
+                                            alt={item.name} 
+                                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                                            onError={(e) => {
+                                                // Fallback if Unsplash fails
+                                                (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=600";
+                                            }}
+                                        />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                                         <div className="absolute bottom-3 left-4 text-white">
                                             <p className="text-[8px] uppercase tracking-widest text-white/70">{item.type}</p>

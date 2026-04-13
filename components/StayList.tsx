@@ -8,20 +8,27 @@ type StayListProps = {
   items: Accommodation[];
   linkLabel: string;
   showViewAll?: boolean;
-  variant?: "default" | "minimal";
+  variant?: "default" | "minimal" | "compact";
 };
 
 export function StayList({ items, linkLabel, showViewAll, variant = "default" }: StayListProps) {
   const isMinimal = variant === "minimal";
+  const isCompact = variant === "compact";
   
   return (
     <div className="flex flex-col gap-10 cursor-default">
       <div className={cn(
-        "grid gap-6",
-        isMinimal ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-4"
+        "grid gap-4",
+        isMinimal || isCompact ? "grid-cols-1 sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-4"
       )}>
         {items.map((stay, index) => (
-          <div key={stay.id || `stay-option-${index}`} className="group relative flex h-72 flex-col justify-end overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-sm transition-transform hover:-translate-y-1 hover:shadow-md">
+          <div 
+            key={stay.id || `stay-option-${index}`} 
+            className={cn(
+                "group relative flex overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-sm transition-all hover:-translate-y-1 hover:shadow-md",
+                isCompact ? "h-40" : "flex-col justify-end h-72"
+            )}
+          >
             {stay.link ? (
                <a href={stay.link} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-20">
                  <span className="sr-only">Reservar en {stay.name}</span>
@@ -33,48 +40,72 @@ export function StayList({ items, linkLabel, showViewAll, variant = "default" }:
                className="absolute inset-0 bg-muted/20 transition-transform duration-700 group-hover:scale-105"
             >
                {stay.imageUrl ? (
-                 <Image src={stay.imageUrl} alt={stay.name} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw" className="object-cover" />
+                 <Image 
+                    src={stay.imageUrl} 
+                    alt={stay.name} 
+                    fill 
+                    sizes="(max-width: 768px) 100vw, 50vw" 
+                    className="object-cover" 
+                 />
                ) : (
                  <div className="flex h-full w-full items-center justify-center bg-accent/30 text-muted/50">
-                    <BedDouble className="h-16 w-16" />
+                    <BedDouble className="h-12 w-12" />
                  </div>
                )}
             </div>
             
             {/* Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent pointer-events-none" />
+            <div className={cn(
+                "absolute inset-0 pointer-events-none",
+                isCompact 
+                    ? "bg-gradient-to-t from-black/80 via-black/20 to-transparent" 
+                    : "bg-gradient-to-t from-black/70 via-black/30 to-transparent"
+            )} />
 
             {/* Badges */}
-            <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-10 pointer-events-none">
+            <div className="absolute top-3 left-3 right-3 flex justify-between items-start z-10 pointer-events-none">
                {stay.hasBlock && (
-                  <div className="flex items-center gap-1 rounded-full bg-accent/95 backdrop-blur px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-sm">
-                    <Check className="h-3.5 w-3.5" />
-                    <span>Precio Especial</span>
+                  <div className="flex items-center gap-1 rounded-full bg-accent/95 backdrop-blur px-2.5 py-1 text-[8px] font-bold uppercase tracking-wider text-primary-foreground shadow-sm">
+                    <Check className="h-3 w-3" />
+                    <span>Bloqueo</span>
                   </div>
                )}
                {stay.priceRange && (
-                  <div className="ml-auto rounded-full bg-black/40 backdrop-blur px-3 py-1.5 text-xs font-bold text-white">
+                  <div className="ml-auto rounded-full bg-black/40 backdrop-blur px-2.5 py-1 text-[9px] font-bold text-white">
                     {stay.priceRange}
                   </div>
                )}
             </div>
 
             {/* Content */}
-            <div className="relative z-10 flex flex-col p-6 pointer-events-none items-center text-center">
-              <header className="flex flex-col gap-1 text-white items-center">
-                <span className="text-[10px] uppercase tracking-widest text-white/80 font-bold">{stay.type}</span>
-                <h3 className="text-2xl font-serif !text-white">{stay.name}</h3>
+            <div className={cn(
+                "relative z-10 flex flex-col pointer-events-none",
+                isCompact ? "p-4 justify-end h-full" : "p-6 items-center text-center"
+            )}>
+              <header className={cn(
+                  "flex flex-col gap-0.5 text-white",
+                  !isCompact && "items-center"
+              )}>
+                <span className={cn(
+                    "uppercase tracking-widest text-white/70 font-bold",
+                    isCompact ? "text-[8px]" : "text-[10px]"
+                )}>{stay.type}</span>
+                <h3 className={cn(
+                    "font-serif !text-white",
+                    isCompact ? "text-base leading-tight" : "text-2xl"
+                )}>{stay.name}</h3>
                 
-                {(stay.distance || stay.capacity) && (
-                  <div className="mt-2 flex items-center justify-center gap-3 text-xs text-white/90">
+                {(stay.distance) && (
+                  <div className={cn(
+                      "flex items-center gap-1.5 text-white/90",
+                      isCompact ? "mt-1 text-[10px]" : "mt-2 text-xs justify-center"
+                  )}>
                      {stay.distance && (
                         <span className="flex items-center gap-1">
-                          <MapPin className="h-3.5 w-3.5" />
+                          <MapPin className="h-3 w-3" />
                           {stay.distance}
                         </span>
                      )}
-                     {stay.distance && stay.capacity && <span className="opacity-50">•</span>}
-                     {stay.capacity && <span>{stay.capacity}</span>}
                   </div>
                 )}
               </header>
