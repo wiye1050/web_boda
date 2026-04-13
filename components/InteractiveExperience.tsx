@@ -30,7 +30,7 @@ export function InteractiveExperience({
       type: "Cultura",
       distance: "En el centro",
       priceRange: "Ticket 6€",
-      imageUrl: "https://images.unsplash.com/photo-1599932840502-36940d510e9f?q=80&w=800&auto=format&fit=crop",
+      imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Castillo_de_los_Templarios_de_Ponferrada.jpg/800px-Castillo_de_los_Templarios_de_Ponferrada.jpg",
       link: "https://www.ponferrada.org/turismo/es/monumentos/castillo-templarios",
     },
     {
@@ -39,7 +39,7 @@ export function InteractiveExperience({
       type: "Naturaleza",
       distance: "A 25 min",
       priceRange: "Patrimonio UNESCO",
-      imageUrl: "https://images.unsplash.com/photo-1628124800366-0771cc436ca6?q=80&w=800&auto=format&fit=crop",
+      imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Panor%C3%A1mica_de_Las_M%C3%A9dulas.jpg/800px-Panor%C3%A1mica_de_Las_M%C3%A9dulas.jpg",
       link: "https://www.ponferrada.org/turismo/es/entorno/medulas",
     },
     {
@@ -48,7 +48,7 @@ export function InteractiveExperience({
       type: "Pueblo",
       distance: "A 30 min",
       priceRange: "Pueblo más bonito",
-      imageUrl: "https://images.unsplash.com/photo-1627585002930-5716e91f692f?q=80&w=800&auto=format&fit=crop",
+      imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Pe%C3%B1alba_de_Santiago.jpg/800px-Pe%C3%B1alba_de_Santiago.jpg",
       link: "https://www.ponferrada.org/turismo/es/entorno/penalba-santiago",
     },
     {
@@ -57,7 +57,7 @@ export function InteractiveExperience({
       type: "Pueblo",
       distance: "A 10 min",
       priceRange: "Camino de Santiago",
-      imageUrl: "https://images.unsplash.com/photo-1652613133333-8208453fbcaf?q=80&w=800&auto=format&fit=crop",
+      imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Molinaseca_puente_romano.jpg/800px-Molinaseca_puente_romano.jpg",
       link: "https://www.turismocastillayleon.com/es/rural-naturaleza/pueblos-con-encanto/molinaseca",
     },
     {
@@ -194,11 +194,14 @@ export function InteractiveExperience({
                                         className="group relative h-40 overflow-hidden rounded-2xl bg-surface border border-border/40 shadow-sm transition-all hover:-translate-y-1"
                                     >
                                         <img 
-                                            src={`${item.imageUrl}?auto=format&fit=crop&q=80&w=600`} 
+                                            src={item.imageUrl.includes("unsplash.com") 
+                                                ? `${item.imageUrl}${item.imageUrl.includes("?") ? "&" : "?"}auto=format&fit=crop&q=80&w=600`
+                                                : item.imageUrl
+                                            } 
                                             alt={item.name} 
                                             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
                                             onError={(e) => {
-                                                // Fallback if Unsplash fails
+                                                // Fallback if URL fails
                                                 (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=600";
                                             }}
                                         />
