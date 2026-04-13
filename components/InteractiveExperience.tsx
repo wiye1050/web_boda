@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { PracticalList } from "./PracticalList";
 import { StayList } from "./StayList";
 import { MapInteractive } from "./MapInteractive";
@@ -88,31 +89,31 @@ export function InteractiveExperience({
           <button
             onClick={() => setActiveCategory("info")}
             className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
               activeCategory === "info" 
                 ? "bg-accent text-white shadow-sm" 
                 : "text-muted hover:text-foreground"
             )}
           >
-            <Info className="h-3 w-3" />
+            <Info className="h-3.5 w-3.5" />
             Info
           </button>
           <button
             onClick={() => setActiveCategory("accommodation")}
             className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
               activeCategory === "accommodation" 
                 ? "bg-accent text-white shadow-sm" 
                 : "text-muted hover:text-foreground"
             )}
           >
-            <BedDouble className="h-3 w-3" />
+            <BedDouble className="h-3.5 w-3.5" />
             Dormir
           </button>
           <button
             onClick={() => setActiveCategory("tourism")}
             className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
               activeCategory === "tourism" 
                 ? "bg-accent text-white shadow-sm" 
                 : "text-muted hover:text-foreground"
@@ -193,20 +194,20 @@ export function InteractiveExperience({
                                         rel="noopener noreferrer"
                                         className="group relative h-40 overflow-hidden rounded-2xl bg-surface border border-border/40 shadow-sm transition-all hover:-translate-y-1"
                                     >
-                                        <img 
-                                            src={item.imageUrl.includes("unsplash.com") 
-                                                ? `${item.imageUrl}${item.imageUrl.includes("?") ? "&" : "?"}auto=format&fit=crop&q=80&w=600`
-                                                : item.imageUrl
-                                            } 
-                                            alt={item.name} 
-                                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                                            onError={(e) => {
-                                                // Fallback if URL fails
-                                                (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=600";
-                                            }}
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                                        <div className="absolute bottom-3 left-4 text-white">
+                                        <div className="absolute inset-0 z-10">
+                                            <Image 
+                                                src={item.imageUrl.includes("unsplash.com") 
+                                                    ? `${item.imageUrl}${item.imageUrl.includes("?") ? "&" : "?"}auto=format&fit=crop&q=80&w=600`
+                                                    : item.imageUrl
+                                                } 
+                                                alt={item.name} 
+                                                fill
+                                                sizes="(max-width: 640px) 100vw, 300px"
+                                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                                            />
+                                        </div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-20" />
+                                        <div className="absolute bottom-3 left-4 text-white z-30">
                                             <p className="text-[8px] uppercase tracking-widest text-white/70">{item.type}</p>
                                             <p className="font-serif text-sm italic">{item.name}</p>
                                         </div>

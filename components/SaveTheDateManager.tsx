@@ -16,13 +16,15 @@ export function SaveTheDateManager({ children }: SaveTheDateManagerProps) {
     const seen = sessionStorage.getItem("wb_save_the_date_seen");
     setIsIntroSeen(!!seen);
     
-    // Small delay to ensure smooth transition
-    const timer = setTimeout(() => setIsReady(true), 100);
+    // If already seen, we add a small buffer for the child content to mount smoothly
+    // If NOT seen, we mark ready immediately so the Modal can take over.
+    const delay = seen ? 100 : 0;
+    const timer = setTimeout(() => setIsReady(true), delay);
     return () => clearTimeout(timer);
   }, []);
 
   // While checking, show a black screen to prevent website flash
-  if (isIntroSeen === null || !isReady) {
+  if (isIntroSeen === null || (!isReady && isIntroSeen)) {
     return (
       <div className="fixed inset-0 z-[9999] bg-black" aria-hidden="true" />
     );

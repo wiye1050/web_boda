@@ -98,8 +98,14 @@ export function MobileBottomBar({
       <div
         className={cn(
           "fixed left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-[420px] sm:hidden transition-all duration-700 ease-in-out",
-          isHidden ? "bottom-0 translate-y-full opacity-0 pointer-events-none" : "bottom-6 translate-y-0 opacity-100"
+          isHidden 
+            ? "bottom-0 translate-y-full opacity-0 pointer-events-none" 
+            : "opacity-100"
         )}
+        style={{
+          bottom: isHidden ? 0 : `calc(24px + env(safe-area-inset-bottom, 0px))`,
+          transform: isHidden ? "translate(-50%, 100%)" : "translate(-50%, 0)"
+        }}
       >
         <div className="glass rounded-[2rem] px-2 py-2 flex items-center justify-between gap-1 shadow-premium border-white/20">
           <a

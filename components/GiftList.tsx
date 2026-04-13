@@ -66,6 +66,12 @@ function CopyableDetail({ text }: { text: string }) {
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
+      
+      // Haptic feedback for Android
+      if (typeof window !== "undefined" && window.navigator.vibrate) {
+        window.navigator.vibrate(40);
+      }
+      
       toast.success("IBAN copiado al portapapeles");
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
