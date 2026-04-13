@@ -203,12 +203,44 @@ export function useRsvpData(limitTo = 200) {
     const db = getFirestoreDb();
     try {
       await deleteDoc(doc(db, "rsvps", id));
-      // Optimistic update not needed as onSnapshot will handle it
     } catch (err) {
       console.error("Error deleting RSVP:", err);
       throw err;
     }
   };
 
-  return { records, isLoading, error, metrics, deleteRsvp };
+  const addRsvp = async (data: Omit<RsvpRecord, "id" | "submittedAt" | "updatedAt">) => {
+    const db = getFirestoreDb();
+    const { addDoc, serverTimestamp } = await import("firebase/firestore");
+    try {
+      await addDoc(collection(db, "rsvps"), {
+        ...data,
+        submittedAt: serverTimestamp(),
+        processed: true, // Manual entries are usually processed
+        tags: data.tags || [],
+      });
+    } catch (err) {
+      console.error("Error adding RSVP:", err);
+      throw err;
+    }
+  };
+
+  const updateRsvp = async (id: string, data: Partial<RsvpRecord>) => {
+    const db = getFirestoreDb();
+    const { updateDoc, serverTimestamp } = await import("firebase/firestore");
+    try {
+      const docRef = doc(db, "rsvps", id);
+      const cleanData = { ...data };
+      delete (cleanData as any).id;
+      await updateDoc(docRef, {
+        ...cleanData,
+        updatedAt: serverTimestamp(),
+      });
+    } catch (err) {
+      console.error("Error updating RSVP:", err);
+      throw err;
+    }
+  };
+
+  return { records, isLoading, error, metrics, deleteRsvp, addRsvp, updateRsvp };
 }

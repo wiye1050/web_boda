@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Music, Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const AUDIO_SRC = "/audio/cancion_1.mp3";
+const AUDIO_SRC = "/audio/Marlon - De Perreo.mp3";
 const PREF_KEY = "wb_music_pref"; // "yes" | "no"
 
 export function AmbientMusic() {
@@ -65,16 +65,28 @@ export function AmbientMusic() {
   // Show banner after 2.5s if no preference saved yet
   useEffect(() => {
     const pref = sessionStorage.getItem(PREF_KEY);
-    if (pref === "yes") {
+    const videoSeen = sessionStorage.getItem("wb_save_the_date_seen");
+
+    if (pref === "yes" || pref === "no") {
       setButtonVisible(true);
       return;
     }
-    if (pref === "no") {
-      setButtonVisible(true);
-      return;
+
+    const startBannerTimer = () => {
+      setTimeout(() => setShowBanner(true), 2000);
+    };
+
+    if (videoSeen) {
+      startBannerTimer();
+    } else {
+      // Wait for video to be closed
+      const handleVideoClosed = () => {
+        startBannerTimer();
+        window.removeEventListener("wb-video-closed", handleVideoClosed);
+      };
+      window.addEventListener("wb-video-closed", handleVideoClosed);
+      return () => window.removeEventListener("wb-video-closed", handleVideoClosed);
     }
-    const t = setTimeout(() => setShowBanner(true), 2500);
-    return () => clearTimeout(t);
   }, []);
 
   // Fade audio volume in/out

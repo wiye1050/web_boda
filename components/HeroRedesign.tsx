@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { getGoogleCalendarUrl } from "@/lib/calendar";
 import { ChevronDown } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const chars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789!@#$%^&*()_+";
 
@@ -57,22 +57,26 @@ type HeroRedesignProps = {
 
 export function HeroRedesign({ config }: HeroRedesignProps) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     setIsLoaded(true);
     let ticking = false;
 
     const handleMouseMove = (e: MouseEvent) => {
-      // Solo en escritorio para evitar cálculos innecesarios en móvil
-      if (window.innerWidth < 768) return;
+      if (window.innerWidth < 768 || !containerRef.current) return;
       
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setMousePos({
-            x: (e.clientX / window.innerWidth - 0.5) * 20,
-            y: (e.clientY / window.innerHeight - 0.5) * 20,
-          });
+          const x = (e.clientX / window.innerWidth - 0.5) * 20;
+          const y = (e.clientY / window.innerHeight - 0.5) * 20;
+          
+          if (containerRef.current) {
+            containerRef.current.style.setProperty("--mouse-x", `${x}px`);
+            containerRef.current.style.setProperty("--mouse-y", `${y}px`);
+            containerRef.current.style.setProperty("--rotate-x", `${-y * 0.1}deg`);
+            containerRef.current.style.setProperty("--rotate-y", `${x * 0.1}deg`);
+          }
           ticking = false;
         });
         ticking = true;
@@ -91,7 +95,10 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
   ];
 
   return (
-    <header className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center text-center px-4 pt-32 pb-20 md:pt-28 md:pb-28 overflow-hidden">
+    <header 
+      ref={containerRef}
+      className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center text-center px-4 pt-32 pb-20 md:pt-28 md:pb-28 overflow-hidden [--mouse-x:0px] [--mouse-y:0px] [--rotate-x:0deg] [--rotate-y:0deg]"
+    >
       
       {/* Premium Light Leak Effect */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
@@ -145,10 +152,10 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
 
         {/* Central Illustration with Parallax */}
         <div className="relative w-full flex justify-center mt-0 mb-0">
-          <motion.div 
-            className="relative w-full max-w-[340px] md:max-w-[600px] h-[50vh] md:h-[65vh] min-h-[420px] md:min-h-[750px] mix-blend-multiply transition-transform duration-700 ease-out"
+          <div 
+            className="relative w-full max-w-[340px] md:max-w-[600px] h-[50vh] md:h-[65vh] min-h-[420px] md:min-h-[750px] mix-blend-multiply transition-transform duration-700 ease-out will-change-transform"
             style={{
-              transform: `translate3d(${mousePos.x}px, ${mousePos.y}px, 0) rotateX(${-mousePos.y * 0.1}deg) rotateY(${mousePos.x * 0.1}deg)`,
+              transform: `translate3d(var(--mouse-x), var(--mouse-y), 0) rotateX(var(--rotate-x)) rotateY(var(--rotate-y))`,
             }}
           >
             {/* Capas de Pinceladas */}
@@ -189,7 +196,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
                 </motion.div>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
 
         {/* Poetic Subtext & CTA */}

@@ -46,31 +46,54 @@ const TAG_SUGGESTIONS = [
 
 export function RsvpDetailDialog({ record, onClose }: RsvpDetailDialogProps) {
   const { user } = useAuth();
-  const [notes, setNotes] = useState("");
-  const [processed, setProcessed] = useState(false);
-  const [status, setStatus] = useState<RsvpStatus>("pendiente");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  
+  // State for all fields
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    attendance: "si" as "si" | "no",
+    guests: 1,
+    guestNames: "",
+    preboda: "si" as "si" | "no",
+    needsTransport: "no" as "si" | "no",
+    transportSeats: 0,
+    requests: "",
+    notes: "",
+    status: "pendiente" as RsvpStatus,
+    processed: false,
+    tags: [] as string[],
+  });
+
   const [newTag, setNewTag] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setNotes(record?.notes ?? "");
-    setProcessed(record?.processed ?? false);
-    setStatus(record?.status ?? "pendiente");
-    setSelectedTags(record?.tags ?? []);
-    setNewTag("");
-    setError(null);
-    setIsSaving(false);
+    if (record) {
+      setFormData({
+        fullName: record.fullName || "",
+        email: record.email || "",
+        phone: record.phone || "",
+        attendance: record.attendance || "si",
+        guests: record.guests || 0,
+        guestNames: record.guestNames || "",
+        preboda: record.preboda || "no",
+        needsTransport: record.needsTransport || "no",
+        transportSeats: record.transportSeats || 0,
+        requests: record.requests || "",
+        notes: record.notes || "",
+        status: record.status || "pendiente",
+        processed: record.processed || false,
+        tags: record.tags || [],
+      });
+      setError(null);
+    }
   }, [record]);
 
-  if (!record) {
-    return null;
-  }
+  if (!record) return null;
 
-  const recordId = record.id;
-
-  async function handleSave(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSave(event: React.FormEvent) {
     event.preventDefault();
     if (isSaving) return;
     setIsSaving(true);
@@ -78,229 +101,157 @@ export function RsvpDetailDialog({ record, onClose }: RsvpDetailDialogProps) {
 
     try {
       const db = getFirestoreDb();
-      const docRef = doc(db, "rsvps", recordId);
+      const docRef = doc(db, "rsvps", record.id);
 
       await updateDoc(docRef, {
-        notes: notes.trim(),
-        processed,
-        status,
-        tags: selectedTags.map((tag) => tag.trim()).filter(Boolean),
+        ...formData,
         updatedAt: serverTimestamp(),
-        updatedBy: user?.email ?? null,
+        updatedBy: user?.email ?? "admin",
       });
 
       onClose();
     } catch (err) {
       console.error(err);
-      setError("No se pudo guardar. Intenta de nuevo en unos segundos.");
+      setError("Error al guardar los cambios.");
     } finally {
       setIsSaving(false);
     }
   }
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target as HTMLInputElement;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === "number" ? parseInt(value) || 0 : value
+    }));
+  };
+
   function addTag(tag: string) {
     const trimmed = tag.trim();
     if (!trimmed) return;
-    const exists = selectedTags.some(
-      (existing) => existing.toLowerCase() === trimmed.toLowerCase(),
-    );
-    if (!exists) {
-      setSelectedTags((prev) => [...prev, trimmed]);
+    if (!formData.tags.includes(trimmed)) {
+      setFormData(prev => ({ ...prev, tags: [...prev.tags, trimmed] }));
     }
     setNewTag("");
   }
 
   function removeTag(tag: string) {
-    setSelectedTags((prev) =>
-      prev.filter((existing) => existing.toLowerCase() !== tag.toLowerCase()),
-    );
+    setFormData(prev => ({ ...prev, tags: prev.tags.filter(t => t !== tag) }));
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8">
-      <div className="w-full max-w-2xl rounded-[24px] border border-border/80 bg-surface p-8 shadow-2xl">
-        <header className="flex items-start justify-between gap-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 py-8 overflow-y-auto">
+      <div className="w-full max-w-3xl my-auto rounded-[32px] border border-border/80 bg-surface p-8 shadow-2xl animate-in fade-in zoom-in duration-300">
+        <header className="flex items-start justify-between mb-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-              Gestionar RSVP
-            </p>
-            <h2 className="mt-2 text-2xl font-semibold text-foreground">
-              {record.fullName}
-            </h2>
-            <p className="mt-1 text-sm text-muted">
-              {record.email} · {record.phone}
-            </p>
-            {record.guestNames && (
-              <p className="mt-1 text-xs text-muted">
-                Acompañantes: {record.guestNames}
-              </p>
-            )}
+            <h2 className="text-2xl font-serif italic text-accent">Editar Invitado</h2>
+            <p className="text-xs text-muted uppercase tracking-widest mt-1">ID: {record.id}</p>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-          >
-            Cerrar
+          <button onClick={onClose} className="p-2 hover:bg-muted rounded-full transition-colors">
+            <X className="h-5 w-5" />
           </button>
         </header>
 
-        <div className="mt-6 grid gap-4 rounded-[20px] border border-border/70 bg-background/50 px-5 py-4 text-sm text-muted">
-          <span>
-            <strong className="font-semibold">Asistencia:</strong> {" "}
-            {record.attendance === "si" ? "Sí" : "No"} · {record.guests} adultos
-          </span>
-          <span>
-            <strong className="font-semibold">Preboda:</strong> {" "}
-            {record.preboda === "si" ? "Confirma" : "No viene"}
-          </span>
-          <span>
-            <strong className="font-semibold">Transporte:</strong> {" "}
-            {record.needsTransport === "si"
-              ? `${record.transportSeats ?? 0} plazas solicitadas`
-              : "No requiere"}
-          </span>
-          {record.requests && (
-            <span>
-              <strong className="font-semibold">Notas invitado:</strong> {" "}
-              {record.requests}
-            </span>
-          )}
-        </div>
-
-        <form onSubmit={handleSave} className="mt-6 flex flex-col gap-6">
-          <label className="flex flex-col gap-2 text-left">
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-              Estado del seguimiento
-            </span>
-            <select
-              value={status}
-              onChange={(event) => setStatus(event.target.value as RsvpStatus)}
-              className="rounded-full border border-border/80 bg-background px-4 py-2 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
-            >
-              {STATUS_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            <span className="text-xs text-muted">
-              {STATUS_OPTIONS.find((option) => option.value === status)?.helper}
-            </span>
-          </label>
-
-          <label className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              checked={processed}
-              onChange={(event) => setProcessed(event.target.checked)}
-              className="h-4 w-4 rounded border border-border/80 accent-primary"
-            />
-            <span className="text-sm font-semibold uppercase tracking-[0.3em] text-muted">
-              RSVP procesado
-            </span>
-          </label>
-
-          <label className="flex flex-col gap-2 text-left">
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-              Notas internas
-            </span>
-            <textarea
-              rows={4}
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-              placeholder="Añade observaciones, asignación de mesa, seguimiento, etc."
-              className="rounded-3xl border border-border/80 bg-background px-4 py-3 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
-            />
-          </label>
-
-          <div className="flex flex-col gap-3 text-left">
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-              Etiquetas
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {selectedTags.length === 0 && (
-                <span className="text-xs uppercase tracking-[0.3em] text-muted">
-                  Sin etiquetas
-                </span>
-              )}
-              {selectedTags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center gap-2 rounded-full bg-accent/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-foreground/80"
-                >
-                  {tag}
-                  <button
-                    type="button"
-                    onClick={() => removeTag(tag)}
-                    className="text-[0.65rem] uppercase tracking-[0.3em] text-muted hover:text-primary"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
+        <form onSubmit={handleSave} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Left Column: Guest Info */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted px-1">Nombre Completo</label>
+                <input name="fullName" value={formData.fullName} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-background border border-border outline-none focus:ring-2 focus:ring-accent/20" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted px-1">Email</label>
+                <input name="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-background border border-border outline-none focus:ring-2 focus:ring-accent/20" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted px-1">Teléfono</label>
+                <input name="phone" value={formData.phone} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-background border border-border outline-none focus:ring-2 focus:ring-accent/20" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted px-1">Estado Admin</label>
+                  <select name="status" value={formData.status} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-background border border-border outline-none focus:ring-2 focus:ring-accent/20">
+                    {STATUS_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                  </select>
+                </div>
+                <div className="flex items-end pb-3">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" name="processed" checked={formData.processed} onChange={(e) => setFormData(p => ({...p, processed: e.target.checked}))} className="rounded border-border text-accent focus:ring-accent" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted">Procesado</span>
+                  </label>
+                </div>
+              </div>
             </div>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <input
-                value={newTag}
-                onChange={(event) => setNewTag(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    event.preventDefault();
-                    addTag(newTag);
-                  }
-                }}
-                placeholder="Añadir etiqueta (Enter para guardar)"
-                className="w-full rounded-full border border-border/80 bg-background px-4 py-2 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
-              />
-              <button
-                type="button"
-                onClick={() => addTag(newTag)}
-                className="mt-2 inline-flex items-center justify-center rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary sm:mt-0"
-              >
-                Añadir
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {TAG_SUGGESTIONS.map((tag) => {
-                const active = selectedTags.some(
-                  (existing) => existing.toLowerCase() === tag.toLowerCase(),
-                );
-                return (
-                  <button
-                    key={tag}
-                    type="button"
-                    onClick={() => (active ? removeTag(tag) : addTag(tag))}
-                    className={[
-                      "rounded-full border px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.3em] transition",
-                      active
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : "border-border text-muted hover:border-primary/60 hover:text-primary",
-                    ].join(" ")}
-                  >
-                    {tag}
-                  </button>
-                );
-              })}
+
+            {/* Right Column: Event Info */}
+            <div className="space-y-4">
+               <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted px-1">Asistencia</label>
+                  <select name="attendance" value={formData.attendance} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-background border border-border outline-none focus:ring-2 focus:ring-accent/20">
+                    <option value="si">Confirmado</option>
+                    <option value="no">No viene</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted px-1">Nº Adultos</label>
+                  <input name="guests" type="number" value={formData.guests} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-background border border-border outline-none focus:ring-2 focus:ring-accent/20" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted px-1">Acompañantes</label>
+                <input name="guestNames" value={formData.guestNames} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-background border border-border outline-none focus:ring-2 focus:ring-accent/20" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted px-1">Preboda</label>
+                  <select name="preboda" value={formData.preboda} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-background border border-border outline-none focus:ring-2 focus:ring-accent/20">
+                    <option value="si">Viene</option>
+                    <option value="no">No viene</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted px-1">Pazas Bus</label>
+                  <input name="transportSeats" type="number" value={formData.transportSeats} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl bg-background border border-border outline-none focus:ring-2 focus:ring-accent/20" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted px-1">Notas Invitado</label>
+                <textarea name="requests" value={formData.requests} onChange={handleChange} rows={1} className="w-full px-4 py-2.5 rounded-xl bg-background border border-border outline-none focus:ring-2 focus:ring-accent/20 resize-none" />
+              </div>
             </div>
           </div>
 
-          {error && <p className="text-xs text-primary">{error}</p>}
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-muted px-1">Notas Internas (Dietas, Mesas, etc.)</label>
+              <textarea name="notes" value={formData.notes} onChange={handleChange} rows={3} className="w-full px-4 py-3 rounded-xl bg-background border border-border outline-none focus:ring-2 focus:ring-accent/20" />
+            </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-full border border-border px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted transition hover:border-primary/60 hover:text-primary"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              disabled={isSaving}
-              className="rounded-full bg-primary px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-primary-foreground transition hover:translate-y-[-1px] hover:shadow-lg hover:shadow-primary/30 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isSaving ? "Guardando..." : "Guardar cambios"}
+            <div className="space-y-3">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-muted px-1">Etiquetas</label>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {formData.tags.map(tag => (
+                  <span key={tag} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-bold uppercase tracking-widest border border-accent/20">
+                    {tag}
+                    <button type="button" onClick={() => removeTag(tag)} className="hover:text-red-500">×</button>
+                  </span>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <input value={newTag} onChange={(e) => setNewTag(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTag(newTag))} className="flex-1 px-4 py-2 rounded-full bg-background border border-border text-xs outline-none" placeholder="Nueva etiqueta..." />
+                <button type="button" onClick={() => addTag(newTag)} className="px-4 py-2 rounded-full border border-border text-xs font-bold uppercase tracking-widest hover:bg-muted transition-colors">Añadir</button>
+              </div>
+            </div>
+          </div>
+
+          {error && <p className="text-xs text-red-500">{error}</p>}
+
+          <div className="flex justify-end gap-3 pt-4 border-t border-border">
+            <button type="button" onClick={onClose} className="px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest text-muted hover:bg-muted transition-all">Cancelar</button>
+            <button type="submit" disabled={isSaving} className="px-10 py-3 rounded-full bg-accent text-white text-xs font-bold uppercase tracking-widest shadow-lg shadow-accent/20 hover:-translate-y-0.5 transition-all">
+              {isSaving ? "Guardando..." : "Guardar Cambios"}
             </button>
           </div>
         </form>

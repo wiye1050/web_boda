@@ -2,17 +2,24 @@ import Image from "next/image";
 import { CTAButton } from "@/components/CTAButton";
 import type { Accommodation } from "@/components/admin/useAccommodations";
 import { BedDouble, Check, MapPin } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type StayListProps = {
   items: Accommodation[];
   linkLabel: string;
   showViewAll?: boolean;
+  variant?: "default" | "minimal";
 };
 
-export function StayList({ items, linkLabel, showViewAll }: StayListProps) {
+export function StayList({ items, linkLabel, showViewAll, variant = "default" }: StayListProps) {
+  const isMinimal = variant === "minimal";
+  
   return (
     <div className="flex flex-col gap-10 cursor-default">
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className={cn(
+        "grid gap-6",
+        isMinimal ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-4"
+      )}>
         {items.map((stay, index) => (
           <div key={stay.id || `stay-option-${index}`} className="group relative flex h-72 flex-col justify-end overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-sm transition-transform hover:-translate-y-1 hover:shadow-md">
             {stay.link ? (

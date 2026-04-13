@@ -5,9 +5,17 @@ import dynamic from "next/dynamic";
 import { Map as MapIcon, MousePointer2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const MapboxMap = dynamic(() => import("@/components/MapboxMap").then(mod => mod.MapboxMap));
+const MapboxMap = dynamic(() => import("@/components/MapboxMap").then(mod => mod.MapboxMap), { ssr: false });
 
-export function MapInteractive({ mapboxToken, embedUrl }: { mapboxToken?: string; embedUrl?: string }) {
+export function MapInteractive({ 
+  mapboxToken, 
+  embedUrl,
+  category = "all"
+}: { 
+  mapboxToken?: string; 
+  embedUrl?: string;
+  category?: "all" | "accommodation" | "tourism"
+}) {
   const [isMapActive, setIsMapActive] = useState(false);
 
   return (
@@ -42,16 +50,20 @@ export function MapInteractive({ mapboxToken, embedUrl }: { mapboxToken?: string
       
       <div className={cn("h-full w-full transition-all duration-700", !isMapActive && "pointer-events-none opacity-60 grayscale-[50%]")}>
         <Suspense fallback={<div className="h-full w-full bg-muted animate-pulse" />}>
-          {mapboxToken ? (
-            <MapboxMap />
-          ) : embedUrl ? (
-            <iframe
-              src={embedUrl}
-              className="h-full w-full border-0"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          ) : null}
+          {isMapActive ? (
+            mapboxToken ? (
+              <MapboxMap category={category} />
+            ) : embedUrl ? (
+              <iframe
+                src={embedUrl}
+                className="h-full w-full border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            ) : null
+          ) : (
+            <div className="h-full w-full bg-muted/20" />
+          )}
         </Suspense>
       </div>
     </div>

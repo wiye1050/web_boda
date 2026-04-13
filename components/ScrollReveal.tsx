@@ -28,13 +28,11 @@ export function ScrollReveal({
       initial={{ 
         opacity: 0, 
         ...directions[direction],
-        filter: "blur(10px)"
       }}
       whileInView={{ 
         opacity: 1, 
         x: 0, 
         y: 0,
-        filter: "blur(0px)"
       }}
       viewport={{ once: true, margin: "-10%" }}
       transition={{ 
