@@ -66,7 +66,7 @@ export function MobileBottomBar({
     setShareMessage(null);
     const targetUrl =
       shareUrl ||
-      (typeof window !== "undefined" ? window.location.href : "https://web-boda-delta.vercel.app/");
+      (typeof window !== "undefined" ? window.location.href : "https://ayg2026.vercel.app/");
     const payload = {
       title: shareTitle,
       text: shareText,
