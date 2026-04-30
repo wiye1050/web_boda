@@ -119,9 +119,10 @@ export function MobileBottomBar({
               type="button"
               onClick={() => window.dispatchEvent(new Event('open-chat'))}
               aria-label="Abrir Asistente IA"
-              className="flex min-h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-accent/10 transition-all active:scale-95 hover:bg-accent/20 border border-accent/20"
+              className="group relative flex min-h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-accent/10 transition-all active:scale-95 hover:bg-accent/20 border border-accent/20"
             >
-              <Sparkles className="h-[18px] w-[18px] text-accent" strokeWidth={2} />
+              <span className="absolute inset-0 rounded-full bg-accent/20 animate-pulse" />
+              <Sparkles className="relative h-[18px] w-[18px] text-accent group-hover:scale-110 transition-transform" strokeWidth={2.5} />
             </button>
             <button
               ref={mapsButtonRef}

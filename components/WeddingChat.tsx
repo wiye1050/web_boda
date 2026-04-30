@@ -57,6 +57,18 @@ export function WeddingChat() {
   const inputRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
   const recognitionRef = useRef<any>(null);
+  
+  // Bloquear scroll cuando el chat está abierto
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     // Mostrar el hint después de 4 segundos
@@ -373,32 +385,32 @@ export function WeddingChat() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={handleClose}
-              className="fixed inset-0 z-40 bg-black/40 backdrop-blur-md"
+              className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xl"
             />
 
             <motion.div
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              transition={{ type: "spring", damping: 28, stiffness: 220 }}
               drag="y"
               dragConstraints={{ top: 0 }}
-              dragElastic={0.2}
+              dragElastic={0.15}
               onDragEnd={(_, info) => {
                 if (info.offset.y > 100) handleClose();
               }}
-              className="fixed bottom-0 right-0 z-50 flex w-full flex-col bg-surface shadow-2xl sm:bottom-8 sm:right-8 sm:w-[calc(100vw-2rem)] sm:max-w-sm sm:rounded-[var(--radius-card)] sm:border sm:border-border/30 overflow-hidden"
-              style={{ height: "min(600px, 85dvh)" }}
+              className="fixed bottom-0 right-0 z-[70] flex w-full flex-col bg-surface shadow-2xl sm:bottom-8 sm:right-8 sm:w-[calc(100vw-2rem)] sm:max-w-sm rounded-t-[2.5rem] sm:rounded-[var(--radius-card)] sm:border sm:border-border/30 overflow-hidden"
+              style={{ height: "min(700px, 92dvh)" }}
             >
-              <div className="flex w-full items-center justify-center pt-3 pb-1 sm:hidden">
-                <div className="h-1.5 w-12 rounded-full bg-muted/30" />
+              <div className="flex w-full items-center justify-center pt-3 pb-1 shrink-0">
+                <div className="h-1 w-10 rounded-full bg-muted/20" />
               </div>
 
               {/* Header */}
-              <div className="flex shrink-0 items-center justify-between gap-3 bg-foreground px-5 py-4 text-white">
+              <div className="flex shrink-0 items-center justify-between gap-3 bg-foreground px-6 py-5 text-white">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 relative">
-                    <MessageCircleHeart className="h-5 w-5" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 relative">
+                    <MessageCircleHeart className="h-5 w-5 text-accent" />
                     {isSpeaking && (
                       <span className="absolute -bottom-1 -right-1 flex h-3 w-3">
                         <span className="animate-ping absolute h-full w-full rounded-full bg-accent opacity-75" />
@@ -407,18 +419,24 @@ export function WeddingChat() {
                     )}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold leading-tight">Asistente de la boda</p>
-                    <p className="text-[10px] tracking-wide text-white/60">Alba &amp; Guille · 12 sep 2026</p>
+                    <p className="text-[14px] font-bold tracking-tight text-white/95">Asistente de Alba & Guille</p>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green-500" />
+                      </span>
+                      <p className="text-[10px] font-medium tracking-wide text-white/50 uppercase">En línea ahora</p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => {
                       setIsVoiceEnabled(!isVoiceEnabled);
                       if (isVoiceEnabled) window.speechSynthesis.cancel();
                     }}
                     className={cn(
-                      "rounded-full p-2 transition-all",
+                      "rounded-full p-2.5 transition-all active:scale-90",
                       isVoiceEnabled ? "bg-accent text-white" : "text-white/50 hover:bg-white/10"
                     )}
                     title={isVoiceEnabled ? "Desactivar voz" : "Activar voz"}
@@ -428,9 +446,9 @@ export function WeddingChat() {
                   <button
                     onClick={handleClose}
                     aria-label="Cerrar chat"
-                    className="rounded-full p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white"
+                    className="rounded-full p-2 text-white/50 transition hover:bg-white/10 hover:text-white active:scale-90"
                   >
-                    <X className="h-4 w-4" />
+                    <X className="h-5 w-5" />
                   </button>
                 </div>
               </div>
@@ -447,10 +465,10 @@ export function WeddingChat() {
                   >
                     <div
                       className={cn(
-                        "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed relative group",
+                        "max-w-[85%] rounded-2xl px-4 py-3 text-[13px] leading-relaxed relative group shadow-sm transition-all",
                         msg.role === "user"
-                          ? "rounded-tr-sm bg-foreground text-white"
-                          : "rounded-tl-sm bg-accent-bg text-foreground border border-border/30"
+                          ? "rounded-tr-sm bg-foreground text-white/95 shadow-md shadow-foreground/5"
+                          : "rounded-tl-sm bg-accent-bg text-foreground border border-accent/10"
                       )}
                     >
                       {msg.streaming && msg.content === "" ? (
@@ -478,8 +496,8 @@ export function WeddingChat() {
               {/* Input */}
               <div className="shrink-0 border-t border-border/20 p-4 pb-8 sm:pb-4 bg-surface">
                 <div className={cn(
-                  "flex items-center gap-2 rounded-full border px-4 py-2 transition-all",
-                  isListening ? "border-accent ring-2 ring-accent/10 bg-accent/5" : "border-border/40 bg-background focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10"
+                  "flex items-center gap-3 rounded-2xl border px-4 py-3.5 transition-all shadow-xl shadow-black/5",
+                  isListening ? "border-accent ring-4 ring-accent/10 bg-accent/5" : "border-border/30 bg-background focus-within:border-accent/40 focus-within:ring-4 focus-within:ring-accent/5"
                 )}>
                   <input
                     ref={inputRef}
