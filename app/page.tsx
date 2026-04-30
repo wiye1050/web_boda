@@ -3,7 +3,6 @@ import { Footer } from "@/components/Footer";
 import { HeroRedesign } from "@/components/HeroRedesign";
 import { Section } from "@/components/Section";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { TopBar } from "@/components/TopBar";
 import { getPublicConfig } from "@/lib/getPublicConfig";
 import { getAccommodations } from "@/lib/getAccommodations";
 import { DEFAULT_PUBLIC_CONTENT } from "@/lib/publicContent";
@@ -83,24 +82,7 @@ export default async function Home() {
     return Boolean(section?.enabled && sectionHasContent(sectionId));
   };
 
-  const navItems = config.sections
-    .filter((section: any) => section.enabled && section.nav)
-    .filter((section: any) => sectionHasContent(section.id))
-    .sort((a: any, b: any) => a.order - b.order)
-    .map((section: any) => ({
-      label: section.label.trim() || section.id,
-      href: section.id === "media" ? "/media" : `#${section.id}`,
-    }))
-    .reduce((acc: any[], item: any) => {
-      const targetHref = item.href === "#alojamiento" ? "/alojamientos" : item.href;
-      const targetLabel = item.href === "#alojamiento" ? "Alojamientos" : item.label;
-      if (!acc.some(existing => existing.href === targetHref)) {
-        acc.push({ label: targetLabel, href: targetHref });
-      }
-      return acc;
-    }, []);
 
-  const showNotice = true;
   
   return (
     <>
@@ -113,17 +95,7 @@ export default async function Home() {
       </head>
       <SaveTheDateManager>
       <div id="top" className="flex min-h-screen flex-col w-full">
-        {showNotice && (
-          <TopBar
-            brandName={config.brandName}
-            navItems={navItems}
-            ctaLabel={config.headerCtaLabel}
-            config={{
-              noticeText: config.noticeText,
-              noticeCountdownTarget: config.noticeCountdownTarget,
-            }}
-          />
-        )}
+
         <main className="flex-1 pb-12 sm:pb-0">
           <HeroRedesign
             config={{
