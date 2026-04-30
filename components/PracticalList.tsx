@@ -38,8 +38,11 @@ export function PracticalList({ items, variant = "card", className }: PracticalL
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/80 shadow-sm transition-transform group-hover:rotate-6 text-primary/80">
               {(() => {
-                const IconComponent = ICON_MAP[item.icon] || Info;
-                return <IconComponent size={24} strokeWidth={1.5} />;
+                const IconComponent = ICON_MAP[item.icon];
+                if (IconComponent) {
+                  return <IconComponent size={24} strokeWidth={1.5} />;
+                }
+                return <span className="text-2xl leading-none">{item.icon}</span>;
               })()}
             </div>
             <div className="flex flex-col text-left">
@@ -61,8 +64,11 @@ export function PracticalList({ items, variant = "card", className }: PracticalL
         >
           <div className="text-primary/70 mb-2">
             {(() => {
-              const IconComponent = ICON_MAP[item.icon] || Info;
-              return <IconComponent size={28} strokeWidth={1.5} />;
+              const IconComponent = ICON_MAP[item.icon];
+              if (IconComponent) {
+                return <IconComponent size={28} strokeWidth={1.5} />;
+              }
+              return <span className="text-3xl leading-none">{item.icon}</span>;
             })()}
           </div>
           <h3 className="text-lg font-semibold">{item.title}</h3>

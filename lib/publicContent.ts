@@ -179,7 +179,7 @@ export type PublicContent = {
 
 export const DEFAULT_SECTIONS: SectionConfig[] = [
   { id: "preboda", label: "Preboda", enabled: true, nav: true, order: 1 },
-  { id: "ubicacion", label: "La boda", enabled: true, nav: true, order: 2 },
+  { id: "ubicacion", label: "Ubicación", enabled: true, nav: true, order: 2 },
   { id: "detalles", label: "Guía práctica", enabled: true, nav: true, order: 3 },
   { id: "alojamiento", label: "Alojamiento", enabled: true, nav: true, order: 4 },
   { id: "regalos", label: "Regalos", enabled: true, nav: true, order: 5 },
@@ -276,13 +276,12 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     "Te dejamos algunas opciones cercanas para dormir cómodamente.",
   stayLinkLabel: "Ver mapa",
   stayOptions: [],
-  giftsEyebrow: "Regalos",
+  giftsEyebrow: "Detalle",
   giftsTitle: "Tu presencia es el mejor regalo",
   giftsDescription:
-    "Si quieres tener un detalle, aquí tienes algunas opciones.",
-  giftsBankTitle: "Regalo privado",
-  giftsBankDescription:
-    "Si prefieres un detalle directo, escríbenos y te contamos.",
+    "Pero si de todas formas quereis ayudarnos con nuestros proyectos, podeis hacerlo aqui. Gracias infinitas.",
+  giftsBankTitle: "",
+  giftsBankDescription: "",
   rsvpEyebrow: "Confirmar asistencia",
   rsvpTitle: "Confirma tu asistencia",
   rsvpDescription:
@@ -357,8 +356,8 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     "© {year} {brandName}. Todos los derechos reservados.",
   footerMadeWith: "Hecho con amor.",
   heroBackgroundImages: [
-    "/photos/hero/boda1.jpeg",
-    "/photos/hero/boda2.jpg",
+    "/photos/hero/hero_ilustracion.png",
+    "/photos/hero/share-boda0.png",
   ],
   heroBackgroundIntervalMs: "8000",
   mobileBar: {

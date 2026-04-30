@@ -47,8 +47,6 @@ export default async function Home() {
   const weddingMapUrl = config.weddingMapsUrl?.trim() || config.locationMapUrl?.trim() || (config.locationName ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(config.locationName + " " + (config.locationAddress || ""))}` : "");
   
   const hasPracticalItems = config.practicalItems.length > 0;
-  const weddingMapsUrl = config.weddingMapsUrl?.trim();
-  const prebodaMapsUrl = config.prebodaMapsUrl?.trim();
 
   const giftOptions: GiftOption[] = [
     {
@@ -304,8 +302,8 @@ export default async function Home() {
     
     <MobileBottomBar
       confirmHref="#asistencia"
-      wedding={weddingMapsUrl ? { name: config.weddingVenueName.trim() || "Boda", url: weddingMapsUrl } : null}
-      preboda={prebodaMapsUrl ? { name: config.prebodaVenueName.trim() || "Preboda", url: prebodaMapsUrl } : null}
+      wedding={weddingMapUrl ? { name: config.weddingVenueName.trim() || "Boda", url: weddingMapUrl } : null}
+      preboda={prebodaMapUrl ? { name: config.prebodaVenueName.trim() || "Preboda", url: prebodaMapUrl } : null}
       weddingVenueName={config.weddingVenueName.trim()}
       confirmLabel={config.mobileBar.confirmLabel}
       mapsLabel={config.mobileBar.mapsLabel}

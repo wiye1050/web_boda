@@ -27,8 +27,8 @@ export function GiftList({ gifts }: GiftListProps) {
           key={gift.title}
           className="flex w-full max-w-3xl flex-col gap-4 rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 sm:p-6 text-center items-center"
         >
-          <h3 className="text-xl font-semibold">{gift.title}</h3>
-          <p className="text-sm text-muted">{gift.description}</p>
+          {gift.title && <h3 className="text-xl font-semibold">{gift.title}</h3>}
+          {gift.description && <p className="text-sm text-muted">{gift.description}</p>}
           {gift.details &&
             (gift.hideDetails ? (
               <FlipCard details={gift.details} />
@@ -74,7 +74,7 @@ function CopyableDetail({ text }: { text: string }) {
 
   return (
     <li className="flex w-full items-center justify-center gap-3 rounded-lg bg-background/50 px-4 py-3 border border-border/50">
-      <span className="font-mono text-[11px] sm:text-[13px] tracking-widest whitespace-nowrap">{text}</span>
+      <span className="font-mono text-[10px] sm:text-[13px] tracking-normal sm:tracking-widest whitespace-nowrap">{text}</span>
       <button
         onClick={handleCopy}
         className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface text-muted-foreground transition-all hover:bg-primary hover:text-white hover:scale-105 active:scale-95 shadow-sm border border-border/40"
@@ -107,7 +107,7 @@ function FlipCard({ details }: { details: string[] }) {
           style={{ backfaceVisibility: "hidden" }}
         >
           <span className="font-semibold uppercase tracking-[0.2em] text-muted text-sm text-center">
-            Clic para descubrir
+            Haz clic aquí
           </span>
         </div>
 

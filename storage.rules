@@ -19,6 +19,12 @@ service firebase.storage {
       );
     }
 
+    // Carpeta pública 'media' para vídeos y assets
+    match /media/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // Carpeta pública 'gallery'
     match /gallery/{imageId} {
       // Cualquiera puede leer (ver fotos)

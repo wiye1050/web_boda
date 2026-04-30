@@ -11,7 +11,7 @@ interface SaveTheDateModalProps {
 }
 
 export function SaveTheDateModal({
-  videoSrc = "/media/save-the-date.mp4",
+  videoSrc = "https://firebasestorage.googleapis.com/v0/b/web-boda-84004.firebasestorage.app/o/media%2Fsave_the_dateAG.mp4?alt=media",
   onClose,
 }: SaveTheDateModalProps) {
   const [isOpen, setIsOpen] = useState(false);

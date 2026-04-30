@@ -108,7 +108,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
       {/* Seccion Superior: Nombres y Fecha */}
       <div className="z-10 flex flex-col items-center w-full">
         <div className="relative pt-8 mb-4">
-          <h1 className="text-6xl md:text-[8rem] font-serif tracking-tighter leading-[0.85] text-center">
+          <h1 className="text-5xl sm:text-7xl md:text-[8rem] font-serif tracking-tighter leading-[0.85] text-center">
             <span className="relative z-10 flex flex-col md:flex-row justify-center items-center gap-y-2 md:gap-x-16">
               <motion.span 
                 initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
