@@ -100,6 +100,7 @@ export function RsvpDetailDialog({ record, onClose }: RsvpDetailDialogProps) {
     setError(null);
 
     try {
+      if (!record) return;
       const db = getFirestoreDb();
       const docRef = doc(db, "rsvps", record.id);
 
