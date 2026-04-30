@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-export type MapCategory = "all" | "accommodation" | "tourism";
+export type MapCategory = "all" | "accommodation" | "tourism" | "hair" | "makeup";
 
 const PINS = [
   // Core Locations
@@ -86,6 +86,141 @@ const PINS = [
     subtitle: "Vistas y Viñedos",
     time: "Gastro y Enoturismo",
     address: "C. la Iglesia, s/n, 24545 Canedo, León",
+  },
+  // Hair / Beauty
+  {
+    id: "sagra",
+    category: "hair",
+    label: "✂️",
+    color: "#c69b7b",
+    coords: [-6.5937, 42.5458] as [number, number],
+    title: "Peluquería Sagra",
+    subtitle: "Peluquería de confianza",
+    time: "Reserva anticipada",
+    address: "Av. Valdés, 5, 24402 Ponferrada, León",
+  },
+  {
+    id: "kahos",
+    category: "hair",
+    label: "✂️",
+    color: "#b48464",
+    coords: [-6.5957, 42.5413] as [number, number],
+    title: "KAHOS by baró estilistas",
+    subtitle: "Peluquería y Estética",
+    time: "Reserva anticipada",
+    address: "Paseo San Antonio, 11, 24401 Ponferrada, León",
+  },
+  {
+    id: "alba-canas",
+    category: "makeup",
+    label: "AC",
+    color: "#a08b7a",
+    coords: [-6.6575, 42.7248] as [number, number],
+    title: "Alba Cañas Estética",
+    subtitle: "Maquillaje (Se desplaza)",
+    time: "Reserva anticipada",
+    address: "Avenida Ancares, 8, Bajo, 24434 Vega de Espinareda, León",
+  },
+  // Accommodations
+  {
+    id: "aroi-bierzo",
+    category: "accommodation",
+    label: "HO",
+    color: "#5b6d65",
+    coords: [-6.5936, 42.5447] as [number, number],
+    title: "Hotel Aroi Bierzo Plaza",
+    subtitle: "Alojamiento",
+    time: "",
+    address: "Pl. Ayuntamiento, 4, 24401 Ponferrada, León",
+  },
+  {
+    id: "hotel-alda",
+    category: "accommodation",
+    label: "HO",
+    color: "#5b6d65",
+    coords: [-6.5959, 42.5458] as [number, number],
+    title: "Hotel Alda",
+    subtitle: "Alojamiento",
+    time: "",
+    address: "Av. la Puebla, 44, 24402 Ponferrada, León",
+  },
+  {
+    id: "guiana",
+    category: "accommodation",
+    label: "AP",
+    color: "#5b6d65",
+    coords: [-6.5942, 42.5432] as [number, number],
+    title: "Apartamentos Turísticos Guiana",
+    subtitle: "Alojamiento",
+    time: "",
+    address: "Av. del Castillo, 54, 24401 Ponferrada, León",
+  },
+  // Tourism
+  {
+    id: "castillo",
+    category: "tourism",
+    label: "CA",
+    color: "#8b7a60",
+    coords: [-6.5960, 42.5444] as [number, number],
+    title: "Castillo de los Templarios",
+    subtitle: "Cultura",
+    time: "",
+    address: "Av. del Castillo, s/n, 24400 Ponferrada, León",
+  },
+  {
+    id: "medulas",
+    category: "tourism",
+    label: "ME",
+    color: "#8b7a60",
+    coords: [-6.7645, 42.4613] as [number, number],
+    title: "Las Médulas",
+    subtitle: "Naturaleza",
+    time: "",
+    address: "24442 Las Médulas, León",
+  },
+  {
+    id: "penalba",
+    category: "tourism",
+    label: "PE",
+    color: "#8b7a60",
+    coords: [-6.5398, 42.4276] as [number, number],
+    title: "Peñalba de Santiago",
+    subtitle: "Pueblo con Encanto",
+    time: "",
+    address: "24415 Peñalba de Santiago, León",
+  },
+  {
+    id: "molinaseca",
+    category: "tourism",
+    label: "MO",
+    color: "#8b7a60",
+    coords: [-6.5197, 42.5386] as [number, number],
+    title: "Molinaseca",
+    subtitle: "Pueblo con Encanto",
+    time: "",
+    address: "24413 Molinaseca, León",
+  },
+  {
+    id: "bodegon",
+    category: "tourism",
+    label: "BO",
+    color: "#8b7a60",
+    coords: [-6.5937, 42.5440] as [number, number],
+    title: "El Bodegón",
+    subtitle: "Gastro",
+    time: "",
+    address: "C. Pelayo, 2, 24401 Ponferrada, León",
+  },
+  {
+    id: "canedo",
+    category: "tourism",
+    label: "PA",
+    color: "#8b7a60",
+    coords: [-6.7029, 42.6167] as [number, number],
+    title: "Palacio de Canedo",
+    subtitle: "Bodega",
+    time: "",
+    address: "Calle de la Iglesia, s/n, 24546 Canedo, León",
   }
 ];
 
@@ -142,7 +277,8 @@ export function MapboxMap({ category = "all" }: { category?: MapCategory }) {
       markersRef.current.forEach(m => m.remove());
       markersRef.current = [];
 
-      const filteredPins = PINS.filter(p => p.category === "all" || category === "all" || p.category === category);
+      // Todos los pines visibles siempre
+      const filteredPins = PINS;
 
       filteredPins.forEach((pin) => {
         const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(pin.address)}`;
@@ -164,15 +300,6 @@ export function MapboxMap({ category = "all" }: { category?: MapCategory }) {
         
         markersRef.current.push(marker);
       });
-
-      // Fly to a central point depending on category if needed
-      if (category === "tourism") {
-        map.flyTo({ center: [-6.5920, 42.5450], zoom: 14, duration: 2500 });
-      } else if (category === "accommodation") {
-        map.flyTo({ center: [-6.5915, 42.5441], zoom: 15, duration: 2500 });
-      } else {
-        map.flyTo({ center: [-6.6050, 42.5620], zoom: 11.5, duration: 2500 });
-      }
     };
 
     map.on("load", updateMarkers);

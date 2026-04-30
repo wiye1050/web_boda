@@ -40,6 +40,8 @@ function parseFirestoreValue(value: FirestoreValue | undefined): unknown {
   return undefined;
 }
 
+import { cache } from "react";
+
 function parseConfig(data: ConfigResponse | null | undefined): PublicContent {
   if (!data?.fields) {
     return DEFAULT_PUBLIC_CONTENT;
@@ -53,7 +55,7 @@ function parseConfig(data: ConfigResponse | null | undefined): PublicContent {
   return normalizePublicContent(rawData);
 }
 
-export async function getPublicConfig(): Promise<PublicContent> {
+export const getPublicConfig = cache(async (): Promise<PublicContent> => {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
   if (!projectId || !apiKey) {
@@ -62,9 +64,16 @@ export async function getPublicConfig(): Promise<PublicContent> {
 
   try {
     const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/config/general?key=${apiKey}`;
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
     const response = await fetch(url, {
       next: { revalidate: 60 },
+      signal: controller.signal,
     });
+    
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       return DEFAULT_PUBLIC_CONTENT;
@@ -73,9 +82,9 @@ export async function getPublicConfig(): Promise<PublicContent> {
     const json = (await response.json()) as ConfigResponse;
     return parseConfig(json);
   } catch (error) {
-    console.error("Error fetching public config", error);
+    console.error("Error fetching public config:", error);
     return DEFAULT_PUBLIC_CONTENT;
   }
-}
+});
 
 export type { PublicContent };

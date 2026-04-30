@@ -48,7 +48,7 @@ export function Section({
       aria-labelledby={headingId}
       aria-describedby={descriptionId}
       className={cn(
-        "relative w-full py-[var(--spacing-section)] overflow-hidden",
+        "relative w-full py-16 md:py-[var(--spacing-section)] overflow-hidden",
         "flex flex-col items-center justify-center",
         backgroundClassMap[background],
         className

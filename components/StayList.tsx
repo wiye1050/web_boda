@@ -64,12 +64,6 @@ export function StayList({ items, linkLabel, showViewAll, variant = "default" }:
 
             {/* Badges */}
             <div className="absolute top-3 left-3 right-3 flex justify-between items-start z-10 pointer-events-none">
-               {stay.hasBlock && (
-                  <div className="flex items-center gap-1 rounded-full bg-accent/95 backdrop-blur px-2.5 py-1 text-[8px] font-bold uppercase tracking-wider text-primary-foreground shadow-sm">
-                    <Check className="h-3 w-3" />
-                    <span>Bloqueo</span>
-                  </div>
-               )}
                {stay.priceRange && (
                   <div className="ml-auto rounded-full bg-black/40 backdrop-blur px-2.5 py-1 text-[9px] font-bold text-white">
                     {stay.priceRange}

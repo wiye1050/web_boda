@@ -107,7 +107,7 @@ export function MobileBottomBar({
           transform: isHidden ? "translate(-50%, 100%)" : "translate(-50%, 0)"
         }}
       >
-        <div className="glass rounded-[2rem] px-2 py-2 flex items-center justify-between gap-1 shadow-premium border-white/20">
+        <div className="bg-white/80 backdrop-blur-2xl rounded-[2rem] px-2 py-2 flex items-center justify-between gap-1 shadow-2xl border border-white/60">
           <a
             href={confirmHref}
             className="flex-1 flex min-h-[50px] items-center justify-center rounded-full bg-foreground px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-lg active:scale-95 transition-all hover:bg-foreground/90 whitespace-nowrap"
@@ -118,9 +118,10 @@ export function MobileBottomBar({
             type="button"
             onClick={() => window.dispatchEvent(new Event('open-chat'))}
             aria-label="Abrir Asistente IA"
-            className="flex min-h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full bg-accent/10 border border-accent/20 transition-all active:scale-95 hover:bg-accent/20"
+            className="flex flex-col min-h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full bg-accent/10 border border-accent/20 transition-all active:scale-95 hover:bg-accent/20"
           >
-            <Sparkles className="h-5 w-5 text-accent animate-pulse" />
+            <Sparkles className="h-[18px] w-[18px] text-accent animate-pulse mb-0.5" />
+            <span className="text-[9px] font-bold text-accent leading-none uppercase tracking-widest drop-shadow-sm">IA</span>
           </button>
           <button
             ref={mapsButtonRef}

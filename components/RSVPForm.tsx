@@ -27,7 +27,6 @@ type FormState = {
   transportSeats: string;
   requests: string;
   dietary: string;
-  hairMakeup?: boolean;
   reminderOptIn: boolean;
   acceptedTerms: boolean;
 };
@@ -44,7 +43,6 @@ const INITIAL_STATE: FormState = {
   transportSeats: "",
   requests: "",
   dietary: "",
-  hairMakeup: false,
   reminderOptIn: false,
   acceptedTerms: false,
 };
@@ -274,7 +272,6 @@ export function RSVPForm({
             : 0,
         requests: form.requests.trim(),
         dietary: form.dietary.trim(),
-        hairMakeup: Boolean(form.hairMakeup),
         reminderOptIn: Boolean(form.reminderOptIn),
         acceptedTerms: true,
         editToken,
@@ -371,17 +368,17 @@ export function RSVPForm({
           <div className="w-full max-w-sm rounded-[2rem] bg-white/40 p-8 text-foreground/80 shadow-premium border border-white/40 backdrop-blur-md">
             <ul className="space-y-4 text-sm text-center">
               <li className="flex justify-between border-b border-black/5 pb-4">
-                <span className="font-sans font-semibold uppercase tracking-widest text-[10px] opacity-40">Asistencia</span>
+                <span className="font-sans font-semibold uppercase tracking-widest text-[11px] md:text-xs opacity-40">Asistencia</span>
                 <span className="font-serif italic text-base">{submittedInfo.attendance === "si" ? "Estaré ahí" : "No podré"}</span>
               </li>
               {submittedInfo.attendance === "si" && (
                 <>
                   <li className="flex justify-between border-b border-black/5 pb-4">
-                    <span className="font-sans font-semibold uppercase tracking-widest text-[10px] opacity-40">Personas</span>
+                    <span className="font-sans font-semibold uppercase tracking-widest text-[11px] md:text-xs opacity-40">Personas</span>
                     <span className="font-serif italic text-base">{submittedInfo.guests}</span>
                   </li>
                   <li className="flex justify-between">
-                    <span className="font-sans font-semibold uppercase tracking-widest text-[10px] opacity-40">Bus</span>
+                    <span className="font-sans font-semibold uppercase tracking-widest text-[11px] md:text-xs opacity-40">Bus</span>
                     <span className="font-serif italic text-base">{submittedInfo.needsTransport === "si" ? "Sí" : "No"}</span>
                   </li>
                 </>
@@ -391,7 +388,7 @@ export function RSVPForm({
           <button
             type="button"
             onClick={() => { setSubmittedInfo(null); setStatus("idle"); }}
-            className="mt-4 text-[10px] font-bold uppercase tracking-[0.3em] text-accent hover:opacity-70 transition-opacity"
+            className="mt-4 text-[11px] md:text-xs font-bold uppercase tracking-[0.3em] text-accent hover:opacity-70 transition-opacity"
           >
             Editar respuesta
           </button>
@@ -400,7 +397,7 @@ export function RSVPForm({
         <>
           <div className="grid gap-6 md:gap-10 md:grid-cols-2">
             <label className="flex flex-col gap-3 text-center">
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.fullNameLabel}</span>
+              <span className="text-[11px] md:text-xs font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.fullNameLabel}</span>
               <input 
                 name="fullName" 
                 autoComplete="name" 
@@ -412,7 +409,7 @@ export function RSVPForm({
               />
             </label>
             <label className="flex flex-col gap-3 text-center">
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.emailLabel}</span>
+              <span className="text-[11px] md:text-xs font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.emailLabel}</span>
               <input 
                 type="email" 
                 name="email" 
@@ -426,7 +423,7 @@ export function RSVPForm({
               {!emailValid && form.email.length > 0 && <span className="text-xs text-primary">{copy.emailError}</span>}
             </label>
             <label className="flex flex-col gap-3 text-center">
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.phoneLabel}</span>
+              <span className="text-[11px] md:text-xs font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.phoneLabel}</span>
               <input 
                 type="tel" 
                 name="phone" 
@@ -441,7 +438,7 @@ export function RSVPForm({
               {!phoneValid && form.phone.length > 0 && <span className="text-xs text-primary">{copy.phoneError}</span>}
             </label>
             <fieldset className="flex flex-col gap-5 rounded-[2rem] border border-black/5 bg-white/20 px-6 py-6 text-center shadow-inner">
-              <legend className="mx-auto text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50 px-4">{copy.attendanceLegend}</legend>
+              <legend className="mx-auto text-[11px] md:text-xs font-bold uppercase tracking-[0.3em] text-foreground/50 px-4">{copy.attendanceLegend}</legend>
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap justify-center">
                 {["si", "no"].map((val) => (
                   <label 
@@ -472,24 +469,24 @@ export function RSVPForm({
             <div className="grid gap-8 md:gap-12 animate-in fade-in slide-in-from-top-4 duration-700">
               <div className="grid gap-6 md:gap-10 md:grid-cols-2">
                 <label className="flex flex-col gap-4 text-center">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.guestsLabel}</span>
+                  <span className="text-[11px] md:text-xs font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.guestsLabel}</span>
                   <input name="guests" inputMode="numeric" min={1} required value={form.guests} onChange={(e) => handleChange("guests", e.target.value)} placeholder={copy.guestsPlaceholderYes} className="placeholder:text-foreground/30 rounded-2xl border border-black/5 bg-white/40 px-6 py-4 text-xl text-foreground font-serif italic shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center max-w-[120px] mx-auto" />
-                  <span className="text-[10px] tracking-wider text-foreground/40">{copy.guestsHelper}</span>
+                  <span className="text-[11px] md:text-xs tracking-wider text-foreground/40">{copy.guestsHelper}</span>
                   {showGuestError && <span className="text-xs text-primary">{copy.guestsError}</span>}
                 </label>
                 <label className="flex flex-col gap-3 text-center">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.guestNamesLabel}</span>
+                  <span className="text-[11px] md:text-xs font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.guestNamesLabel}</span>
                   <textarea name="guestNames" value={form.guestNames} onChange={(e) => handleChange("guestNames", e.target.value)} rows={2} placeholder={copy.guestNamesPlaceholder} className="min-h-[80px] rounded-[2rem] border border-black/5 bg-white/40 px-6 py-5 text-sm text-foreground font-serif italic shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center" />
                 </label>
               </div>
 
               <div id="rsvp-advanced" className="grid gap-6 md:gap-10 rounded-[3rem] border border-black/5 bg-black/[0.02] p-6 md:p-8 md:grid-cols-2 text-center shadow-inner">
                 <fieldset className="flex flex-col gap-5 rounded-[2rem] border border-black/5 bg-white/20 px-6 py-6 text-center">
-                  <legend className="mx-auto text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50 px-4">{copy.prebodaLegend}</legend>
+                  <legend className="mx-auto text-[11px] md:text-xs font-bold uppercase tracking-[0.3em] text-foreground/50 px-4">{copy.prebodaLegend}</legend>
                   <div className="flex gap-3 justify-center">
                     {["si", "no"].map((val) => (
                       <label key={val} className={cn(
-                        "flex-1 rounded-xl border px-5 py-3 text-[10px] uppercase font-bold tracking-widest cursor-pointer transition-all",
+                        "flex-1 rounded-xl border px-5 py-3 text-[11px] md:text-xs uppercase font-bold tracking-widest cursor-pointer transition-all",
                         form.preboda === val ? "border-accent bg-accent text-white shadow-premium" : "border-black/5 bg-white/40 text-foreground/40"
                       )}>
                         <input className="sr-only" type="radio" name="preboda" value={val} checked={form.preboda === val} onChange={(e) => handleChange("preboda", e.target.value as FormState["preboda"])} />
@@ -497,15 +494,15 @@ export function RSVPForm({
                       </label>
                     ))}
                   </div>
-                  <p className="text-[10px] text-foreground/40 italic leading-snug">{copy.prebodaNote}</p>
+                  <p className="text-[11px] md:text-xs text-foreground/40 italic leading-snug">{copy.prebodaNote}</p>
                 </fieldset>
 
                 <fieldset className="flex flex-col gap-5 rounded-[2rem] border border-black/5 bg-white/20 px-6 py-6 text-center">
-                  <legend className="mx-auto text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50 px-4">{copy.transportLegend}</legend>
+                  <legend className="mx-auto text-[11px] md:text-xs font-bold uppercase tracking-[0.3em] text-foreground/50 px-4">{copy.transportLegend}</legend>
                   <div className="flex gap-3 justify-center">
                     {["no", "si"].map((val) => (
                       <label key={val} className={cn(
-                        "flex-1 rounded-xl border px-5 py-3 text-[10px] uppercase font-bold tracking-widest cursor-pointer transition-all",
+                        "flex-1 rounded-xl border px-5 py-3 text-[11px] md:text-xs uppercase font-bold tracking-widest cursor-pointer transition-all",
                         form.needsTransport === val ? "border-accent bg-accent text-white shadow-premium" : "border-black/5 bg-white/40 text-foreground/40"
                       )}>
                         <input className="sr-only" type="radio" name="needsTransport" value={val} checked={form.needsTransport === val} onChange={(e) => handleChange("needsTransport", e.target.value as FormState["needsTransport"])} />
@@ -517,24 +514,15 @@ export function RSVPForm({
 
                 {form.needsTransport === "si" && (
                   <label className="flex flex-col gap-4 text-center md:col-span-2 py-4">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.transportSeatsLabel}</span>
+                    <span className="text-[11px] md:text-xs font-bold uppercase tracking-[0.3em] text-foreground/50">{copy.transportSeatsLabel}</span>
                     <input name="transportSeats" inputMode="numeric" min={1} required value={form.transportSeats} onChange={(e) => handleChange("transportSeats", e.target.value)} placeholder={copy.transportSeatsPlaceholder} className="placeholder:text-foreground/30 rounded-2xl border border-black/5 bg-white/40 px-6 py-4 text-xl text-foreground font-serif italic shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center mx-auto max-w-[140px]" />
                     {showSeatsError && <span className="text-xs text-primary">{copy.transportSeatsError}</span>}
                   </label>
                 )}
 
                 <label className="flex flex-col gap-4 text-center md:col-span-2">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50">Restricciones alimenticias</span>
+                  <span className="text-[11px] md:text-xs font-bold uppercase tracking-[0.3em] text-foreground/50">Restricciones alimenticias</span>
                   <textarea name="dietary" value={form.dietary} onChange={(e) => handleChange("dietary", e.target.value)} rows={2} placeholder="Alergias, veganismo..." className="rounded-[2rem] border border-black/5 bg-white/40 px-6 py-5 text-sm text-foreground font-serif italic shadow-sm outline-none transition-all focus:bg-white/80 focus:ring-2 focus:ring-accent/20 text-center min-h-[100px]" />
-                </label>
-                
-                <label className="md:col-span-2 flex items-center gap-4 rounded-[2rem] border border-black/5 bg-white/30 px-6 py-5 text-sm text-left cursor-pointer transition-colors hover:bg-white/50 group">
-                  <div className="relative flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-black/10 bg-white transition-all group-hover:border-accent/40 shadow-sm">
-                    <input type="checkbox" className="peer sr-only" checked={form.hairMakeup || false} onChange={(e) => handleChange("hairMakeup", e.target.checked)} />
-                    <div className="absolute inset-0 rounded-lg bg-accent opacity-0 transition-opacity peer-checked:opacity-100" />
-                    <Check className="relative z-10 h-4 w-4 text-white opacity-0 transition-opacity peer-checked:opacity-100" strokeWidth={3} />
-                  </div>
-                  <span className="text-[10px] font-semibold tracking-wider text-foreground/60 leading-relaxed uppercase">Interés en servicio de <span className="text-accent underline decoration-accent/30 underline-offset-4">peluquería o maquillaje</span></span>
                 </label>
               </div>
             </div>
@@ -547,7 +535,7 @@ export function RSVPForm({
                 <div className="absolute inset-0 rounded-lg bg-accent opacity-0 transition-opacity peer-checked:opacity-100" />
                 <Check className="relative z-10 h-4 w-4 text-white opacity-0 transition-opacity peer-checked:opacity-100" strokeWidth={3} />
               </div>
-              <span className="text-[10px] md:text-[11px] font-medium text-foreground/50 leading-relaxed uppercase tracking-widest">Acepto que Alba & Guille guarden mis datos para la organización de la boda según la <span className="text-foreground/80 underline underline-offset-4 decoration-accent/40">política de privacidad</span>.</span>
+              <span className="text-[11px] md:text-[12px] font-medium text-foreground/50 leading-relaxed uppercase tracking-widest">Acepto que Alba & Guille guarden mis datos para la organización de la boda según la <span className="text-foreground/80 underline underline-offset-4 decoration-accent/40">política de privacidad</span>.</span>
             </label>
 
             <div className="flex flex-col items-center gap-6 w-full">
@@ -569,7 +557,7 @@ export function RSVPForm({
       )}
 
       <div className="rounded-[3rem] border border-black/5 bg-black/[0.03] px-8 py-8 text-center shadow-inner">
-        <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/40 mb-6">{importantTitle}</p>
+        <p className="text-[11px] md:text-xs font-bold uppercase tracking-[0.4em] text-foreground/40 mb-6">{importantTitle}</p>
         <ul className="space-y-4 text-xs">
           {importantNotes.map((note, idx) => (
             <li key={idx} className="flex items-center justify-center gap-4 text-foreground/60 italic font-serif text-base">

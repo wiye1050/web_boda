@@ -56,7 +56,7 @@ export default async function Home() {
       title: config.giftsBankTitle,
       description: config.giftsBankDescription,
       details: ["ES57 0081 5035 9900 0123 2724"],
-      hideDetails: false,
+      hideDetails: true,
     },
   ];
 
@@ -90,7 +90,15 @@ export default async function Home() {
     .map((section: any) => ({
       label: section.label.trim() || section.id,
       href: section.id === "media" ? "/media" : `#${section.id}`,
-    }));
+    }))
+    .reduce((acc: any[], item: any) => {
+      const targetHref = item.href === "#alojamiento" ? "/alojamientos" : item.href;
+      const targetLabel = item.href === "#alojamiento" ? "Alojamientos" : item.label;
+      if (!acc.some(existing => existing.href === targetHref)) {
+        acc.push({ label: targetLabel, href: targetHref });
+      }
+      return acc;
+    }, []);
 
   const showNotice = true;
   
@@ -129,17 +137,17 @@ export default async function Home() {
             >
             <ScrollReveal>
               <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2">
-                <article className="flex flex-col items-center justify-center rounded-[2.5rem] glass p-8 text-center sm:p-10">
+                <article className="flex flex-col items-center justify-center rounded-[2.5rem] glass p-6 text-center sm:p-10">
                   <p className="text-editorial">Fecha</p>
                   <h3 className="mt-4 text-3xl font-serif font-medium">
                     {config.prebodaTime.replace(/\s*h\s*$/i, "")}
                   </h3>
-                  <p className="mt-4 text-sm text-foreground/60 leading-relaxed italic">
+                  <p className="mt-4 text-sm text-foreground/70 leading-relaxed italic">
                     &ldquo;{config.prebodaCardOneDescription || "Un brindis para calentar motores."}&rdquo;
                   </p>
                 </article>
 
-                <article className="flex flex-col items-center justify-center rounded-[2.5rem] glass p-8 text-center sm:p-10">
+                <article className="flex flex-col items-center justify-center rounded-[2.5rem] glass p-6 text-center sm:p-10">
                   <p className="text-editorial">Lugar</p>
                   <h3 className="mt-4 text-3xl font-serif font-medium">{config.prebodaPlace}</h3>
                   {config.prebodaAddress && (
@@ -170,13 +178,13 @@ export default async function Home() {
             >
               <ScrollReveal>
                 <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2 mb-12">
-                  <article className="flex flex-col items-center justify-center rounded-[2.5rem] glass p-8 text-center sm:p-10">
+                  <article className="flex flex-col items-center justify-center rounded-[2.5rem] glass p-6 text-center sm:p-10">
                     <p className="text-editorial">La Ceremonia</p>
                     <h3 className="mt-4 text-3xl font-serif font-medium">12 SEPT · 14:00</h3>
-                    <p className="mt-4 text-xs italic text-accent font-medium tracking-wide">Se ruega puntualidad</p>
+                    <p className="mt-4 text-[13px] md:text-sm italic text-accent font-medium tracking-wide">Se ruega puntualidad</p>
                   </article>
 
-                  <article className="flex flex-col items-center justify-center rounded-[2.5rem] glass p-8 text-center sm:p-10">
+                  <article className="flex flex-col items-center justify-center rounded-[2.5rem] glass p-6 text-center sm:p-10">
                     <p className="text-editorial">El Lugar</p>
                     <h3 className="mt-4 text-3xl font-serif font-medium">{config.locationName}</h3>
                     <p className="mt-2 text-sm text-foreground/60">{config.locationAddress}</p>
@@ -193,7 +201,7 @@ export default async function Home() {
                   </article>
                 </div>
 
-                <div className="rounded-[2.5rem] glass p-8 sm:p-10 max-w-4xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-8 mt-12 overflow-hidden">
+                <div className="rounded-[2.5rem] glass p-6 sm:p-10 max-w-4xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-8 mt-12 overflow-hidden">
                   <h3 className="text-2xl font-serif font-medium m-0 text-center md:text-left flex-shrink-0">
                     {config.locationContactTitle}
                   </h3>

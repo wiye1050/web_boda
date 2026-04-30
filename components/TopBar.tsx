@@ -80,13 +80,13 @@ export function TopBar({
               href={isHome ? "#top" : "/"}
               className="flex items-center justify-center relative group shrink-0"
             >
-              <div className="absolute inset-0 bg-accent/10 blur-xl rounded-full scale-0 group-hover:scale-150 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-accent/20 md:bg-accent/10 blur-xl rounded-full scale-110 md:scale-0 group-hover:scale-150 transition-transform duration-700" />
               <Image 
                 src="/logo-ag.png" 
                 alt="Alba & Guille Logo" 
                 width={85}
                 height={45}
-                className="h-9 md:h-11 w-auto object-contain transition-all duration-500 group-hover:scale-110"
+                className="h-9 md:h-11 w-auto object-contain transition-all duration-500 group-hover:scale-110 drop-shadow-lg brightness-75 contrast-125 md:brightness-100 md:contrast-100"
                 priority
               />
             </Link>
@@ -104,6 +104,16 @@ export function TopBar({
                     <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-[1.5px] bg-accent transition-all duration-300 group-hover:w-1/2" />
                   </Link>
                 ))}
+              </div>
+
+              {/* CTA Confirmar (Solo Desktop) */}
+              <div className="hidden md:block">
+                 <Link 
+                   href="#asistencia"
+                   className="inline-flex h-9 items-center justify-center rounded-full bg-foreground px-6 text-[10px] font-bold uppercase tracking-widest text-background transition-all hover:scale-105 hover:bg-foreground/90 shadow-sm"
+                 >
+                   {ctaLabel}
+                 </Link>
               </div>
 
               {/* Mobile Menu Toggle */}

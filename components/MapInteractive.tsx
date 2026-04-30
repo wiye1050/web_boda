@@ -14,7 +14,7 @@ export function MapInteractive({
 }: { 
   mapboxToken?: string; 
   embedUrl?: string;
-  category?: "all" | "accommodation" | "tourism"
+  category?: "all" | "accommodation" | "tourism" | "hair" | "makeup"
 }) {
   const [isMapActive, setIsMapActive] = useState(false);
 

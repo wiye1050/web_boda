@@ -30,7 +30,9 @@ function parseFirestoreValue(value: FirestoreValue | undefined): unknown {
   return undefined;
 }
 
-export async function getAccommodations(): Promise<Accommodation[]> {
+import { cache } from "react";
+
+export const getAccommodations = cache(async (): Promise<Accommodation[]> => {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
   
@@ -39,13 +41,17 @@ export async function getAccommodations(): Promise<Accommodation[]> {
   }
 
   try {
-    // We use the REST API point to fetch the collection without initializing the full Admin SDK on the edge/server components if possible
     const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/accommodations?key=${apiKey}`;
     
-    // We can use a short revalidate time so when the couple updates the admin panel, the website reflects it shortly after.
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
     const response = await fetch(url, {
-      next: { revalidate: 60 }, 
+      next: { revalidate: 60 },
+      signal: controller.signal,
     });
+    
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       console.error("Failed to fetch accommodations:", response.status, response.statusText);
@@ -81,4 +87,4 @@ export async function getAccommodations(): Promise<Accommodation[]> {
     console.error("Error fetching accommodations:", error);
     return [];
   }
-}
+});

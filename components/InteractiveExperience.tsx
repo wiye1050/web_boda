@@ -6,10 +6,10 @@ import { PracticalList } from "./PracticalList";
 import { StayList } from "./StayList";
 import { MapInteractive } from "./MapInteractive";
 import { motion, AnimatePresence } from "framer-motion";
-import { BedDouble, Utensils, Info, Coffee, Camera } from "lucide-react";
+import { BedDouble, Utensils, Info, Coffee, Camera, Scissors, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Category = "info" | "accommodation" | "tourism";
+type Category = "info" | "accommodation" | "tourism" | "hair" | "makeup";
 
 export function InteractiveExperience({ 
   accommodations, 
@@ -81,6 +81,39 @@ export function InteractiveExperience({
     },
   ];
 
+  const hairItems = [
+    {
+      id: "sagra",
+      name: "Peluquería Sagra",
+      type: "Peluquería",
+      distance: "Centro",
+      priceRange: "Reserva anticipada",
+      imageUrl: "https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=800&auto=format&fit=crop",
+      link: "https://www.google.com/maps/search/?api=1&query=Peluquería+Sagra+Ponferrada",
+    },
+    {
+      id: "kahos",
+      name: "KAHOS by baró estilistas",
+      type: "Peluquería y Estética",
+      distance: "Centro",
+      priceRange: "Reserva anticipada",
+      imageUrl: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=800&auto=format&fit=crop",
+      link: "https://www.google.com/maps/search/?api=1&query=KAHOS+by+baró+estilistas+Ponferrada",
+    }
+  ];
+
+  const makeupItems = [
+    {
+      id: "alba-canas",
+      name: "Alba Cañas Centro Estética Avanzada",
+      type: "Maquillaje",
+      distance: "Se desplaza al lugar",
+      priceRange: "Reserva anticipada",
+      imageUrl: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop",
+      link: "https://albacestetica.com/",
+    }
+  ];
+
   return (
     <div className="flex flex-col gap-10">
       {/* Category Toggles */}
@@ -121,6 +154,30 @@ export function InteractiveExperience({
           >
             <Camera className="h-3 w-3" />
             Qué hacer
+          </button>
+          <button
+            onClick={() => setActiveCategory("hair")}
+            className={cn(
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+              activeCategory === "hair" 
+                ? "bg-accent text-white shadow-sm" 
+                : "text-muted hover:text-foreground"
+            )}
+          >
+            <Scissors className="h-3.5 w-3.5" />
+            Peluquería
+          </button>
+          <button
+            onClick={() => setActiveCategory("makeup")}
+            className={cn(
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+              activeCategory === "makeup" 
+                ? "bg-accent text-white shadow-sm" 
+                : "text-muted hover:text-foreground"
+            )}
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+            Maquillaje
           </button>
         </div>
       </div>
@@ -165,10 +222,96 @@ export function InteractiveExperience({
                             <StayList
                                 items={accommodations}
                                 linkLabel="Ver hotel"
-                                showViewAll={false}
+                                showViewAll={true}
                                 variant="compact"
                             />
                          </div>
+                    </motion.div>
+                ) : activeCategory === "hair" ? (
+                    <motion.div
+                        key="hair-list"
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        className="flex flex-col gap-6"
+                    >
+                        <div className="rounded-3xl bg-accent/5 border border-accent/20 p-6">
+                            <h4 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-4">
+                                <Scissors className="h-3 w-3" /> Peluquería y Maquillaje
+                            </h4>
+                            <p className="text-[11px] text-muted leading-relaxed mb-6 italic">
+                                Hemos seleccionado estas dos opciones de confianza en Ponferrada para que estéis radiantes.
+                            </p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {hairItems.map((item) => (
+                                    <a 
+                                        key={item.id} 
+                                        href={item.link} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="group relative h-40 overflow-hidden rounded-2xl bg-surface border border-border/40 shadow-sm transition-all hover:-translate-y-1"
+                                    >
+                                        <div className="absolute inset-0 z-10">
+                                            <Image 
+                                                src={item.imageUrl} 
+                                                alt={item.name} 
+                                                fill
+                                                sizes="(max-width: 640px) 100vw, 300px"
+                                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                                            />
+                                        </div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-20" />
+                                        <div className="absolute bottom-3 left-4 text-white z-30">
+                                            <p className="text-[8px] uppercase tracking-widest text-white/70">{item.type}</p>
+                                            <p className="font-serif text-sm italic">{item.name}</p>
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    </motion.div>
+                ) : activeCategory === "makeup" ? (
+                    <motion.div
+                        key="makeup-list"
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        className="flex flex-col gap-6"
+                    >
+                        <div className="rounded-3xl bg-accent/5 border border-accent/20 p-6">
+                            <h4 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-4">
+                                <Sparkles className="h-3 w-3" /> Maquillaje
+                            </h4>
+                            <p className="text-[11px] text-muted leading-relaxed mb-6 italic">
+                                La mejor recomendación para maquillaje. Se desplaza hasta donde lo necesitéis para vuestra comodidad.
+                            </p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {makeupItems.map((item) => (
+                                    <a 
+                                        key={item.id} 
+                                        href={item.link} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="group relative h-40 overflow-hidden rounded-2xl bg-surface border border-border/40 shadow-sm transition-all hover:-translate-y-1"
+                                    >
+                                        <div className="absolute inset-0 z-10">
+                                            <Image 
+                                                src={item.imageUrl} 
+                                                alt={item.name} 
+                                                fill
+                                                sizes="(max-width: 640px) 100vw, 300px"
+                                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                                            />
+                                        </div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-20" />
+                                        <div className="absolute bottom-3 left-4 text-white z-30">
+                                            <p className="text-[8px] uppercase tracking-widest text-white/70">{item.type}</p>
+                                            <p className="font-serif text-sm italic">{item.name}</p>
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
                     </motion.div>
                 ) : (
                     <motion.div
