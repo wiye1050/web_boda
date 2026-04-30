@@ -93,7 +93,11 @@ export default async function AlojamientosPage() {
                     <h2 className="text-2xl font-serif text-foreground/90 bg-background pr-2">{pluralizeType(type)}</h2>
                     <div className="h-px flex-1 bg-border/60" />
                   </div>
-                  <StayList items={accommodationsByType[type]} linkLabel="Ver detalles" />
+                  <StayList 
+                    items={accommodationsByType[type]} 
+                    linkLabel="Ver detalles" 
+                    variant="detailed"
+                  />
                 </section>
               ))
             ) : (
