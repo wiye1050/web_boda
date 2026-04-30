@@ -189,11 +189,11 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
                 initial={{ 
                   maskSize: "0% 0%", 
                   WebkitMaskSize: "0% 0%" 
-                }}
-                animate={isLoaded ? { 
+                } as any}
+                animate={isLoaded ? ({ 
                   maskSize: "450% 450%",
                   WebkitMaskSize: "450% 450%",
-                } : {}}
+                } as any) : {}}
                 transition={{ 
                   delay: stroke.delay, 
                   duration: stroke.duration, 
