@@ -107,7 +107,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
       <div className="z-10 flex flex-col items-center w-full">
         <div className="relative pt-8 mb-4">
           <h1 className="text-6xl md:text-[8rem] font-serif tracking-tighter leading-[0.85] text-center">
-            <span className="relative z-10 flex flex-col md:flex-row justify-center items-center gap-y-1 md:gap-x-10">
+            <span className="relative z-10 flex flex-col md:flex-row justify-center items-center gap-y-2 md:gap-x-16">
               <motion.span 
                 initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
                 animate={isLoaded ? { 
@@ -129,7 +129,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
                   rotate: 0,
                   transition: { duration: 4, ease: [0.16, 1, 0.3, 1], delay: 2.2 }
                 } : {}}
-                className="text-accent font-script text-[5.5rem] sm:text-[7.5rem] md:text-[8.5rem] lg:text-[11rem] drop-shadow-sm -translate-y-2 md:-translate-y-4 -my-4 md:my-0 z-20 will-change-transform transform-gpu"
+                className="text-accent font-script text-[5.5rem] sm:text-[7.5rem] md:text-[8.5rem] lg:text-[11rem] drop-shadow-sm -translate-y-1 md:-translate-y-2 -my-2 md:my-0 z-20 will-change-transform transform-gpu"
               >
                 &
               </motion.span> 
