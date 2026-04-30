@@ -11,6 +11,8 @@ type CTAButtonProps = {
   className?: string;
   prefetch?: boolean;
   onClick?: () => void;
+  target?: string;
+  rel?: string;
 };
 
 const baseClasses =
@@ -32,11 +34,20 @@ export function CTAButton({
   className,
   prefetch,
   onClick,
+  target,
+  rel,
 }: CTAButtonProps) {
   const combinedClassName = cn(baseClasses, variantClasses[variant], className);
 
   return (
-    <Link href={href} className={combinedClassName} prefetch={prefetch} onClick={onClick}>
+    <Link 
+      href={href} 
+      className={combinedClassName} 
+      prefetch={prefetch} 
+      onClick={onClick}
+      target={target}
+      rel={rel}
+    >
       {children}
     </Link>
   );
