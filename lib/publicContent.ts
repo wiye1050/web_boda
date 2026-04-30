@@ -224,9 +224,9 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   whatsappLink: "https://wa.me/34696408689",
   giftLink: "",
   prebodaEyebrow: "Preboda",
-  prebodaTitle: "Nos vemos el día antes",
+  prebodaTitle: "La Víspera",
   prebodaDescription:
-    "Quedamos para brindar juntos la víspera. Un rato tranquilo para vernos con calma.",
+    "La excusa perfecta para vernos dos veces",
   prebodaCardOneDescription:
     "Un brindis para calentar motores.",
 

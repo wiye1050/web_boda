@@ -75,8 +75,10 @@ export function MobileBottomBar({
     if (navigator.share) {
       try {
         await navigator.share(payload);
-      } catch (error) {
-        console.error("Share cancelled or failed", error);
+      } catch (error: any) {
+        if (error.name !== "AbortError") {
+          console.error("Share failed", error);
+        }
       }
       return;
     }
@@ -97,14 +99,12 @@ export function MobileBottomBar({
     <>
       <div
         className={cn(
-          "fixed left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-[420px] sm:hidden transition-all duration-700 ease-in-out",
-          isHidden 
-            ? "bottom-0 translate-y-full opacity-0 pointer-events-none" 
-            : "opacity-100"
+          "fixed left-[50%] z-50 w-[94%] max-w-[420px] sm:hidden transition-transform duration-700 ease-in-out",
+          isHidden ? "pointer-events-none opacity-0" : "opacity-100"
         )}
         style={{
-          bottom: isHidden ? 0 : `calc(24px + env(safe-area-inset-bottom, 0px))`,
-          transform: isHidden ? "translate(-50%, 100%)" : "translate(-50%, 0)"
+          bottom: `calc(24px + env(safe-area-inset-bottom, 0px))`,
+          transform: isHidden ? "translate(-50%, 120%)" : "translate(-50%, 0)",
         }}
       >
         <div className="bg-white/80 backdrop-blur-2xl rounded-[2rem] px-2 py-2 flex items-center justify-between gap-1 shadow-2xl border border-white/60">

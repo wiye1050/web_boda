@@ -105,7 +105,7 @@ export default async function Home() {
   return (
     <>
       <SaveTheDateManager>
-      <div id="top" className="flex min-h-screen flex-col overflow-x-hidden w-full">
+      <div id="top" className="flex min-h-screen flex-col w-full">
         {showNotice && (
           <TopBar
             brandName={config.brandName}
@@ -316,18 +316,18 @@ export default async function Home() {
           brandName={config.brandName}
           targetDate={config.noticeCountdownTarget}
         />
-
-        <MobileBottomBar
-          confirmHref="#asistencia"
-          wedding={weddingMapsUrl ? { name: config.weddingVenueName.trim() || "Boda", url: weddingMapsUrl } : null}
-          preboda={prebodaMapsUrl ? { name: config.prebodaVenueName.trim() || "Preboda", url: prebodaMapsUrl } : null}
-          weddingVenueName={config.weddingVenueName.trim()}
-          confirmLabel={config.mobileBar.confirmLabel}
-          mapsLabel={config.mobileBar.mapsLabel}
-          mapsModalCopy={config.mapsModal}
-        />
       </div>
     </SaveTheDateManager>
+    
+    <MobileBottomBar
+      confirmHref="#asistencia"
+      wedding={weddingMapsUrl ? { name: config.weddingVenueName.trim() || "Boda", url: weddingMapsUrl } : null}
+      preboda={prebodaMapsUrl ? { name: config.prebodaVenueName.trim() || "Preboda", url: prebodaMapsUrl } : null}
+      weddingVenueName={config.weddingVenueName.trim()}
+      confirmLabel={config.mobileBar.confirmLabel}
+      mapsLabel={config.mobileBar.mapsLabel}
+      mapsModalCopy={config.mapsModal}
+    />
     <SaveTheDateModal />
     </>
   );

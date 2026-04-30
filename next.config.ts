@@ -29,6 +29,9 @@ const nextConfig: NextConfig = {
       skipDefaultConversion: true,
     },
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

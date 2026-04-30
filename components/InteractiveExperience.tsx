@@ -99,10 +99,7 @@ export function InteractiveExperience({
       priceRange: "Reserva anticipada",
       imageUrl: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=800&auto=format&fit=crop",
       link: "https://www.google.com/maps/search/?api=1&query=KAHOS+by+baró+estilistas+Ponferrada",
-    }
-  ];
-
-  const makeupItems = [
+    },
     {
       id: "alba-canas",
       name: "Alba Cañas Centro Estética Avanzada",
@@ -117,8 +114,8 @@ export function InteractiveExperience({
   return (
     <div className="flex flex-col gap-10">
       {/* Category Toggles */}
-      <div className="flex justify-start sm:justify-center w-full overflow-x-auto scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 pb-2">
-        <div className="inline-flex shrink-0 p-1.5 rounded-full bg-surface/80 glass border border-border/40 shadow-sm">
+      <div className="flex justify-start sm:justify-center w-[100vw] ml-[calc(50%-50vw)] overflow-x-auto scrollbar-hide px-4 sm:px-8 pb-2">
+        <div className="inline-flex shrink-0 p-1.5 rounded-full bg-surface/80 glass border border-border/40 shadow-sm mx-auto sm:mx-0 min-w-max">
           <button
             onClick={() => setActiveCategory("info")}
             className={cn(
@@ -166,18 +163,6 @@ export function InteractiveExperience({
           >
             <Scissors className="h-3.5 w-3.5" />
             Peluquería
-          </button>
-          <button
-            onClick={() => setActiveCategory("makeup")}
-            className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
-              activeCategory === "makeup" 
-                ? "bg-accent text-white shadow-sm" 
-                : "text-muted hover:text-foreground"
-            )}
-          >
-            <Sparkles className="h-3.5 w-3.5" />
-            Maquillaje
           </button>
         </div>
       </div>
@@ -244,49 +229,6 @@ export function InteractiveExperience({
                             </p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {hairItems.map((item) => (
-                                    <a 
-                                        key={item.id} 
-                                        href={item.link} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="group relative h-40 overflow-hidden rounded-2xl bg-surface border border-border/40 shadow-sm transition-all hover:-translate-y-1"
-                                    >
-                                        <div className="absolute inset-0 z-10">
-                                            <Image 
-                                                src={item.imageUrl} 
-                                                alt={item.name} 
-                                                fill
-                                                sizes="(max-width: 640px) 100vw, 300px"
-                                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                                            />
-                                        </div>
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-20" />
-                                        <div className="absolute bottom-3 left-4 text-white z-30">
-                                            <p className="text-[8px] uppercase tracking-widest text-white/70">{item.type}</p>
-                                            <p className="font-serif text-sm italic">{item.name}</p>
-                                        </div>
-                                    </a>
-                                ))}
-                            </div>
-                        </div>
-                    </motion.div>
-                ) : activeCategory === "makeup" ? (
-                    <motion.div
-                        key="makeup-list"
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
-                        className="flex flex-col gap-6"
-                    >
-                        <div className="rounded-3xl bg-accent/5 border border-accent/20 p-6">
-                            <h4 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-4">
-                                <Sparkles className="h-3 w-3" /> Maquillaje
-                            </h4>
-                            <p className="text-[11px] text-muted leading-relaxed mb-6 italic">
-                                La mejor recomendación para maquillaje. Se desplaza hasta donde lo necesitéis para vuestra comodidad.
-                            </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {makeupItems.map((item) => (
                                     <a 
                                         key={item.id} 
                                         href={item.link} 
