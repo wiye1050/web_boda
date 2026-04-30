@@ -44,24 +44,24 @@ export async function generateMetadata(): Promise<Metadata> {
       default: config.brandName,
       template: `%s | ${config.brandName}`,
     },
-    description: "¡Por fin podemos decíroslo! Tenéis una invitación pendiente aquí dentro...",
+    description: "¿Preparado? Pincha el enlace...",
     metadataBase: new URL("https://web-boda-delta.vercel.app"),
     alternates: {
       canonical: "/",
     },
     openGraph: {
       title: config.brandName,
-      description: "¡Por fin podemos decíroslo! Tenéis una invitación pendiente aquí dentro...",
+      description: "¿Preparado? Pincha el enlace...",
       url: "https://web-boda-delta.vercel.app/",
       siteName: config.brandName,
       images: [
         {
-          url: "https://web-boda-delta.vercel.app/logo-ag.png?v=3",
-          secureUrl: "https://web-boda-delta.vercel.app/logo-ag.png?v=3",
+          url: "https://web-boda-delta.vercel.app/logo-whatsapp.jpg",
+          secureUrl: "https://web-boda-delta.vercel.app/logo-whatsapp.jpg",
           width: 1024,
-          height: 636,
+          height: 1024,
           alt: `${config.brandName} - Nuestra Boda`,
-          type: "image/png",
+          type: "image/jpeg",
         },
       ],
       locale: "es_ES",
@@ -70,8 +70,8 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: config.brandName,
-      description: "¡Por fin podemos decíroslo! Tenéis una invitación pendiente aquí dentro...",
-      images: ["https://web-boda-delta.vercel.app/logo-ag.png?v=3"],
+      description: "¿Preparado? Pincha el enlace...",
+      images: ["https://web-boda-delta.vercel.app/logo-whatsapp.jpg"],
     },
   };
 }
