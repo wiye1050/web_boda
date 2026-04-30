@@ -8,7 +8,7 @@ import { Lock } from "lucide-react";
 import Link from "next/link";
 import { MediaCountdownClient } from "@/components/MediaCountdownClient";
 
-const WEDDING_DATE = new Date("2026-09-12T13:30:00+02:00");
+// La fecha de la boda se obtiene del config dinámicamente
 
 export default async function GalleryPage() {
   const config = await getPublicConfig();
@@ -20,8 +20,9 @@ export default async function GalleryPage() {
       href: section.id === "media" ? "/media" : `/#${section.id}`,
     }));
 
+  const weddingDate = new Date(`${config.ceremonyDateISO}T${config.ceremonyTime}:00`);
   const now = new Date();
-  const isUnlocked = now >= WEDDING_DATE;
+  const isUnlocked = now >= weddingDate;
 
   return (
     <>
@@ -81,14 +82,14 @@ export default async function GalleryPage() {
                 </h1>
                 <p className="text-muted text-sm leading-relaxed">
                   Esta sección se abrirá el día de la boda, el{" "}
-                  <span className="font-semibold text-foreground">12 de septiembre de 2026</span>.
+                  <span className="font-semibold text-foreground">{config.eventDate.split("·")[0].trim()}</span>.
                   <br />
                   Vuelve entonces para compartir y ver los momentos únicos del gran día.
                 </p>
               </div>
 
               {/* Countdown display */}
-              <MediaCountdown targetDate={WEDDING_DATE.toISOString()} />
+              <MediaCountdown targetDate={weddingDate.toISOString()} />
 
               {/* Back link */}
               <Link

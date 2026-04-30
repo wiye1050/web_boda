@@ -105,6 +105,8 @@ export type PublicContent = {
   heroStatTimeNote: string;
   eventDate: string;
   eventTimeRange: string;
+  ceremonyTime: string;
+  ceremonyDateISO: string;
   locationName: string;
   locationAddress: string;
   locationMapUrl: string;
@@ -210,6 +212,8 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   heroStatTimeNote: "niños bienvenidos",
   eventDate: "12 de septiembre · 2026",
   eventTimeRange: "14:00 — 02:00",
+  ceremonyTime: "14:00",
+  ceremonyDateISO: "2026-09-12",
   locationName: "Finca El Casar · Ponferrada",
   locationAddress: "Cabañas Raras, León",
   locationMapUrl: "",
@@ -662,6 +666,14 @@ export function normalizePublicContent(
     eventTimeRange: normalizeString(
       data.eventTimeRange,
       DEFAULT_PUBLIC_CONTENT.eventTimeRange,
+    ),
+    ceremonyTime: normalizeString(
+      data.ceremonyTime,
+      DEFAULT_PUBLIC_CONTENT.ceremonyTime,
+    ),
+    ceremonyDateISO: normalizeString(
+      data.ceremonyDateISO,
+      DEFAULT_PUBLIC_CONTENT.ceremonyDateISO,
     ),
     locationName: normalizeString(
       data.locationName,

@@ -8,7 +8,6 @@ import { LazyMotionProvider } from "@/components/providers/LazyMotionProvider";
 
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { WeddingChatWrapper } from "@/components/WeddingChatWrapper";
-import { EnvelopeWrapper } from "@/components/EnvelopeWrapper";
 import { MusicWrapper } from "@/components/MusicWrapper";
 
 const montserrat = Montserrat({
@@ -56,8 +55,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: config.brandName,
       images: [
         {
-          url: "https://ayg2026.vercel.app/logo-whatsapp.jpg",
-          secureUrl: "https://ayg2026.vercel.app/logo-whatsapp.jpg",
+          url: "/logo-whatsapp.jpg",
           width: 1024,
           height: 1024,
           alt: `${config.brandName} - Nuestra Boda`,
@@ -71,7 +69,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: config.brandName,
       description: "¿Preparado? Pincha el enlace...",
-      images: ["https://ayg2026.vercel.app/logo-whatsapp.jpg"],
+      images: ["/logo-whatsapp.jpg"],
     },
   };
 }
@@ -103,7 +101,6 @@ export default function RootLayout({
             </LazyMotionProvider>
             <Toaster position="top-center" richColors />
             <WeddingChatWrapper />
-            {/* <EnvelopeWrapper /> */}
             <MusicWrapper />
           </div>
         </ThemeProvider>

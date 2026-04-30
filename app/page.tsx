@@ -130,6 +130,8 @@ export default async function Home() {
               heroTitle: config.heroTitle,
               heroDescription: config.heroDescription,
               eventDate: config.eventDate || "12 de septiembre · 2026",
+              ceremonyTime: config.ceremonyTime,
+              ceremonyDateISO: config.ceremonyDateISO,
               locationName: config.locationName,
               locationAddress: config.locationAddress,
             }}
@@ -187,7 +189,9 @@ export default async function Home() {
                 <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2 mb-12">
                   <article className="flex flex-col items-center justify-center rounded-[2.5rem] glass p-6 text-center sm:p-10">
                     <p className="text-editorial">La Ceremonia</p>
-                    <h3 className="mt-4 text-3xl font-serif font-medium">12 SEPT · 14:00</h3>
+                    <h3 className="mt-4 text-3xl font-serif font-medium">
+                      {config.eventDate.split("·")[0].trim().toUpperCase()} · {config.ceremonyTime}
+                    </h3>
                     <p className="mt-4 text-[13px] md:text-sm italic text-accent font-medium tracking-wide">Se ruega puntualidad</p>
                   </article>
 

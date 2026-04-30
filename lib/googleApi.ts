@@ -49,16 +49,19 @@ export async function addRsvpToCalendar(rsvpData: {
     const auth = await getAuthenticatedClient();
     const calendar = await getCalendarClient(auth);
 
+    const WEDDING_DATE = "2026-09-12";
+    const WEDDING_TIME = "13:30:00"; // Hora inicio para calendario
+
     const event = {
       summary: `Boda Alba & Guille: ${rsvpData.fullName}`,
       description: `Confirmación de asistencia: ${rsvpData.guests} asistentes.\nEmail: ${rsvpData.email}`,
       start: {
-        dateTime: "2026-09-12T13:30:00Z", // Ajustar a tu hora real
-        timeZone: "Europe/Madrid",
+        dateTime: `${WEDDING_DATE}T${WEDDING_TIME}Z`,
+        timeZone: "UTC",
       },
       end: {
-        dateTime: "2026-09-13T02:00:00Z",
-        timeZone: "Europe/Madrid",
+        dateTime: `${WEDDING_DATE}T23:59:00Z`,
+        timeZone: "UTC",
       },
     };
 

@@ -23,11 +23,11 @@ function getTimeLeft(target: Date) {
 
 export function Footer({
   brandName = "Alba & Guille",
-  targetDate = "2026-09-12T13:30:00",
+  targetDate = "2026-09-12T14:00:00",
 }: FooterProps) {
   const parsedTarget = useMemo(() => {
     const parsed = Date.parse(targetDate);
-    return Number.isFinite(parsed) ? new Date(parsed) : new Date("2026-09-12T13:30:00");
+    return Number.isFinite(parsed) ? new Date(parsed) : new Date("2026-09-12T14:00:00");
   }, [targetDate]);
 
   const [timeLeft, setTimeLeft] = useState({ total: 0, days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -54,7 +54,7 @@ export function Footer({
               La cuenta atrás ha empezado
             </h3>
             <p className="text-[10px] md:text-xs tracking-[0.4em] text-white/40 uppercase font-sans">
-              Nos vemos el 12 de Septiembre de 2026
+              Nos vemos pronto
             </p>
           </div>
 

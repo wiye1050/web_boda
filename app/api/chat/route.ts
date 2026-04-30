@@ -40,7 +40,12 @@ function buildSystemPrompt(
   }
 
   const now = new Date();
-  const weddingDate = new Date(2026, 8, 12); // Sep 12, 2026
+  const weddingDateParts = config.ceremonyDateISO.split("-");
+  const weddingDate = new Date(
+    parseInt(weddingDateParts[0]),
+    parseInt(weddingDateParts[1]) - 1,
+    parseInt(weddingDateParts[2])
+  );
   const diffTime = weddingDate.getTime() - now.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   
@@ -52,8 +57,8 @@ function buildSystemPrompt(
   return `Eres el asistente de boda de ${config.brandName}. Responde siempre en español, de forma cálida y cercana, pero breve y profesional. No uses demasiados emojis. ${countdownMsg}
 
 === DATOS CLAVE ===
-Boda: Sábado 12 de septiembre de 2026 (Lugar: ${config.locationName}).
-Preboda: Viernes 11 de septiembre (19:30h en ${config.prebodaPlace}). Dirección: ${config.prebodaAddress}. Es un brindis informal y toma de contacto. ¡Habrá sorpresas!
+Boda: ${config.eventDate} (Lugar: ${config.locationName}).
+Preboda: ${config.prebodaPlace} (Viernes anterior). Dirección: ${config.prebodaAddress}. Es un brindis informal y toma de contacto. ¡Habrá sorpresas!
 
 === ALOJAMIENTO RECOMENDADO ===
 Alba y Guille recomiendan especialmente los que tienen reserva de bloque. Aquí tienes la lista completa de opciones que ellos han seleccionado:

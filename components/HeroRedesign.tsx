@@ -50,6 +50,8 @@ type HeroRedesignProps = {
     heroTitle: string;
     heroDescription: string;
     eventDate: string;
+    ceremonyTime: string;
+    ceremonyDateISO: string;
     locationName: string;
     locationAddress: string;
   };
@@ -158,7 +160,7 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
             transition={{ delay: 4.5, duration: 2 }}
           >
             <ScrambleText 
-              text="12 · SEPTIEMBRE · 2026" 
+              text={config.eventDate.toUpperCase()} 
               delay={4.5} 
               duration={2}
               className="font-sans text-[10px] md:text-xs text-foreground font-bold tracking-[0.4em] uppercase"
@@ -245,8 +247,8 @@ export function HeroRedesign({ config }: HeroRedesignProps) {
                 title: "Boda Alba & Guille",
                 description: config.heroDescription,
                 location: `${config.locationName}, ${config.locationAddress}`,
-                start: new Date("2026-09-12T13:30:00"),
-                end: new Date("2026-09-13T02:00:00"),
+                start: new Date(`${config.ceremonyDateISO}T13:30:00`),
+                end: new Date(`${config.ceremonyDateISO}T23:59:59`),
               })}
               target="_blank"
               rel="noopener noreferrer"
