@@ -117,8 +117,8 @@ export function InteractiveExperience({
   return (
     <div className="flex flex-col gap-10">
       {/* Category Toggles */}
-      <div className="flex justify-center">
-        <div className="inline-flex p-1.5 rounded-full bg-surface/80 glass border border-border/40 shadow-sm overflow-x-auto max-w-full">
+      <div className="flex justify-start sm:justify-center w-full overflow-x-auto scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 pb-2">
+        <div className="inline-flex shrink-0 p-1.5 rounded-full bg-surface/80 glass border border-border/40 shadow-sm">
           <button
             onClick={() => setActiveCategory("info")}
             className={cn(

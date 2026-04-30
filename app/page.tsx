@@ -105,7 +105,7 @@ export default async function Home() {
   return (
     <>
       <SaveTheDateManager>
-      <div id="top" className="flex min-h-screen flex-col">
+      <div id="top" className="flex min-h-screen flex-col overflow-x-hidden w-full">
         {showNotice && (
           <TopBar
             brandName={config.brandName}
