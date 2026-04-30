@@ -200,7 +200,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   heroEyebrow: "",
   heroTitle: "Alba & Guille",
   heroDescription:
-    "El 12 de septiembre de 2026 nos casamos en Finca El Casar, Ponferrada. Nos encantará compartir el día contigo.",
+    "Porque no hay mejor excusa para juntaros a todos",
   heroPrimaryCtaLabel: "Confirmar asistencia",
   heroSecondaryCtaLabel: "Ver horarios",
   heroMapCtaLabel: "Ver ubicación",

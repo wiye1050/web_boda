@@ -22,11 +22,19 @@ export type SystemLog = {
   rsvpId?: string;
 };
 
+import { useAuth } from "./AuthContext";
+
 export function useSystemLogs(limitTo = 10) {
+  const { isAdmin } = useAuth();
   const [logs, setLogs] = useState<SystemLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!isAdmin) {
+      setIsLoading(false);
+      return;
+    }
+
     const db = getFirestoreDb();
     const logsQuery = query(
       collection(db, "system_logs"),
@@ -51,7 +59,7 @@ export function useSystemLogs(limitTo = 10) {
     );
 
     return unsubscribe;
-  }, [limitTo]);
+  }, [limitTo, isAdmin]);
 
   return { logs, isLoading };
 }

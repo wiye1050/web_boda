@@ -3,6 +3,19 @@
 import { useEffect, useMemo, useState } from "react";
 import * as XLSX from "xlsx";
 import type { RsvpRecord, RsvpStatus } from "./useRsvpData";
+import { 
+  Users, 
+  Calendar, 
+  Bus, 
+  Trash2, 
+  CheckCircle2, 
+  XCircle, 
+  Clock, 
+  ChevronRight, 
+  FileSpreadsheet,
+  AlertCircle,
+  MessageSquare
+} from "lucide-react";
 
 type FilterOption = "all" | "attending" | "notAttending";
 
@@ -97,8 +110,9 @@ export function RsvpTable({
             <button
               type="button"
               onClick={handleExport}
-              className="rounded-full border border-emerald-600/30 bg-emerald-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700 transition hover:bg-emerald-500/20 active:translate-y-[1px]"
+              className="group flex items-center gap-2 rounded-full border border-emerald-600/30 bg-emerald-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700 transition hover:bg-emerald-500/20 active:translate-y-[1px]"
             >
+              <FileSpreadsheet size={14} className="transition-transform group-hover:scale-110" />
               Exportar Excel
             </button>
           </div>
@@ -148,8 +162,12 @@ export function RsvpTable({
                           ? `${record.transportSeats ?? 0} plazas`
                           : "No"}
                       </span>
-                      <span>
-                        Términos: {record.acceptedTerms ? "✅" : "❌"}
+                      <span className="flex items-center gap-1.5">
+                        Términos: {record.acceptedTerms ? (
+                          <CheckCircle2 size={12} className="text-emerald-500" />
+                        ) : (
+                          <XCircle size={12} className="text-red-400" />
+                        )}
                       </span>
                     </div>
                     {(record.guestNames || record.requests) && (
@@ -183,10 +201,19 @@ export function RsvpTable({
                     <tr>
                       <th className="px-4 py-3">Invitado</th>
                       <th className="px-4 py-3">Asistencia</th>
-                      <th className="px-4 py-3 text-center" title="Preboda">🎉</th>
-                      <th className="px-4 py-3 text-center" title="Transporte">🚌</th>
-                      <th className="px-4 py-3 text-center">Adultos</th>
-                      <th className="px-4 py-3">Registro</th>
+                      <th className="px-4 py-3 text-center" title="Preboda">
+                        <Users size={14} className="mx-auto" />
+                      </th>
+                      <th className="px-4 py-3 text-center" title="Transporte">
+                        <Bus size={14} className="mx-auto" />
+                      </th>
+                      <th className="px-4 py-3 text-center">Pax</th>
+                      <th className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <Clock size={12} />
+                          <span>Registro</span>
+                        </div>
+                      </th>
                       <th className="px-4 py-3">Estado</th>
                       {onSelectRecord && (
                         <th className="px-4 py-3 text-right">Acciones</th>
@@ -210,7 +237,7 @@ export function RsvpTable({
                                 {record.fullName}
                               </span>
                               {(record.requests || record.notes) && (
-                                <span title="Tiene notas" className="cursor-help text-xs">📝</span>
+                                <MessageSquare size={12} className="text-primary/60" title="Tiene comentarios o notas" />
                               )}
                             </div>
                             <span className="text-xs text-muted">
@@ -225,9 +252,9 @@ export function RsvpTable({
                         </td>
                         <td className="px-4 py-4 text-center">
                           {record.preboda === "si" ? (
-                            <span title="Asiste a preboda">✅</span>
+                            <CheckCircle2 size={16} className="mx-auto text-primary" title="Asiste a preboda" />
                           ) : (
-                            <span className="text-muted/30">—</span>
+                            <span className="text-muted/20">—</span>
                           )}
                         </td>
                         <td className="px-4 py-4 text-center">
@@ -314,10 +341,10 @@ function DeleteButton({ onDelete }: { onDelete: () => void }) {
     >
       {confirming ? (
         <span className="whitespace-nowrap text-[10px] uppercase tracking-widest">
-          ¿Borrar?
+          ¿Seguro?
         </span>
       ) : (
-        "🗑️"
+        <Trash2 size={14} />
       )}
     </button>
   );

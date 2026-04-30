@@ -52,12 +52,20 @@ export type RsvpMetrics = {
   tagCounts: Record<string, number>;
 };
 
+import { useAuth } from "./AuthContext";
+
 export function useRsvpData(limitTo = 200) {
+  const { isAdmin } = useAuth();
   const [records, setRecords] = useState<RsvpRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    if (!isAdmin) {
+      setIsLoading(false);
+      return;
+    }
+
     const db = getFirestoreDb();
     const rsvpQuery = query(
       collection(db, "rsvps"),
@@ -157,7 +165,7 @@ export function useRsvpData(limitTo = 200) {
     );
 
     return unsubscribe;
-  }, [limitTo]);
+  }, [limitTo, isAdmin]);
 
   const metrics = useMemo<RsvpMetrics>(() => {
     return records.reduce<RsvpMetrics>(

@@ -31,12 +31,20 @@ export type WeddingTask = {
   updatedAt?: Date | null;
 };
 
+import { useAuth } from "./AuthContext";
+
 export function useWeddingTasks() {
+  const { isAdmin } = useAuth();
   const [tasks, setTasks] = useState<WeddingTask[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!isAdmin) {
+      setIsLoading(false);
+      return;
+    }
+
     const db = getFirestoreDb();
     const tasksRef = collection(db, "tasks");
     const tasksQuery = query(tasksRef, orderBy("createdAt", "desc"));
@@ -83,7 +91,7 @@ export function useWeddingTasks() {
     );
 
     return unsubscribe;
-  }, []);
+  }, [isAdmin]);
 
   async function addTask(input: Omit<WeddingTask, "id" | "createdAt" | "updatedAt">) {
     const db = getFirestoreDb();

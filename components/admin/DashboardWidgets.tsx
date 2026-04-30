@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useWeddingTasks } from "./useWeddingTasks";
 import { useSystemLogs } from "./useSystemLogs";
 import { syncPendingTasksAction } from "@/app/actions/syncTasks";
-import {  Calendar, Check, Clock, Plus, ArrowRight, AlertTriangle, MailWarning, RefreshCw } from "lucide-react";
+import {  Calendar, Check, Clock, Plus, ArrowRight, AlertTriangle, MailWarning, RefreshCw, Settings, Info } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
@@ -15,6 +15,7 @@ export function DashboardWidgets() {
       <div className="flex flex-col gap-4 lg:col-span-1">
         <CountdownWidget targetDate="2026-09-12T13:30:00" />
         <QuickActionsWidget />
+        <SiteStatusWidget />
         <SystemLogsWidget />
       </div>
 
@@ -237,5 +238,43 @@ function SyncTasksButton() {
     >
       <RefreshCw size={10} className={isSyncing ? "animate-spin" : ""} />
     </button>
+  );
+}
+function SiteStatusWidget() {
+  // En una app real, esto vendría de un hook que lea de Firestore (colección config/public)
+  // Por ahora mostramos los valores por defecto o simulados para dar feedback visual
+  const config = {
+    heroDescription: "Porque no hay mejor excusa para juntaros a todos",
+    noticeEnabled: true,
+    weddingDate: "12 Septiembre 2026",
+  };
+
+  return (
+    <div className="rounded-[16px] border border-border/60 bg-surface/60 backdrop-blur-md p-4 shadow-[var(--shadow-soft)]">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">Info de la Web</h3>
+        <Settings size={12} className="text-muted/40" />
+      </div>
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
+          <span className="text-[9px] uppercase tracking-wider text-muted">Hero Description</span>
+          <p className="text-[11px] leading-relaxed text-foreground/90 italic font-medium">
+            "{config.heroDescription}"
+          </p>
+        </div>
+        <div className="grid grid-cols-2 gap-2 border-t border-border/30 pt-3">
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[9px] uppercase tracking-wider text-muted">Fecha</span>
+            <span className="text-[10px] font-semibold">{config.weddingDate}</span>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[9px] uppercase tracking-wider text-muted">Aviso Superior</span>
+            <span className={`text-[10px] font-semibold ${config.noticeEnabled ? 'text-emerald-600' : 'text-muted'}`}>
+              {config.noticeEnabled ? 'Activado' : 'Desactivado'}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
