@@ -15,7 +15,8 @@ export function SaveTheDateModal({
   onClose,
 }: SaveTheDateModalProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [muted, setMuted] = useState(true);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [muted, setMuted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showPauseIcon, setShowPauseIcon] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -33,16 +34,16 @@ export function SaveTheDateModal({
     }
   }, []);
 
-  // Show mute hint after 1.5s if still muted
+  // Show mute hint 2s after video starts
   useEffect(() => {
-    if (!isOpen) return;
+    if (!hasStarted) return;
     hintTimer.current = setTimeout(() => {
       if (muted) setShowHint(true);
-    }, 1500);
+    }, 2000);
     return () => {
       if (hintTimer.current) clearTimeout(hintTimer.current);
     };
-  }, [isOpen, muted]);
+  }, [hasStarted, muted]);
 
   // Hide hint when user unmutes
   useEffect(() => {
@@ -95,6 +96,14 @@ export function SaveTheDateModal({
       videoRef.current.muted = !muted;
     }
     setMuted((prev) => !prev);
+  };
+
+  const handleStartVideo = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    setHasStarted(true);
+    video.play();
+    setIsPlaying(true);
   };
 
   const handleVideoClick = () => {
@@ -156,14 +165,14 @@ export function SaveTheDateModal({
               ref={videoRef}
               src={videoSrc}
               className="h-full w-full cursor-pointer object-contain md:max-h-[85vh] md:rounded-[2rem]"
-              autoPlay
               muted={muted}
               playsInline
+              preload="metadata"
               onEnded={handleClose}
               onTimeUpdate={handleTimeUpdate}
               onPlay={handlePlay}
               onPause={handlePause}
-              onClick={handleVideoClick}
+              onClick={hasStarted ? handleVideoClick : undefined}
             />
 
             {/* Overlay gradients */}
@@ -177,7 +186,38 @@ export function SaveTheDateModal({
               />
             </div>
 
-            {/* Center play/pause icon — shows on pause */}
+            {/* Splash screen — shown before user presses play */}
+            <AnimatePresence>
+              {!hasStarted && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0, transition: { duration: 0.4 } }}
+                  className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-6 bg-black/60 backdrop-blur-sm md:rounded-[2rem]"
+                >
+                  <div className="flex flex-col items-center gap-3 text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/50">
+                      Nuestra Boda
+                    </p>
+                    <h4 className="font-serif text-4xl italic text-white md:text-5xl">
+                      Save the Date
+                    </h4>
+                  </div>
+                  <motion.button
+                    onClick={handleStartVideo}
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex h-20 w-20 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition hover:bg-white/20"
+                    aria-label="Reproducir vídeo"
+                  >
+                    <Play className="h-8 w-8 translate-x-1 fill-white text-white" />
+                  </motion.button>
+                  <p className="text-xs text-white/40">Toca para ver el vídeo</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Center play/pause icon — shows on pause (only after started) */}
             <AnimatePresence>
               {(!isPlaying || showPauseIcon) && (
                 <motion.div
