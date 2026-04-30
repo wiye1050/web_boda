@@ -5,6 +5,7 @@ import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { getFirestoreDb } from "@/lib/firebase";
 import type { RsvpRecord, RsvpStatus } from "./useRsvpData";
 import { useAuth } from "@/components/admin/AuthContext";
+import { X } from "lucide-react";
 
 type RsvpDetailDialogProps = {
   record: RsvpRecord | null;
