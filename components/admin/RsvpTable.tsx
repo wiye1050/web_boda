@@ -237,7 +237,7 @@ export function RsvpTable({
                                 {record.fullName}
                               </span>
                               {(record.requests || record.notes) && (
-                                <MessageSquare size={12} className="text-primary/60" title="Tiene comentarios o notas" />
+                                <MessageSquare size={12} className="text-primary/60" aria-label="Tiene comentarios o notas" />
                               )}
                             </div>
                             <span className="text-xs text-muted">
