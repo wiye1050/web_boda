@@ -195,14 +195,6 @@ export function SaveTheDateModal({
                   exit={{ opacity: 0, transition: { duration: 0.4 } }}
                   className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-6 bg-black/60 backdrop-blur-sm md:rounded-[2rem]"
                 >
-                  <div className="flex flex-col items-center gap-3 text-center">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/50">
-                      Nuestra Boda
-                    </p>
-                    <h4 className="font-serif text-4xl italic text-white md:text-5xl">
-                      Save the Date
-                    </h4>
-                  </div>
                   <motion.button
                     onClick={handleStartVideo}
                     whileHover={{ scale: 1.08 }}
@@ -212,7 +204,7 @@ export function SaveTheDateModal({
                   >
                     <Play className="h-8 w-8 translate-x-1 fill-white text-white" />
                   </motion.button>
-                  <p className="text-xs text-white/40">Toca para ver el vídeo</p>
+                  <p className="text-xs text-white/40 font-medium tracking-wide">Toca para ver el vídeo</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -280,15 +272,6 @@ export function SaveTheDateModal({
               )}
             </AnimatePresence>
 
-            {/* Footer branding */}
-            <div className="pointer-events-none absolute bottom-8 left-8 z-30 hidden text-left md:block">
-              <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.4em] text-white/40">
-                Nuestra Boda
-              </p>
-              <h4 className="font-serif text-2xl italic text-white">
-                Save the Date
-              </h4>
-            </div>
           </motion.div>
         </motion.div>
       )}
