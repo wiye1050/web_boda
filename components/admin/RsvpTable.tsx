@@ -252,7 +252,7 @@ export function RsvpTable({
                         </td>
                         <td className="px-4 py-4 text-center">
                           {record.preboda === "si" ? (
-                            <CheckCircle2 size={16} className="mx-auto text-primary" title="Asiste a preboda" />
+                            <CheckCircle2 size={16} className="mx-auto text-primary" aria-label="Asiste a preboda" />
                           ) : (
                             <span className="text-muted/20">—</span>
                           )}
