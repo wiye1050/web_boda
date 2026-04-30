@@ -104,6 +104,13 @@ export default async function Home() {
   
   return (
     <>
+      <head>
+        {/* Preload critical Hero assets */}
+        <link rel="preload" href="/photos/hero/hero_ilustracion.png" as="image" />
+        <link rel="preload" href="/images/masks/brush_stroke_1.png" as="image" />
+        <link rel="preload" href="/images/masks/brush_stroke_2.png" as="image" />
+        <link rel="preload" href="/images/masks/brush.png" as="image" />
+      </head>
       <SaveTheDateManager>
       <div id="top" className="flex min-h-screen flex-col w-full">
         {showNotice && (

@@ -107,47 +107,48 @@ export function MobileBottomBar({
           transform: isHidden ? "translate(-50%, 120%)" : "translate(-50%, 0)",
         }}
       >
-        <div className="bg-white/80 backdrop-blur-2xl rounded-[2rem] px-2 py-2 flex items-center justify-between gap-1 shadow-2xl border border-white/60">
+        <div className="bg-white/80 backdrop-blur-2xl rounded-[2rem] px-2 py-2 flex items-center justify-between gap-2 shadow-2xl border border-white/60">
           <a
             href={confirmHref}
-            className="flex-1 flex min-h-[50px] items-center justify-center rounded-full bg-foreground px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-lg active:scale-95 transition-all hover:bg-foreground/90 whitespace-nowrap"
+            className="flex-1 flex min-h-[52px] items-center justify-center rounded-full bg-foreground px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-lg active:scale-95 transition-all hover:bg-foreground/90 whitespace-nowrap"
           >
             {confirmLabel}
           </a>
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new Event('open-chat'))}
-            aria-label="Abrir Asistente IA"
-            className="flex flex-col min-h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full bg-accent/10 border border-accent/20 transition-all active:scale-95 hover:bg-accent/20"
-          >
-            <Sparkles className="h-[18px] w-[18px] text-accent animate-pulse mb-0.5" />
-            <span className="text-[9px] font-bold text-accent leading-none uppercase tracking-widest drop-shadow-sm">IA</span>
-          </button>
-          <button
-            ref={mapsButtonRef}
-            type="button"
-            disabled={!canOpen}
-            aria-label={mapsLabel}
-            onClick={() => {
-              window.dispatchEvent(new CustomEvent("wb-pause-music"));
-              setIsOpen(true);
-            }}
-            className="flex min-h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full bg-white/40 transition-all active:scale-95 disabled:opacity-50 hover:bg-white/60"
-          >
-            <Map className="h-[22px] w-[22px] text-foreground" strokeWidth={1.5} />
-          </button>
-          <button
-            type="button"
-            onClick={handleShare}
-            aria-label="Compartir"
-            className="flex min-h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full bg-white/40 transition-all active:scale-95 hover:bg-white/60"
-          >
-            {shareMessage ? (
-              <Check className="h-[22px] w-[22px] text-secondary animate-pulse" strokeWidth={1.5} />
-            ) : (
-              <Share2 className="h-[22px] w-[22px] text-foreground" strokeWidth={1.5} />
-            )}
-          </button>
+          <div className="flex gap-1">
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event('open-chat'))}
+              aria-label="Abrir Asistente IA"
+              className="flex min-h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-accent/10 transition-all active:scale-95 hover:bg-accent/20 border border-accent/20"
+            >
+              <Sparkles className="h-[18px] w-[18px] text-accent" strokeWidth={2} />
+            </button>
+            <button
+              ref={mapsButtonRef}
+              type="button"
+              disabled={!canOpen}
+              aria-label={mapsLabel}
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent("wb-pause-music"));
+                setIsOpen(true);
+              }}
+              className="flex min-h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-white/40 transition-all active:scale-95 disabled:opacity-50 hover:bg-white/60 border border-white/20"
+            >
+              <Map className="h-[20px] w-[20px] text-foreground" strokeWidth={1.5} />
+            </button>
+            <button
+              type="button"
+              onClick={handleShare}
+              aria-label="Compartir"
+              className="flex min-h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-white/40 transition-all active:scale-95 hover:bg-white/60 border border-white/20"
+            >
+              {shareMessage ? (
+                <Check className="h-[20px] w-[20px] text-secondary animate-pulse" strokeWidth={1.5} />
+              ) : (
+                <Share2 className="h-[20px] w-[20px] text-foreground" strokeWidth={1.5} />
+              )}
+            </button>
+          </div>
         </div>
       </div>
       <MapsChooserModal

@@ -8,9 +8,6 @@
   /* Surface - Pure White for Cards */
   --surface: #ffffff;
 
-  /* Muted - Muted Taupe */
-  --muted: #8b7e74;
-
   /* Border - Subtle for Soft UI */
   --border: rgba(61, 59, 56, 0.08);
 
@@ -18,10 +15,13 @@
   --primary: #8b7e74;
   --primary-foreground: #ffffff;
 
-  /* Accent - Gold Accent */
-  --accent: #d4af37;
-  --accent-strong: #b89d7b;
+  /* Accent - Gold Accent (Ajustado para contraste 4.5:1) */
+  --accent: #a67c00;
+  --accent-strong: #8a6800;
   --accent-bg: #f3ede2;
+
+  /* Muted - Muted Taupe (Oscurecido para legibilidad) */
+  --muted: #5a514a;
 
   /* Contrast Acelts from Invitation */
   --olive: #5b634a;
@@ -218,4 +218,30 @@ h1, .font-display {
 
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
   background: rgba(var(--accent-rgb), 0.4);
+}
+
+/* Gold Shimmer Effect for Hero Names */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.text-shimmer-gold {
+  background: linear-gradient(
+    to right,
+    #7a5900 20%,
+    #a67c00 40%,
+    #c5a059 50%,
+    #a67c00 60%,
+    #7a5900 80%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: shimmer 15s linear infinite;
+}
+
+.font-script {
+  font-family: 'Dancing Script', cursive; /* Asegúrate de tener esta fuente o una similar */
 }

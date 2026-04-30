@@ -169,7 +169,7 @@ export function InteractiveExperience({
 
       <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
         {/* Sidebar: Content depending on category */}
-        <div className="flex flex-col gap-8 order-2 lg:order-1 max-h-[500px] lg:max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent pr-4">
+        <div className="flex flex-col gap-8 order-1 max-h-[500px] lg:max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent pr-4">
             <AnimatePresence mode="wait">
                 {activeCategory === "info" ? (
                     <motion.div
@@ -305,8 +305,8 @@ export function InteractiveExperience({
             </AnimatePresence>
         </div>
 
-        {/* Map Column - Always Right on desktop */}
-        <div className="relative group order-1 lg:order-2">
+        {/* Map Column - Always last on stack */}
+        <div className="relative group order-2">
            <div className="absolute -inset-1 bg-accent/20 rounded-[2.5rem] blur opacity-0 group-hover:opacity-100 transition duration-1000" />
            <MapInteractive 
              mapboxToken={mapboxToken} 
