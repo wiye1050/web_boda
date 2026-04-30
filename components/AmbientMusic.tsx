@@ -13,6 +13,7 @@ export function AmbientMusic() {
   const [ready, setReady] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [buttonVisible, setButtonVisible] = useState(false);
+  const [videoOpen, setVideoOpen] = useState(false);
 
   // Load audio and set up listeners
   useEffect(() => {
@@ -49,7 +50,7 @@ export function AmbientMusic() {
     };
   }, []);
 
-  // Listeners for auto-pause
+  // Listeners for auto-pause and video open/close
   useEffect(() => {
     const handleGlobalPause = () => {
       if (audioRef.current) {
@@ -57,20 +58,30 @@ export function AmbientMusic() {
         setPlaying(false);
       }
     };
+    const handleVideoOpened = () => setVideoOpen(true);
+    const handleVideoClosed = () => setVideoOpen(false);
 
     window.addEventListener("wb-pause-music", handleGlobalPause);
-    return () => window.removeEventListener("wb-pause-music", handleGlobalPause);
+    window.addEventListener("wb-video-opened", handleVideoOpened);
+    window.addEventListener("wb-video-closed", handleVideoClosed);
+    return () => {
+      window.removeEventListener("wb-pause-music", handleGlobalPause);
+      window.removeEventListener("wb-video-opened", handleVideoOpened);
+      window.removeEventListener("wb-video-closed", handleVideoClosed);
+    };
   }, []);
 
-  // Show banner after 2.5s if no preference saved yet
+  // Show banner after 2s if no preference saved yet — always wait for video to close
   useEffect(() => {
     const pref = sessionStorage.getItem(PREF_KEY);
-    const videoSeen = sessionStorage.getItem("wb_save_the_date_seen");
 
     if (pref === "yes" || pref === "no") {
       setButtonVisible(true);
       return;
     }
+
+    // Use the same key as the modal (localStorage)
+    const videoSeen = localStorage.getItem("wb_save_the_date_seen_v1");
 
     const startBannerTimer = () => {
       setTimeout(() => setShowBanner(true), 2000);
@@ -79,7 +90,7 @@ export function AmbientMusic() {
     if (videoSeen) {
       startBannerTimer();
     } else {
-      // Wait for video to be closed
+      // Wait for video to be closed before showing music banner
       const handleVideoClosed = () => {
         startBannerTimer();
         window.removeEventListener("wb-video-closed", handleVideoClosed);
@@ -132,6 +143,9 @@ export function AmbientMusic() {
       }).catch(() => {});
     }
   };
+
+  // While video is open, render nothing
+  if (videoOpen) return null;
 
   return (
     <>
