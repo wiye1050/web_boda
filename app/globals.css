@@ -180,10 +180,10 @@ html, body {
     transparent 100%
   );
   transform: rotate(25deg);
-  animation: shimmer 4s infinite;
+  animation: background-shimmer 4s infinite;
 }
 
-@keyframes shimmer {
+@keyframes background-shimmer {
   0% { transform: translateX(-100%) rotate(25deg); }
   100% { transform: translateX(100%) rotate(25deg); }
 }
@@ -235,9 +235,14 @@ h1, .font-display {
   color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
-  animation: shimmer 15s linear infinite;
+  animation: text-shimmer 15s linear infinite;
+}
+
+@keyframes text-shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
 }
 
 .font-script {
-  font-family: 'Dancing Script', cursive; /* Asegúrate de tener esta fuente o una similar */
+  font-family: var(--font-script), cursive;
 }
