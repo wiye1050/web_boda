@@ -21,7 +21,7 @@ const GiftList = dynamic(() => import("@/components/GiftList").then(mod => mod.G
 const PracticalList = dynamic(() => import("@/components/PracticalList").then(mod => mod.PracticalList));
 const SaveTheDateModal = dynamic(() => import("@/components/SaveTheDateModal").then(mod => mod.SaveTheDateModal));
 const InteractiveExperience = dynamic(() => import("@/components/InteractiveExperience").then(mod => mod.InteractiveExperience));
-const { Sparkles, Info } = require("lucide-react");
+import { Sparkles, Info } from "lucide-react";
 
 export const revalidate = 60; // Keep page fast but updated every minute if Firebase changes
 
@@ -225,6 +225,11 @@ export default async function Home() {
           )}
 
           {(isSectionEnabled("detalles") || isSectionEnabled("alojamiento")) && (
+            <Section
+              id="detalles"
+              eyebrow={config.practicalEyebrow || "Cosas Prácticas"}
+              title={config.practicalTitle || "Planifica tu estancia"}
+              description={config.practicalDescription || "Todo lo que necesitas para disfrutar del Bierzo."}
             >
               <ScrollReveal>
                 <div className="mx-auto max-w-4xl">
@@ -257,9 +262,9 @@ export default async function Home() {
           {(isSectionEnabled("alojamiento") || isSectionEnabled("detalles")) && (
             <Section
               id="experiencia"
-              eyebrow="Planifica tu viaje"
-              title="El Bierzo a vuestros pies"
-              description="Hemos seleccionado los mejores lugares para que vuestra estancia sea inolvidable."
+              eyebrow="Explora el Bierzo"
+              title="Vuestra Guía Interactiva"
+              description="Descubre los mejores rincones, dónde dormir y cómo prepararte para el gran día."
             >
               <ScrollReveal>
                 <InteractiveExperience 
