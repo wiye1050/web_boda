@@ -27,9 +27,9 @@ export function StayList({ items, linkLabel, showViewAll, variant = "default" }:
           <div 
             key={stay.id || `stay-option-${index}`} 
             className={cn(
-                "group relative flex overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-sm transition-all hover:-translate-y-1 hover:shadow-md",
+                "group relative flex overflow-hidden rounded-2xl bg-white/60 backdrop-blur-sm border border-accent/10 shadow-sm transition-all hover:scale-[1.01] hover:shadow-md",
                 isCompact ? "h-40" : 
-                isDetailed ? "flex-col h-auto border border-border/40" : "flex-col justify-end h-72"
+                isDetailed ? "flex-col h-auto" : "flex-col justify-end h-72"
             )}
           >
             {stay.link && !isDetailed ? (
@@ -41,7 +41,7 @@ export function StayList({ items, linkLabel, showViewAll, variant = "default" }:
             {/* Background Image / Header Image */}
             <div 
                className={cn(
-                 "relative bg-muted/20 transition-transform duration-700",
+                 "relative bg-muted/10 transition-transform duration-700",
                  isDetailed ? "h-64 overflow-hidden" : "absolute inset-0 group-hover:scale-105"
                )}
             >
@@ -57,8 +57,8 @@ export function StayList({ items, linkLabel, showViewAll, variant = "default" }:
                     )} 
                  />
                ) : (
-                 <div className="flex h-full w-full items-center justify-center bg-accent/30 text-muted/50">
-                    <BedDouble className="h-12 w-12" />
+                 <div className="flex h-full w-full items-center justify-center bg-accent/5 text-accent/20">
+                    <BedDouble className="h-10 w-10" />
                  </div>
                )}
                
@@ -66,16 +66,14 @@ export function StayList({ items, linkLabel, showViewAll, variant = "default" }:
                {!isDetailed && (
                  <div className={cn(
                      "absolute inset-0 pointer-events-none",
-                     isCompact 
-                         ? "bg-gradient-to-t from-black/80 via-black/20 to-transparent" 
-                         : "bg-gradient-to-t from-black/70 via-black/30 to-transparent"
+                     "bg-gradient-to-t from-black/60 via-black/10 to-transparent"
                  )} />
                )}
 
                {/* Price Badge on Image for detailed, or top right for others */}
                {stay.priceRange && (
                   <div className={cn(
-                    "absolute top-3 right-3 rounded-full bg-black/40 backdrop-blur px-2.5 py-1 text-[9px] font-bold text-white z-10",
+                    "absolute top-3 right-3 rounded-full bg-white/80 backdrop-blur-sm px-2.5 py-1 text-[9px] font-bold text-accent/90 z-10 shadow-sm border border-accent/5",
                   )}>
                     {stay.priceRange}
                   </div>
@@ -85,34 +83,34 @@ export function StayList({ items, linkLabel, showViewAll, variant = "default" }:
             {/* Content */}
             <div className={cn(
                 "relative z-10 flex flex-col",
-                isCompact ? "p-4 justify-end h-full pointer-events-none" : 
-                isDetailed ? "p-8 items-start text-left bg-surface flex-1" : "p-6 items-center text-center pointer-events-none"
+                isCompact ? "p-5 justify-end h-full pointer-events-none" : 
+                isDetailed ? "p-6 md:p-8 items-start text-left bg-white/40 flex-1" : "p-6 items-center text-center pointer-events-none"
             )}>
               <header className={cn(
                   "flex flex-col gap-1 w-full",
                   !isCompact && !isDetailed && "items-center"
               )}>
                 <span className={cn(
-                    "uppercase tracking-widest font-bold",
-                    isCompact ? "text-[8px] text-white/70" : 
-                    isDetailed ? "text-[10px] text-accent" : "text-[10px] text-white/70"
+                    "uppercase tracking-widest font-bold text-[9px]",
+                    isCompact ? "text-white/80" : 
+                    isDetailed ? "text-accent" : "text-white/80"
                 )}>{stay.type}</span>
                 
                 <h3 className={cn(
                     "font-serif",
-                    isCompact ? "text-base leading-tight !text-white" : 
-                    isDetailed ? "text-2xl text-foreground/90 mt-1" : "text-2xl !text-white"
+                    isCompact ? "text-xl leading-tight !text-white" : 
+                    isDetailed ? "text-3xl text-foreground/90 mt-1" : "text-3xl !text-white"
                 )}>{stay.name}</h3>
                 
                 {(stay.distance) && (
                   <div className={cn(
-                      "flex items-center gap-1.5",
-                      isCompact ? "mt-1 text-[10px] text-white/90" : 
+                      "flex items-center gap-1.5 font-serif italic",
+                      isCompact ? "mt-1.5 text-xs text-white/90" : 
                       isDetailed ? "mt-2 text-sm text-muted" : "mt-2 text-xs justify-center text-white/90"
                   )}>
                      {stay.distance && (
                         <span className="flex items-center gap-1">
-                          <MapPin className="h-3.5 w-3.5" />
+                          <MapPin className="h-3 w-3 opacity-70" />
                           {stay.distance}
                         </span>
                      )}
@@ -121,12 +119,12 @@ export function StayList({ items, linkLabel, showViewAll, variant = "default" }:
               </header>
 
               {isDetailed && stay.notes && (
-                <div className="mt-8 pt-8 border-t border-border/40 w-full">
+                <div className="mt-8 pt-8 border-t border-accent/10 w-full">
                   <h4 className="text-[10px] font-bold uppercase tracking-[0.15em] text-accent mb-4 flex items-center gap-2">
                     <Check className="w-3.5 h-3.5" />
                     Información Importante
                   </h4>
-                  <p className="text-sm text-muted/80 leading-relaxed whitespace-pre-line italic">
+                  <p className="text-sm text-muted/80 leading-relaxed whitespace-pre-line italic font-serif">
                     {stay.notes}
                   </p>
                 </div>

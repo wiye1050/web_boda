@@ -21,7 +21,6 @@ const GiftList = dynamic(() => import("@/components/GiftList").then(mod => mod.G
 const PracticalList = dynamic(() => import("@/components/PracticalList").then(mod => mod.PracticalList));
 const SaveTheDateModal = dynamic(() => import("@/components/SaveTheDateModal").then(mod => mod.SaveTheDateModal));
 const InteractiveExperience = dynamic(() => import("@/components/InteractiveExperience").then(mod => mod.InteractiveExperience));
-import { Sparkles, Info } from "lucide-react";
 
 export const revalidate = 60; // Keep page fast but updated every minute if Firebase changes
 
@@ -95,7 +94,7 @@ export default async function Home() {
       <SaveTheDateManager>
       <div id="top" className="flex min-h-screen flex-col w-full">
 
-        <main className="flex-1 pb-12 sm:pb-0">
+        <main className="flex-1 pb-32 sm:pb-0">
           <HeroRedesign
             config={{
               heroTitle: config.heroTitle,
@@ -109,150 +108,110 @@ export default async function Home() {
           />
 
           {isSectionEnabled("preboda") && (
-            <Section
+            <Section 
               id="preboda"
-              eyebrow={config.prebodaEyebrow}
-              title={config.prebodaTitle}
-              description={config.prebodaDescription}
-            >
-            <ScrollReveal>
-              <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2">
-                <article className="flex flex-col items-center justify-center rounded-[2.5rem] glass p-6 text-center sm:p-10">
-                  <p className="text-editorial">Fecha</p>
-                  <h3 className="mt-4 text-3xl font-serif font-medium">
-                    {config.prebodaTime.replace(/\s*h\s*$/i, "")}
-                  </h3>
-                  <p className="mt-4 text-sm text-foreground/70 leading-relaxed italic">
-                    &ldquo;{config.prebodaCardOneDescription || "Un brindis para calentar motores."}&rdquo;
-                  </p>
-                </article>
-
-                <article className="flex flex-col items-center justify-center rounded-[2.5rem] glass p-6 text-center sm:p-10">
-                  <p className="text-editorial">Lugar</p>
-                  <h3 className="mt-4 text-3xl font-serif font-medium">{config.prebodaPlace}</h3>
-                  {config.prebodaAddress && (
-                    <p className="mt-2 text-sm text-foreground/60">{config.prebodaAddress}</p>
-                  )}
-                  {prebodaMapUrl && (
-                    <CTAButton
-                      href={prebodaMapUrl}
-                      variant="ghost"
-                      className="mt-8 w-fit tracking-[0.25em] font-bold uppercase text-[10px] border-accent/30 text-accent"
-                      prefetch={false}
-                    >
-                      Cómo llegar
-                    </CTAButton>
-                  )}
-                </article>
-              </div>
-            </ScrollReveal>
-            </Section>
-          )}
-
-          {isSectionEnabled("ubicacion") && (
-            <Section
-              id="ubicacion"
-              eyebrow="La Boda"
-              title="Cuándo y dónde"
-              description={config.locationDescription}
+              fineArt
+              eyebrow="La víspera"
+              title="La Preboda"
+              description="La excusa perfecta para vernos dos veces"
+              showDivider
             >
               <ScrollReveal>
-                <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2 mb-12">
-                  <article className="flex flex-col items-center justify-center rounded-[2.5rem] glass p-6 text-center sm:p-10">
-                    <p className="text-editorial">La Ceremonia</p>
-                    <h3 className="mt-4 text-3xl font-serif font-medium">
-                      {config.eventDate.split("·")[0].trim().toUpperCase()} · {config.ceremonyTime}
-                    </h3>
-                    <p className="mt-4 text-[13px] md:text-sm italic text-accent font-medium tracking-wide">Se ruega puntualidad</p>
-                  </article>
+                <div className="flex flex-col items-center">
+                  {/* Handwritten Details Grid */}
+                  <div className="grid max-w-4xl gap-12 md:gap-24 sm:grid-cols-2 w-full">
+                    <article className="flex flex-col items-center justify-center text-center group">
+                      <p className="font-script text-2xl text-accent/80 -mb-2">Fecha</p>
+                      <h3 className="text-3xl sm:text-4xl font-serif font-medium text-foreground leading-tight">
+                        {config.prebodaTime.replace(/\s*h\s*$/i, "")}
+                      </h3>
+                    </article>
 
-                  <article className="flex flex-col items-center justify-center rounded-[2.5rem] glass p-6 text-center sm:p-10">
-                    <p className="text-editorial">El Lugar</p>
-                    <h3 className="mt-4 text-3xl font-serif font-medium">{config.locationName}</h3>
-                    <p className="mt-2 text-sm text-foreground/60">{config.locationAddress}</p>
-                    {weddingMapUrl && (
-                      <CTAButton
-                        href={weddingMapUrl}
-                        variant="ghost"
-                        className="mt-8 w-fit tracking-[0.25em] font-bold uppercase text-[10px] border-accent/30 text-accent"
-                        prefetch={false}
-                      >
-                        Cómo llegar
-                      </CTAButton>
-                    )}
-                  </article>
-                </div>
-
-                <div className="rounded-[2.5rem] glass p-6 sm:p-10 max-w-4xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-8 mt-12 overflow-hidden">
-                  <h3 className="text-2xl font-serif font-medium m-0 text-center md:text-left flex-shrink-0">
-                    {config.locationContactTitle}
-                  </h3>
-                  <ul className="mt-0 flex flex-col sm:flex-row gap-8 text-sm text-foreground/70 w-full sm:u-auto p-0 list-none m-0">
-                      <li className="flex flex-col gap-2 items-center sm:items-start flex-1 min-w-0">
-                        <span className="text-editorial">{config.locationEmailLabel}:</span>
-                        <div className="flex flex-col gap-2 w-full text-center sm:text-left">
-                          {config.contactEmail && (
-                            <a href={`mailto:${config.contactEmail}`} className="font-medium text-foreground underline decoration-accent/30 underline-offset-4 hover:text-accent transition-colors">
-                              {config.contactEmail}
-                            </a>
-                          )}
-                          {config.contactEmail2 && (
-                            <a href={`mailto:${config.contactEmail2}`} className="font-medium text-foreground underline decoration-accent/30 underline-offset-4 hover:text-accent transition-colors">
-                              {config.contactEmail2}
-                            </a>
-                          )}
-                        </div>
-                      </li>
-                      <li className="flex flex-col gap-2 items-center sm:items-start flex-1 sm:pl-8 sm:border-l border-foreground/10 min-w-0">
-                        <span className="text-editorial">{config.locationPhoneLabel}:</span>
-                        <div className="flex flex-col gap-2 w-full text-center sm:text-left">
-                          {config.contactPhone && (
-                            <a href={`tel:${config.contactPhone}`} className="font-medium text-foreground underline decoration-accent/30 underline-offset-4 hover:text-accent transition-colors">
-                              {config.contactPhone}
-                            </a>
-                          )}
-                          {config.contactPhone2 && (
-                            <a href={`tel:${config.contactPhone2}`} className="font-medium text-foreground underline decoration-accent/30 underline-offset-4 hover:text-accent transition-colors">
-                              {config.contactPhone2}
-                            </a>
-                          )}
-                        </div>
-                      </li>
-                    </ul>
+                    <article className="flex flex-col items-center justify-center text-center group">
+                      <p className="font-script text-2xl text-accent/80 -mb-2">Lugar</p>
+                      <h3 className="text-3xl sm:text-4xl font-serif font-medium text-foreground leading-tight">
+                        {config.prebodaPlace}
+                      </h3>
+                      {config.prebodaAddress && (
+                        <p className="mt-3 text-sm text-foreground/60 leading-relaxed max-w-[280px] font-medium italic">
+                          {config.prebodaAddress}
+                        </p>
+                      )}
+                      {prebodaMapUrl && (
+                        <CTAButton
+                          href={prebodaMapUrl}
+                          variant="ghost"
+                          className="mt-10 w-fit tracking-[0.25em] font-bold uppercase text-[10px] border-accent/20 text-accent/80 hover:bg-accent/5"
+                          prefetch={false}
+                        >
+                          Cómo llegar
+                        </CTAButton>
+                      )}
+                    </article>
+                  </div>
                 </div>
               </ScrollReveal>
             </Section>
           )}
 
-          {(isSectionEnabled("detalles") || isSectionEnabled("alojamiento")) && (
-            <Section
-              id="detalles"
-              eyebrow={config.practicalEyebrow || "Cosas Prácticas"}
-              title={config.practicalTitle || "Planifica tu estancia"}
-              description={config.practicalDescription || "Todo lo que necesitas para disfrutar del Bierzo."}
+          {isSectionEnabled("ubicacion") && (
+            <Section 
+              id="ubicacion"
+              fineArt
+              eyebrow="El Gran Día"
+              title="La Boda"
+              description="La finca será el escenario de todos los actos de la boda"
+              showDivider
             >
               <ScrollReveal>
-                <div className="mx-auto max-w-4xl">
-                  <div className="rounded-[3rem] bg-surface/50 border border-border/30 p-8 md:p-12 shadow-sm">
-                    <h4 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-6">
-                        <Info className="h-3.5 w-3.5" /> Información de interés
-                    </h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-10 italic">
-                        Detalles importantes para que vuestra única preocupación sea disfrutar.
-                    </p>
-                    
-                    <PracticalList variant="strip" items={config.practicalItems} />
-                    
-                    <div className="mt-10 pt-10 border-t border-border/20">
-                      <h5 className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/80 mb-4">
-                          <Sparkles className="h-4 w-4 text-accent" /> Autobuses y Traslados
-                      </h5>
-                      <div className="rounded-[2rem] bg-accent/5 border border-accent/10 p-6 md:p-8">
-                          <p className="text-sm text-muted-foreground leading-relaxed italic">
-                              Estamos coordinando los horarios y puntos de recogida para vuestra máxima comodidad. Muy pronto actualizaremos esta sección con todos los detalles confirmados para que podáis planificar vuestro regreso.
-                          </p>
-                      </div>
-                    </div>
+                <div className="flex flex-col items-center">
+                  {/* Handwritten Details Grid */}
+                  <div className="mx-auto grid max-w-4xl gap-12 md:gap-24 sm:grid-cols-2 w-full">
+                    <article className="flex flex-col items-center justify-center text-center group">
+                      <p className="font-script text-2xl text-accent/80 -mb-2">Cuándo</p>
+                      <h3 className="text-3xl sm:text-4xl font-serif font-medium text-foreground leading-tight">
+                        {config.eventDate.split('·')[0]} · {config.ceremonyTime}
+                      </h3>
+                    </article>
+
+                    <article className="flex flex-col items-center justify-center text-center group">
+                      <p className="font-script text-2xl text-accent/80 -mb-2">El Lugar</p>
+                      <h3 className="text-3xl sm:text-4xl font-serif font-medium text-foreground leading-tight">{config.locationName}</h3>
+                      {config.locationAddress && (
+                        <p className="mt-3 text-sm text-foreground/60 leading-relaxed max-w-[280px] font-medium italic">
+                          {config.locationAddress}
+                        </p>
+                      )}
+                      {weddingMapUrl && (
+                        <CTAButton
+                          href={weddingMapUrl}
+                          variant="ghost"
+                          className="mt-10 w-fit tracking-[0.25em] font-bold uppercase text-[10px] border-accent/20 text-accent/80 hover:bg-accent/5"
+                          prefetch={false}
+                        >
+                          Cómo llegar
+                        </CTAButton>
+                      )}
+                    </article>
+                  </div>
+                </div>
+              </ScrollReveal>
+            </Section>
+          )}
+
+          {isSectionEnabled("detalles") && (
+            <Section 
+              id="detalles"
+              fineArt
+              eyebrow="Faq"
+              title="Información Útil"
+              description="Detalles prácticos para vuestra comodidad durante la jornada"
+              showDivider
+            >
+              <ScrollReveal>
+                <div className="flex flex-col items-center">
+                  <div className="mx-auto max-w-5xl w-full">
+                    <PracticalList items={config.practicalItems} variant="strip" />
                   </div>
                 </div>
               </ScrollReveal>
@@ -260,73 +219,118 @@ export default async function Home() {
           )}
 
           {(isSectionEnabled("alojamiento") || isSectionEnabled("detalles")) && (
-            <Section
+            <Section 
               id="experiencia"
-              eyebrow="Explora el Bierzo"
-              title="Vuestra Guía Interactiva"
-              description="Descubre los mejores rincones, dónde dormir y cómo prepararte para el gran día."
+              fineArt
+              eyebrow="Vuestra Estancia"
+              title="Guía Interactiva"
+              description="Descubre los mejores rincones, dónde dormir y cómo prepararte para el gran día"
+              showDivider
             >
               <ScrollReveal>
-                <InteractiveExperience 
-                  accommodations={accommodations.length > 0 ? accommodations : config.stayOptions}
-                  practicalItems={config.practicalItems}
-                  mapboxToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-                  embedUrl={config.locationMapEmbedUrl}
-                />
+                <div className="flex flex-col items-center">
+                  <div className="w-full">
+                    <InteractiveExperience 
+                      accommodations={accommodations.length > 0 ? accommodations : config.stayOptions}
+                      practicalItems={config.practicalItems}
+                      mapboxToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+                      embedUrl={config.locationMapEmbedUrl}
+                    />
+                  </div>
+                </div>
               </ScrollReveal>
             </Section>
           )}
 
           {isSectionEnabled("regalos") && (
-            <Section
+            <Section 
               id="regalos"
-              eyebrow={config.giftsEyebrow}
-              title={config.giftsTitle}
-              description={config.giftsDescription}
-              align="center"
+              fineArt
+              eyebrow="Detalle"
+              title="Tu presencia es el mejor regalo"
+              description="Pero si de todas formas queréis ayudarnos con nuestros proyectos, podéis hacerlo aquí. Gracias infinitas"
+              showDivider
             >
               <ScrollReveal>
-                <GiftList gifts={giftOptions} />
+                <div className="flex flex-col items-center">
+                  <div className="w-full">
+                    <GiftList gifts={giftOptions} />
+                  </div>
+                </div>
               </ScrollReveal>
             </Section>
           )}
 
           {isSectionEnabled("asistencia") && (
-            <Section
+            <Section 
               id="asistencia"
-              eyebrow={config.rsvpEyebrow}
-              title={config.rsvpTitle}
-              description={config.rsvpDescription}
-              align="center"
+              fineArt
+              eyebrow="RSVP"
+              title="Confirma tu asistencia"
+              description="Completa el formulario para confirmar que vienes."
             >
               <ScrollReveal>
-                <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-8 rounded-[3rem] glass p-8 md:p-12 text-center shadow-premium">
-                  <RSVPForm
-                    importantTitle={config.rsvpImportantTitle}
-                    importantNotes={config.rsvpImportantNotes}
-                    copy={config.rsvpForm}
-                  />
-                  <div className="w-full h-px bg-foreground/5" />
-                  <p className="mx-auto max-w-2xl text-xs sm:text-sm text-foreground/60 leading-relaxed font-light">
-                    {config.rsvpContactLead}{" "}
-                    <a href={`mailto:${config.contactEmail}`} className="font-semibold text-foreground underline decoration-accent/30 underline-offset-4 hover:text-accent transition-colors">
-                      {config.contactEmail}
-                    </a>
-                    {config.contactEmail2 && (
-                      <> · <a href={`mailto:${config.contactEmail2}`} className="font-semibold text-foreground underline decoration-accent/30 underline-offset-4 hover:text-accent transition-colors">{config.contactEmail2}</a></>
-                    )}{" "}
-                    {config.rsvpContactWhatsappLead}{" "}
-                    <a href={config.whatsappLink || `tel:${config.contactPhone}`} className="font-semibold text-foreground underline decoration-accent/30 underline-offset-4 hover:text-accent transition-colors">
-                      {config.contactPhone}
-                    </a>
-                    {config.contactPhone2 && (
-                      <> · <a href={`tel:${config.contactPhone2}`} className="font-semibold text-foreground underline decoration-accent/30 underline-offset-4 hover:text-accent transition-colors">{config.contactPhone2}</a></>
-                    )}.
-                  </p>
+                <div className="flex flex-col items-center">
+                  <div className="mx-auto max-w-4xl w-full">
+                    <div className="rounded-[var(--radius-card)] glass p-6 md:p-14 shadow-premium">
+                      <RSVPForm
+                        importantTitle={config.rsvpImportantTitle}
+                        importantNotes={config.rsvpImportantNotes}
+                        copy={config.rsvpForm}
+                      />
+                    </div>
+                  </div>
                 </div>
               </ScrollReveal>
             </Section>
           )}
+
+          {/* Contacto final */}
+          <Section 
+            id="contacto"
+            fineArt
+            eyebrow="Contacto"
+            title="¿Alguna duda?"
+            description="Contacta con nosotros, estamos a vuestra disposición."
+          >
+            <ScrollReveal>
+              <div className="flex flex-col items-center">
+
+                <ul className="flex flex-col sm:flex-row gap-12 sm:gap-2 items-center sm:items-start justify-center w-full max-w-4xl">
+                  <li className="flex flex-col gap-2 items-center sm:items-start flex-1 min-w-0">
+                    <span className="font-script text-2xl text-accent/80">{config.locationEmailLabel}:</span>
+                    <div className="flex flex-col gap-2 w-full text-center sm:text-left">
+                      {config.contactEmail && (
+                        <a href={`mailto:${config.contactEmail}`} className="font-serif italic text-lg text-foreground underline decoration-accent/30 underline-offset-4 hover:text-accent transition-colors">
+                          {config.contactEmail}
+                        </a>
+                      )}
+                      {config.contactEmail2 && (
+                        <a href={`mailto:${config.contactEmail2}`} className="font-serif italic text-lg text-foreground underline decoration-accent/30 underline-offset-4 hover:text-accent transition-colors">
+                          {config.contactEmail2}
+                        </a>
+                      )}
+                    </div>
+                  </li>
+                  <li className="flex flex-col gap-2 items-center sm:items-start flex-1 sm:pl-8 sm:border-l border-accent/10 min-w-0">
+                    <span className="font-script text-2xl text-accent/80">{config.locationPhoneLabel}:</span>
+                    <div className="flex flex-col gap-2 w-full text-center sm:text-left">
+                      {config.contactPhone && (
+                        <a href={`tel:${config.contactPhone}`} className="font-serif italic text-lg text-foreground underline decoration-accent/30 underline-offset-4 hover:text-accent transition-colors">
+                          {config.contactPhone}
+                        </a>
+                      )}
+                      {config.contactPhone2 && (
+                        <a href={`tel:${config.contactPhone2}`} className="font-serif italic text-lg text-foreground underline decoration-accent/30 underline-offset-4 hover:text-accent transition-colors">
+                          {config.contactPhone2}
+                        </a>
+                      )}
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </ScrollReveal>
+          </Section>
         </main>
 
         <Footer

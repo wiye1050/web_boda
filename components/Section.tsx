@@ -14,6 +14,8 @@ type SectionProps = {
   align?: SectionAlign;
   className?: string;
   children: ReactNode;
+  fineArt?: boolean;
+  showDivider?: boolean;
 };
 
 const backgroundClassMap: Record<SectionBackground, string> = {
@@ -38,6 +40,8 @@ export function Section({
   align = "center",
   className,
   children,
+  fineArt = false,
+  showDivider = false,
 }: SectionProps) {
   const headingId = title && id ? `${id}-heading` : undefined;
   const descriptionId = description && id ? `${id}-description` : undefined;
@@ -54,26 +58,39 @@ export function Section({
         className
       )}
     >
-      <div className="container relative z-10 flex w-full max-w-6xl flex-col gap-6 px-4 sm:gap-8 sm:px-8">
+      <div className={cn(
+        "container relative z-10 flex w-full max-w-6xl flex-col px-4 sm:px-8",
+        fineArt ? "gap-[var(--spacing-content-gap)]" : "gap-8"
+      )}>
         {(eyebrow || title || description) && (
           <header
-            className={[
-              "flex w-full flex-col gap-4",
-              alignmentClassMap[align],
-            ]
-              .filter(Boolean)
-              .join(" ")}
+            className={cn(
+              "flex w-full flex-col",
+              fineArt ? "gap-4 md:gap-6" : "gap-4",
+              alignmentClassMap[align]
+            )}
           >
             {eyebrow && (
               <FadeIn delay={0.1}>
-                <span className="text-xs font-semibold uppercase tracking-[0.4em] text-muted">
+                <span className={cn(
+                  fineArt 
+                    ? "font-script text-2xl md:text-3xl text-accent/90 block -mb-2" 
+                    : "text-xs font-semibold uppercase tracking-[0.4em] text-muted"
+                )}>
                   {eyebrow}
                 </span>
               </FadeIn>
             )}
             {title && (
               <FadeIn delay={0.2}>
-                <h2 id={headingId} className="font-serif text-3xl md:text-5xl tracking-tight text-foreground/90 mb-4">
+                <h2 
+                  id={headingId} 
+                  className={cn(
+                    fineArt
+                      ? "font-serif text-4xl md:text-6xl tracking-tight text-foreground/90"
+                      : "font-serif text-3xl md:text-5xl tracking-tight text-foreground/90 mb-4"
+                  )}
+                >
                   {title}
                 </h2>
               </FadeIn>
@@ -82,12 +99,13 @@ export function Section({
               <FadeIn delay={0.3}>
                 <p
                   id={descriptionId}
-                  className={[
-                    "text-base text-muted max-w-2xl",
-                    align === "center" ? "mx-auto" : "md:max-w-3xl",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
+                  className={cn(
+                    fineArt
+                      ? "font-serif italic text-lg md:text-xl text-muted/80 leading-relaxed"
+                      : "text-base text-muted",
+                    "max-w-2xl",
+                    align === "center" ? "mx-auto" : "md:max-w-3xl"
+                  )}
                 >
                   {description}
                 </p>
@@ -96,9 +114,13 @@ export function Section({
           </header>
         )}
         <FadeIn>
-          <div className="grid gap-8">{children}</div>
+          <div className="w-full">{children}</div>
         </FadeIn>
       </div>
+
+      {showDivider && (
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-[1px] bg-foreground/10" />
+      )}
     </section>
   );
 }

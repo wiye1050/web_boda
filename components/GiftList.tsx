@@ -25,15 +25,15 @@ export function GiftList({ gifts }: GiftListProps) {
       {gifts.map((gift) => (
         <article
           key={gift.title}
-          className="flex w-full max-w-3xl flex-col gap-4 rounded-[var(--radius-card)] border border-border/80 bg-surface/90 p-4 sm:p-6 text-center items-center"
+          className="flex w-full max-w-3xl flex-col gap-6 text-center items-center"
         >
-          {gift.title && <h3 className="text-xl font-semibold">{gift.title}</h3>}
-          {gift.description && <p className="text-sm text-muted">{gift.description}</p>}
+          {gift.title && <h3 className="text-2xl font-serif font-medium">{gift.title}</h3>}
+          {gift.description && <p className="text-sm text-muted leading-relaxed">{gift.description}</p>}
           {gift.details &&
             (gift.hideDetails ? (
               <FlipCard details={gift.details} />
             ) : (
-              <ul className="flex flex-col items-center gap-2 rounded-xl bg-surface border border-border/40 p-6 text-sm text-foreground/90 shadow-[var(--shadow-soft)]">
+              <ul className="flex flex-col items-center gap-2 rounded-xl p-6 text-sm text-foreground/90">
                 {gift.details.map((detail) => (
                   <CopyableDetail key={detail} text={detail} />
                 ))}
@@ -60,7 +60,6 @@ function CopyableDetail({ text }: { text: string }) {
       await navigator.clipboard.writeText(text);
       setCopied(true);
       
-      // Haptic feedback for Android
       if (typeof window !== "undefined" && window.navigator.vibrate) {
         window.navigator.vibrate(40);
       }
@@ -73,14 +72,14 @@ function CopyableDetail({ text }: { text: string }) {
   };
 
   return (
-    <li className="flex w-full items-center justify-center gap-3 rounded-lg bg-background/50 px-4 py-3 border border-border/50">
-      <span className="font-mono text-[10px] sm:text-[13px] tracking-normal sm:tracking-widest whitespace-nowrap">{text}</span>
+    <li className="flex w-full items-center justify-center gap-4">
+      <span className="font-mono text-base sm:text-xl tracking-tight sm:tracking-tighter font-medium text-foreground">{text}</span>
       <button
         onClick={handleCopy}
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface text-muted-foreground transition-all hover:bg-primary hover:text-white hover:scale-105 active:scale-95 shadow-sm border border-border/40"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface text-muted-foreground transition-all hover:bg-primary hover:text-white hover:scale-105 active:scale-95 border border-border/40"
         aria-label="Copiar IBAN"
       >
-        {copied ? <Check size={14} /> : <Copy size={14} />}
+        {copied ? <Check size={16} /> : <Copy size={16} />}
       </button>
     </li>
   );
@@ -90,39 +89,84 @@ function FlipCard({ details }: { details: string[] }) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   return (
-    <div 
-      className="relative w-full max-w-sm h-32 cursor-pointer mx-auto group"
-      style={{ perspective: "1000px" }}
-      onClick={() => setIsFlipped(!isFlipped)}
-    >
-      <motion.div
-        className="w-full h-full relative"
-        style={{ transformStyle: "preserve-3d" }}
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6, type: "spring", bounce: 0.4 }}
+    <div className="flex flex-col items-center w-full max-w-sm mx-auto">
+      <div 
+        className="relative w-full aspect-[3/2] cursor-pointer group"
+        style={{ perspective: "1500px" }}
+        onClick={() => setIsFlipped(!isFlipped)}
       >
-        {/* Front */}
-        <div 
-          className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-xl bg-accent/10 border border-border/70 p-4 transition-colors group-hover:bg-accent/20"
-          style={{ backfaceVisibility: "hidden" }}
+        <motion.div
+          className="w-full h-full relative"
+          style={{ transformStyle: "preserve-3d" }}
+          animate={{ rotateY: isFlipped ? 180 : 0 }}
+          transition={{ duration: 0.7, type: "spring", stiffness: 260, damping: 20 }}
         >
-          <span className="font-semibold uppercase tracking-[0.2em] text-muted text-sm text-center">
-            Haz clic aquí
-          </span>
-        </div>
+          {/* Front: Envelope Design */}
+          <div 
+            className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl bg-[#fdfaf6] border border-stone-200 shadow-2xl overflow-hidden"
+            style={{ backfaceVisibility: "hidden" }}
+          >
+            {/* Envelope Flap Effect */}
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+              <svg viewBox="0 0 300 200" className="w-full h-full fill-none">
+                <path 
+                  d="M0 0 L150 100 L300 0" 
+                  fill="#f9f6f1" 
+                  stroke="#e7e4df" 
+                  strokeWidth="1"
+                />
+                <path 
+                  d="M0 200 L150 100 L300 200" 
+                  fill="#fdfaf6" 
+                  stroke="#e7e4df" 
+                  strokeWidth="0.5"
+                />
+              </svg>
+            </div>
 
-        {/* Back */}
-        <div 
-          className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-surface border border-border/40 shadow-[var(--shadow-soft)] p-2"
-          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-        >
-          <ul className="flex flex-col items-center gap-2 w-full text-sm text-foreground/90">
-            {details.map((detail) => (
-              <CopyableDetail key={detail} text={detail} />
-            ))}
-          </ul>
-        </div>
-      </motion.div>
+            {/* Wax Seal */}
+            <div className="relative z-10 flex flex-col items-center gap-3">
+              <motion.div 
+                animate={{ 
+                  scale: [1, 1.05, 1],
+                  boxShadow: [
+                    "0 0 0 0px rgba(153, 27, 27, 0.2)",
+                    "0 0 0 10px rgba(153, 27, 27, 0)",
+                    "0 0 0 0px rgba(153, 27, 27, 0)"
+                  ]
+                }}
+                transition={{ 
+                  duration: 2, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+                className="w-14 h-14 rounded-full bg-red-800 flex items-center justify-center shadow-lg border-2 border-red-900/20 relative"
+              >
+                <div className="absolute inset-1 rounded-full border border-white/10" />
+                <span className="text-white text-xl font-serif italic select-none">A&G</span>
+              </motion.div>
+              
+              <div className="bg-white/40 backdrop-blur-sm px-4 py-1.5 rounded-full border border-stone-200/50">
+                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-500">
+                  Tocar para abrir
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Back: Invitation Card */}
+          <div 
+            className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl bg-[#fdfaf6] border border-stone-200 shadow-2xl p-4 sm:p-8"
+            style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+          >
+            <ul className="flex flex-col items-center gap-3 w-full">
+              {details.map((detail) => (
+                <CopyableDetail key={detail} text={detail} />
+              ))}
+            </ul>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }

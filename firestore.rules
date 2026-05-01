@@ -42,10 +42,7 @@ service cloud.firestore {
         (isNumeric(data[key]) && data[key] >= minValue && data[key] <= maxValue);
     }
 
-    function optionalInt(data, key, minValue, maxValue) {
-      return !data.keys().hasAny([key]) ||
-        (data[key] is int && data[key] >= minValue && data[key] <= maxValue);
-    }
+
 
     function optionalTags(data) {
       return !data.keys().hasAny(["tags"]) ||
@@ -66,10 +63,7 @@ service cloud.firestore {
         stringField(data.transportRouteId, 1, 200);
     }
 
-    function optionalStringList(data, key, maxItems) {
-      return !data.keys().hasAny([key]) ||
-        (data[key] is list && data[key].size() <= maxItems);
-    }
+
 
     function optionalTransportSeatsAssigned(data) {
       return !data.keys().hasAny(["transportAssignedSeats"]) ||
@@ -147,50 +141,17 @@ service cloud.firestore {
       ]);
     }
 
-    function rsvpUpdateKeys(data) {
-      return data.keys().hasOnly([
-        "fullName",
-        "email",
-        "phone",
-        "attendance",
-        "guests",
-        "guestNames",
-        "preboda",
-        "needsTransport",
-        "transportSeats",
-        "requests",
-        "submittedAt",
-        "source",
-        "processed",
-        "notes",
-        "updatedAt",
-        "updatedBy",
-        "status",
-        "tags",
-        "transportRouteId",
-        "transportAssignedSeats",
-        "editToken",
-        "transportAssignedSeats",
-        "editToken",
-        "reminderOptIn",
-        "tableId",
-        "tableId",
-        "songRequest",
-        "acceptedTerms",
-      ]);
-    }
+
 
     match /rsvps/{docId} {
-      allow create: if isAdmin() || (
+      allow create: if (
         rsvpCreateKeys(request.resource.data) &&
-        baseRsvpChecks(request.resource.data)
+        baseRsvpChecks(request.resource.data) &&
+        request.resource.data.submittedAt == request.time &&
+        request.resource.data.acceptedTerms == true
       );
 
-      allow read: if isAdmin();
-
-      allow update: if isAdmin();
-
-      allow delete: if isAdmin();
+      allow read, update, delete: if isAdmin();
     }
 
     function baseTaskChecks(data) {
@@ -250,20 +211,7 @@ service cloud.firestore {
     }
 
     // --- ACCOMMODATIONS MODULE ---
-    function baseAccommodationChecks(data) {
-      return stringField(data.name, 2, 200) &&
-        data.type in ["Hotel", "Casa Rural", "Apartamento", "Otro"] &&
-        optionalBoolean(data, "hasBlock") &&
-        optionalStringOrNull(data, "capacity", 0, 100) &&
-        optionalStringOrNull(data, "distance", 0, 100) &&
-        optionalStringOrNull(data, "priceRange", 0, 20) &&
-        optionalStringOrNull(data, "link", 0, 1000000) &&
-        optionalStringOrNull(data, "imageUrl", 0, 1000000) &&
-        optionalStringOrNull(data, "notes", 0, 20000) &&
-        optionalTimestamp(data, "createdAt") &&
-        optionalTimestamp(data, "updatedAt") &&
-        optionalNumber(data, "order", 0, 1000);
-    }
+
 
     match /accommodations/{accommodationId} {
       allow read: if true; // Public access for the home/accommodations page

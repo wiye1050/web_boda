@@ -45,14 +45,19 @@
   --color-navy: var(--navy);
 
   /* Typography Mapping */
-  --font-serif: var(--font-instrument-serif);
-  --font-sans: var(--font-inter);
+  --font-serif: var(--font-cormorant);
+  --font-sans: var(--font-montserrat);
   --font-script: var(--font-pinyon-script);
   --font-calligraphy: var(--font-pinyon-script);
   --spacing-section: clamp(4rem, 12dvh, 8rem);
+  --spacing-header-gap: clamp(1.5rem, 6vh, 3rem);
+  --spacing-content-gap: clamp(3rem, 10vh, 5rem);
+  --spacing-block-gap: 2.5rem;
+  --tracking-serif: 0.02em;
+  --tracking-caps: 0.25em;
 
   /* Soft UI Tokens */
-  --radius-card: 32px;
+  --radius-card: 2.5rem; /* 40px - Unificado para toda la web */
   --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
   --shadow-premium: 0 20px 60px -15px rgba(61, 59, 56, 0.12);
 
@@ -91,12 +96,30 @@
   }
 }
 
+/* Paper Texture Overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.035;
+  z-index: 100;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
 @media (max-width: 640px) {
   :root {
     --spacing-section: 4rem;
     --shadow-soft: 0 12px 40px rgba(35, 34, 32, 0.08);
     --border: rgba(35, 34, 32, 0.08);
   }
+}
+
+html {
+  background: var(--background);
 }
 
 html, body {
@@ -246,4 +269,17 @@ h1, .font-display {
 
 .font-script {
   font-family: var(--font-script), cursive;
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+  letter-spacing: var(--tracking-serif);
+}
+
+.font-sans {
+  letter-spacing: 0.01em;
+}
+
+.tracking-widest {
+  letter-spacing: var(--tracking-caps);
 }

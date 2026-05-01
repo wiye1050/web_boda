@@ -199,7 +199,7 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   navRsvpLabel: "Confirmar asistencia",
   navDetailsLabel: "Detalles",
   navLocationLabel: "Ubicación",
-  heroEyebrow: "",
+  heroEyebrow: "El Gran Día",
   heroTitle: "Alba & Guille",
   heroDescription:
     "Porque no hay mejor excusa para juntaros a todos",
@@ -210,46 +210,45 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   heroStatLocationLabel: "Lugar",
   heroStatTimeLabel: "Horario",
   heroStatTimeNote: "niños bienvenidos",
-  eventDate: "12 de septiembre · 2026",
+  eventDate: "Sábado 12 de septiembre · 2026",
   eventTimeRange: "14:00 — 02:00",
   ceremonyTime: "14:00",
   ceremonyDateISO: "2026-09-12",
   locationName: "Finca El Casar · Ponferrada",
-  locationAddress: "Cabañas Raras, León",
+  locationAddress: "Calle Valle del Agua, 14, 24412 Cabañas Raras, León",
   locationMapUrl: "",
   prebodaPlace: "Casino Rooftop Ponferrada",
-  prebodaTime: "11 de septiembre · 19:30",
+  prebodaTime: "Viernes 11 de septiembre · 19:30",
   prebodaAddress: "Calle del Reloj, 11, 24401 Ponferrada, León",
   prebodaMapUrl: "",
-  contactEmail: "guillemenendez1050@gmail.com",
-  contactEmail2: "varelamaciasalba@gmail.com",
-  contactPhone: "+34 696 408 689",
-  contactPhone2: "+34 695 438 798",
-  whatsappLink: "https://wa.me/34696408689",
+  contactEmail: "varelamaciasalba@gmail.com",
+  contactEmail2: "guillemenendez1050@gmail.com",
+  contactPhone: "+34 695 438 798",
+  contactPhone2: "+34 696 408 689",
+  whatsappLink: "https://wa.me/34695438798",
   giftLink: "",
-  prebodaEyebrow: "Preboda",
-  prebodaTitle: "La Víspera",
+  prebodaEyebrow: "La víspera",
+  prebodaTitle: "La Preboda",
   prebodaDescription:
     "La excusa perfecta para vernos dos veces",
-  prebodaCardOneDescription:
-    "Un brindis para calentar motores.",
+  prebodaCardOneDescription: "",
 
-  practicalEyebrow: "",
-  practicalTitle: "Detalles",
+  practicalEyebrow: "Info",
+  practicalTitle: "Información Útil",
   practicalDescription:
-    "Lo esencial para venir tranquilo/a y disfrutar el día.",
+    "Detalles prácticos para vuestra comodidad durante la jornada",
   practicalItems: [
+    {
+      icon: "🚌",
+      title: "Transporte",
+      description:
+        "Si necesitas bus, indícalo en el formulario. Estamos coordinando los horarios y puntos de recogida para vuestra máxima comodidad. Muy pronto actualizaremos esta sección con todos los detalles.",
+    },
     {
       icon: "🚗",
       title: "Accesos y parking",
       description:
         "La finca está a 10 minutos del centro. Hay parking dentro del recinto.",
-    },
-    {
-      icon: "👨‍👩‍👧‍👦",
-      title: "Pequeños invitados",
-      description:
-        "Aunque la celebración está pensada para adultos, vuestros hijos son bienvenidos a compartir este día con nosotros.",
     },
     {
       icon: "🕒",
@@ -258,34 +257,28 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
         "Llega 20 minutos antes para aparcar y acomodarte.",
     },
     {
-      icon: "🚌",
-      title: "Transporte disponible",
-      description:
-        "Si necesitas bus, indícalo en el formulario.",
-    },
-    {
       icon: "🍽️",
-      title: "Alergias y menús",
+      title: "Alergias y menú",
       description:
         "Cuéntanos alergias o intolerancias en el formulario.",
     },
   ],
-  stayEyebrow: "Alojamiento",
-  stayTitle: "Opciones cerca de la finca",
+  stayEyebrow: "Vuestra Estancia",
+  stayTitle: "Guía Interactiva",
   stayDescription:
-    "Te dejamos algunas opciones cercanas para dormir cómodamente.",
+    "Descubre los mejores rincones, dónde dormir y cómo prepararte para el gran día",
   stayLinkLabel: "Ver mapa",
   stayOptions: [],
   giftsEyebrow: "Detalle",
   giftsTitle: "Tu presencia es el mejor regalo",
   giftsDescription:
-    "Pero si de todas formas quereis ayudarnos con nuestros proyectos, podeis hacerlo aqui. Gracias infinitas.",
+    "Pero si de todas formas queréis ayudarnos con nuestros proyectos, podéis hacerlo aquí. Gracias infinitas",
   giftsBankTitle: "",
   giftsBankDescription: "",
-  rsvpEyebrow: "Confirmar asistencia",
+  rsvpEyebrow: "RSVP",
   rsvpTitle: "Confirma tu asistencia",
   rsvpDescription:
-    "Completa el formulario para confirmar si vienes.",
+    "Completa el formulario para confirmar que vienes.",
   rsvpContactLead: "Si prefieres, escríbenos a",
   rsvpContactWhatsappLead: "o por WhatsApp al",
   rsvpImportantTitle: "Importante",
@@ -300,19 +293,19 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     emailLabel: "Email",
     emailPlaceholder: "Opcional",
     emailError: "Revisa el email (ej. nombre@email.com).",
-    phoneLabel: "Teléfono de contacto",
-    phonePlaceholder: "+34 600 000 000",
+    phoneLabel: "Teléfono",
+    phonePlaceholder: "600 000 000",
     phoneError: "Revisa el número (8-15 dígitos).",
     attendanceLegend: "¿Vas a venir?",
     attendanceYesLabel: "Sí, ahí estaré",
     attendanceNoLabel: "No podré ir",
     guestsLabel: "¿Cuántas personas vendréis?",
-    guestsPlaceholderYes: "Contando adultos y niños",
+    guestsPlaceholderYes: "Contándote a ti",
     guestsPlaceholderNo: "Selecciona tu asistencia primero",
     guestsHelper: "Máximo 6 personas por invitación. Si sois más, cuéntanoslo.",
     guestsError: "Indica un número válido de asistentes.",
     guestNamesLabel: "Nombres de acompañantes (opcional)",
-    guestNamesPlaceholder: "Ej: Marta (pareja), Juan (colega)",
+    guestNamesPlaceholder: "Nombres de los acompañantes",
     prebodaLegend: "¿Nos acompañas a la preboda (11 de septiembre)?",
     prebodaYesLabel: "¡Claro!",
     prebodaNoLabel: "No podré ir",
@@ -334,10 +327,10 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
       "¡Gracias! Recibimos tu confirmación. Te escribiremos pronto con más detalles.",
   },
 
-  locationEyebrow: "Cómo llegar",
-  locationTitle: "Ubicación y contacto",
+  locationEyebrow: "Contacto",
+  locationTitle: "¿Alguna duda?",
   locationDescription:
-    "Si necesitas ayuda con rutas o transporte, escríbenos.",
+    "Contacta con nosotros, estamos a vuestra disposición.",
   locationMapEmbedUrl: "",
   locationMapLabel: "Abrir en Maps",
   weddingMapsUrl: "",
@@ -349,8 +342,8 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
   locationPhoneLabel: "Teléfono",
   locationWhatsappLabel: "WhatsApp",
   locationWhatsappActionLabel: "Abrir chat",
-  footerEyebrow: "Nos vemos en el gran día",
-  footerTitle: "Gracias por acompañarnos",
+  footerEyebrow: "Nos vemos allí",
+  footerTitle: "Con muchísima ilusión",
   footerCtaLabel: "Confirmar asistencia",
   footerCopyright:
     "© {year} {brandName}. Todos los derechos reservados.",
@@ -471,25 +464,20 @@ export function parsePracticalItems(raw: unknown): PracticalItem[] {
     })
     .filter((item) => item.icon || item.title || item.description);
 
-  // Force-include critical items (Accesos and Solo Adultos) if not present
+  // Force-include critical items if not present
   const defaults = DEFAULT_PUBLIC_CONTENT.practicalItems;
-  const criticalTitles = ["Accesos y parking", "Solo adultos", "Llegada con tiempo"];
+  const criticalTitles = ["Transporte", "Accesos y parking", "Llegada con tiempo", "Alergias y menú"];
   
   // Filter out any DB items that duplicate our critical titles to avoid double listing
   const filteredCleaned = cleaned.filter(item => !criticalTitles.includes(item.title));
 
-  // Find the critical items from defaults
-  const criticalItems = defaults.filter(item => criticalTitles.includes(item.title));
+  // Find the critical items from defaults in the correct order
+  const criticalItems = criticalTitles.map(title => defaults.find(d => d.title === title)).filter(Boolean) as PracticalItem[];
 
   // Combine: Critical Defaults First + Remaining DB Items
-  // Note: "Solo adultos" and "Niños bienvenidos" are excluded from the UI list as per user request for subtleness
-  const combined = [...criticalItems, ...filteredCleaned].filter(
-    (item) => !item.title.toLowerCase().includes("niños") && !item.title.toLowerCase().includes("adultos")
-  );
+  const combined = [...criticalItems, ...filteredCleaned];
 
-  return combined.length > 0 ? combined : defaults.filter(
-    (item) => !item.title.toLowerCase().includes("niños") && !item.title.toLowerCase().includes("adultos")
-  );
+  return combined.length > 0 ? combined : defaults;
 }
 
 

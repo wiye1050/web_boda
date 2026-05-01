@@ -6,7 +6,7 @@ import { PracticalList } from "./PracticalList";
 import { StayList } from "./StayList";
 import { MapInteractive } from "./MapInteractive";
 import { motion, AnimatePresence } from "framer-motion";
-import { BedDouble, Utensils, Info, Coffee, Camera, Scissors, Sparkles } from "lucide-react";
+import { BedDouble, Coffee, Camera, Scissors } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Category = "accommodation" | "tourism" | "hair" | "makeup";
@@ -115,14 +115,14 @@ export function InteractiveExperience({
     <div className="flex flex-col gap-10">
       {/* Category Toggles */}
       <div className="flex justify-center w-full overflow-x-auto scrollbar-hide px-4 pb-2">
-        <div className="inline-flex p-1 rounded-full bg-surface/80 glass border border-border/40 shadow-sm min-w-max">
+        <div className="inline-flex p-1.5 rounded-full bg-white/40 backdrop-blur-sm border border-accent/10 shadow-sm min-w-max">
           <button
             onClick={() => setActiveCategory("accommodation")}
             className={cn(
-              "flex items-center gap-1.5 px-4 py-2 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+              "flex items-center gap-1.5 px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap",
               activeCategory === "accommodation" 
-                ? "bg-accent text-white shadow-sm" 
-                : "text-muted hover:text-foreground"
+                ? "bg-accent text-white shadow-md scale-105" 
+                : "text-muted hover:text-accent/60"
             )}
           >
             <BedDouble className="h-3 w-3" />
@@ -131,10 +131,10 @@ export function InteractiveExperience({
           <button
             onClick={() => setActiveCategory("tourism")}
             className={cn(
-              "flex items-center gap-1.5 px-4 py-2 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+              "flex items-center gap-1.5 px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap",
               activeCategory === "tourism" 
-                ? "bg-accent text-white shadow-sm" 
-                : "text-muted hover:text-foreground"
+                ? "bg-accent text-white shadow-md scale-105" 
+                : "text-muted hover:text-accent/60"
             )}
           >
             <Camera className="h-3 w-3" />
@@ -143,10 +143,10 @@ export function InteractiveExperience({
           <button
             onClick={() => setActiveCategory("hair")}
             className={cn(
-              "flex items-center gap-1.5 px-4 py-2 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+              "flex items-center gap-1.5 px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap",
               activeCategory === "hair" 
-                ? "bg-accent text-white shadow-sm" 
-                : "text-muted hover:text-foreground"
+                ? "bg-accent text-white shadow-md scale-105" 
+                : "text-muted hover:text-accent/60"
             )}
           >
             <Scissors className="h-3 w-3" />
@@ -157,22 +157,20 @@ export function InteractiveExperience({
 
       <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
         {/* Sidebar: Content depending on category */}
-        <div className="flex flex-col gap-8 order-1 max-h-[500px] lg:max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent pr-4">
+        <div className="flex flex-col gap-8 order-1 lg:max-h-[650px] lg:overflow-y-auto lg:scrollbar-thin lg:scrollbar-thumb-accent/10 lg:scrollbar-track-transparent lg:pr-6">
             <AnimatePresence mode="wait">
                 {activeCategory === "accommodation" ? (
                     <motion.div
                         key="acc-list"
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
                         className="flex flex-col gap-6"
                     >
-                         <div className="rounded-3xl bg-surface/50 border border-border/30 p-6">
-                            <h4 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-4">
-                                <BedDouble className="h-3 w-3" /> Opciones de Alojamiento
-                            </h4>
-                            <p className="text-[11px] text-muted leading-relaxed mb-6 italic">
-                                Hemos seleccionado los mejores hoteles cercanos al evento con tarifas preferenciales.
+                         <div className="p-2">
+                            <h4 className="font-script text-xl text-accent/80 mb-1">Dónde dormir</h4>
+                            <p className="font-serif italic text-sm text-muted/80 leading-relaxed mb-8">
+                                Selección de hoteles cercanos con tarifas especiales para vosotros.
                             </p>
                             <StayList
                                 items={accommodations}
@@ -185,26 +183,24 @@ export function InteractiveExperience({
                 ) : activeCategory === "hair" ? (
                     <motion.div
                         key="hair-list"
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
                         className="flex flex-col gap-6"
                     >
-                        <div className="rounded-3xl bg-accent/5 border border-accent/20 p-6">
-                            <h4 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-4">
-                                <Scissors className="h-3 w-3" /> Peluquería y Maquillaje
-                            </h4>
-                            <p className="text-[11px] text-muted leading-relaxed mb-6 italic">
-                                Hemos seleccionado estas dos opciones de confianza en Ponferrada para que estéis radiantes.
+                        <div className="p-2">
+                            <h4 className="font-script text-xl text-accent/80 mb-1">Para estar radiantes</h4>
+                            <p className="font-serif italic text-sm text-muted/80 leading-relaxed mb-8">
+                                Opciones de confianza en Ponferrada para peluquería y maquillaje.
                             </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {hairItems.map((item) => (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                {hairItems.map((item, idx) => (
                                     <a 
                                         key={item.id} 
                                         href={item.link} 
                                         target="_blank" 
                                         rel="noopener noreferrer"
-                                        className="group relative h-40 overflow-hidden rounded-2xl bg-surface border border-border/40 shadow-sm transition-all hover:-translate-y-1"
+                                        className="group relative h-48 overflow-hidden rounded-2xl bg-white/60 border border-accent/10 shadow-sm transition-all hover:scale-[1.02] hover:shadow-md"
                                     >
                                         <div className="absolute inset-0 z-10">
                                             <Image 
@@ -215,10 +211,10 @@ export function InteractiveExperience({
                                                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
                                             />
                                         </div>
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-20" />
-                                        <div className="absolute bottom-3 left-4 text-white z-30">
-                                            <p className="text-[8px] uppercase tracking-widest text-white/70">{item.type}</p>
-                                            <p className="font-serif text-sm italic">{item.name}</p>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent z-20" />
+                                        <div className="absolute bottom-4 left-5 text-white z-30">
+                                            <p className="text-[9px] uppercase tracking-widest text-white/70 mb-0.5">{item.type}</p>
+                                            <p className="font-serif text-xl italic leading-tight">{item.name}</p>
                                         </div>
                                     </a>
                                 ))}
@@ -228,26 +224,24 @@ export function InteractiveExperience({
                 ) : (
                     <motion.div
                         key="tourism-list"
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
                         className="flex flex-col gap-6"
                     >
-                        <div className="rounded-3xl bg-accent/5 border border-accent/20 p-6">
-                            <h4 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-4">
-                                <Coffee className="h-3 w-3" /> Recomendaciones
-                            </h4>
-                            <p className="text-[11px] text-muted leading-relaxed mb-6 italic">
-                                Ponferrada y el Bierzo tienen lugares mágicos. Aquí os dejamos unos imprescindibles que no os podéis perder.
+                        <div className="p-2">
+                            <h4 className="font-script text-xl text-accent/80 mb-1">El Bierzo Mágico</h4>
+                            <p className="font-serif italic text-sm text-muted/80 leading-relaxed mb-8">
+                                Algunos imprescindibles que no os podéis perder durante vuestra estancia.
                             </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {tourismItems.slice(0, 4).map((item) => (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                {tourismItems.slice(0, 4).map((item, idx) => (
                                     <a 
                                         key={item.id} 
                                         href={item.link} 
                                         target="_blank" 
                                         rel="noopener noreferrer"
-                                        className="group relative h-40 overflow-hidden rounded-2xl bg-surface border border-border/40 shadow-sm transition-all hover:-translate-y-1"
+                                        className="group relative h-48 overflow-hidden rounded-2xl bg-white/60 border border-accent/10 shadow-sm transition-all hover:scale-[1.02] hover:shadow-md"
                                     >
                                         <div className="absolute inset-0 z-10">
                                             <Image 
@@ -261,10 +255,10 @@ export function InteractiveExperience({
                                                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
                                             />
                                         </div>
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-20" />
-                                        <div className="absolute bottom-3 left-4 text-white z-30">
-                                            <p className="text-[8px] uppercase tracking-widest text-white/70">{item.type}</p>
-                                            <p className="font-serif text-sm italic">{item.name}</p>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent z-20" />
+                                        <div className="absolute bottom-4 left-5 text-white z-30">
+                                            <p className="text-[9px] uppercase tracking-widest text-white/70 mb-0.5">{item.type}</p>
+                                            <p className="font-serif text-xl italic leading-tight">{item.name}</p>
                                         </div>
                                     </a>
                                 ))}
