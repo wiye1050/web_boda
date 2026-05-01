@@ -114,36 +114,36 @@ export function InteractiveExperience({
   return (
     <div className="flex flex-col gap-10">
       {/* Category Toggles */}
-      <div className="flex justify-start sm:justify-center w-[100vw] ml-[calc(50%-50vw)] overflow-x-auto scrollbar-hide px-4 sm:px-8 pb-2">
-        <div className="inline-flex shrink-0 p-1.5 rounded-full bg-surface/80 glass border border-border/40 shadow-sm mx-auto sm:mx-0 min-w-max">
+      <div className="flex justify-center w-full overflow-x-auto scrollbar-hide px-4 pb-2">
+        <div className="inline-flex p-1 rounded-full bg-surface/80 glass border border-border/40 shadow-sm min-w-max">
           <button
             onClick={() => setActiveCategory("info")}
             className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+              "flex items-center gap-1.5 px-4 py-2 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
               activeCategory === "info" 
                 ? "bg-accent text-white shadow-sm" 
                 : "text-muted hover:text-foreground"
             )}
           >
-            <Info className="h-3.5 w-3.5" />
+            <Info className="h-3 w-3" />
             Info
           </button>
           <button
             onClick={() => setActiveCategory("accommodation")}
             className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+              "flex items-center gap-1.5 px-4 py-2 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
               activeCategory === "accommodation" 
                 ? "bg-accent text-white shadow-sm" 
                 : "text-muted hover:text-foreground"
             )}
           >
-            <BedDouble className="h-3.5 w-3.5" />
+            <BedDouble className="h-3 w-3" />
             Dormir
           </button>
           <button
             onClick={() => setActiveCategory("tourism")}
             className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+              "flex items-center gap-1.5 px-4 py-2 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
               activeCategory === "tourism" 
                 ? "bg-accent text-white shadow-sm" 
                 : "text-muted hover:text-foreground"
@@ -155,13 +155,13 @@ export function InteractiveExperience({
           <button
             onClick={() => setActiveCategory("hair")}
             className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
+              "flex items-center gap-1.5 px-4 py-2 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
               activeCategory === "hair" 
                 ? "bg-accent text-white shadow-sm" 
                 : "text-muted hover:text-foreground"
             )}
           >
-            <Scissors className="h-3.5 w-3.5" />
+            <Scissors className="h-3 w-3" />
             Peluquería
           </button>
         </div>
@@ -187,6 +187,17 @@ export function InteractiveExperience({
                                 Detalles importantes para vuestro viaje y estancia durante el evento.
                             </p>
                             <PracticalList variant="strip" items={practicalItems} />
+                             
+                             <div className="mt-8 pt-8 border-t border-border/20">
+                                <h5 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/80 mb-3">
+                                    <Sparkles className="h-3 w-3 text-accent" /> Autobuses y Traslados
+                                </h5>
+                                <div className="rounded-2xl bg-accent/5 border border-accent/10 p-5">
+                                    <p className="text-[11px] text-muted-foreground leading-relaxed italic">
+                                        Estamos coordinando los horarios y puntos de recogida para vuestra máxima comodidad. Muy pronto actualizaremos esta sección con todos los detalles confirmados.
+                                    </p>
+                                </div>
+                             </div>
                          </div>
                     </motion.div>
                 ) : activeCategory === "accommodation" ? (
