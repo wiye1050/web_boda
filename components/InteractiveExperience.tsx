@@ -159,6 +159,7 @@ export function InteractiveExperience({
         {/* Sidebar: Content depending on category */}
         <div className="flex flex-col gap-8 order-1 max-h-[500px] lg:max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent pr-4">
             <AnimatePresence mode="wait">
+                {activeCategory === "accommodation" ? (
                     <motion.div
                         key="acc-list"
                         initial={{ opacity: 0, x: -10 }}
