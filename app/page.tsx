@@ -21,6 +21,7 @@ const GiftList = dynamic(() => import("@/components/GiftList").then(mod => mod.G
 const PracticalList = dynamic(() => import("@/components/PracticalList").then(mod => mod.PracticalList));
 const SaveTheDateModal = dynamic(() => import("@/components/SaveTheDateModal").then(mod => mod.SaveTheDateModal));
 const InteractiveExperience = dynamic(() => import("@/components/InteractiveExperience").then(mod => mod.InteractiveExperience));
+const { Sparkles, Info } = require("lucide-react");
 
 export const revalidate = 60; // Keep page fast but updated every minute if Firebase changes
 
@@ -224,11 +225,41 @@ export default async function Home() {
           )}
 
           {(isSectionEnabled("detalles") || isSectionEnabled("alojamiento")) && (
+            >
+              <ScrollReveal>
+                <div className="mx-auto max-w-4xl">
+                  <div className="rounded-[3rem] bg-surface/50 border border-border/30 p-8 md:p-12 shadow-sm">
+                    <h4 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-6">
+                        <Info className="h-3.5 w-3.5" /> Información de interés
+                    </h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-10 italic">
+                        Detalles importantes para que vuestra única preocupación sea disfrutar.
+                    </p>
+                    
+                    <PracticalList variant="strip" items={config.practicalItems} />
+                    
+                    <div className="mt-10 pt-10 border-t border-border/20">
+                      <h5 className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.15em] text-foreground/80 mb-4">
+                          <Sparkles className="h-4 w-4 text-accent" /> Autobuses y Traslados
+                      </h5>
+                      <div className="rounded-[2rem] bg-accent/5 border border-accent/10 p-6 md:p-8">
+                          <p className="text-sm text-muted-foreground leading-relaxed italic">
+                              Estamos coordinando los horarios y puntos de recogida para vuestra máxima comodidad. Muy pronto actualizaremos esta sección con todos los detalles confirmados para que podáis planificar vuestro regreso.
+                          </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+            </Section>
+          )}
+
+          {(isSectionEnabled("alojamiento") || isSectionEnabled("detalles")) && (
             <Section
-              id="detalles"
-              eyebrow={config.practicalEyebrow || "Cosas Prácticas"}
-              title={config.practicalTitle || "Planifica tu estancia"}
-              description={config.practicalDescription || "Todo lo que necesitas para disfrutar del Bierzo."}
+              id="experiencia"
+              eyebrow="Planifica tu viaje"
+              title="El Bierzo a vuestros pies"
+              description="Hemos seleccionado los mejores lugares para que vuestra estancia sea inolvidable."
             >
               <ScrollReveal>
                 <InteractiveExperience 

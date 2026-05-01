@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BedDouble, Utensils, Info, Coffee, Camera, Scissors, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Category = "info" | "accommodation" | "tourism" | "hair" | "makeup";
+type Category = "accommodation" | "tourism" | "hair" | "makeup";
 
 export function InteractiveExperience({ 
   accommodations, 
@@ -22,7 +22,7 @@ export function InteractiveExperience({
   mapboxToken?: string;
   embedUrl?: string;
 }) {
-  const [activeCategory, setActiveCategory] = useState<Category>("info");
+  const [activeCategory, setActiveCategory] = useState<Category>("accommodation");
 
   const tourismItems = [
     {
@@ -117,18 +117,6 @@ export function InteractiveExperience({
       <div className="flex justify-center w-full overflow-x-auto scrollbar-hide px-4 pb-2">
         <div className="inline-flex p-1 rounded-full bg-surface/80 glass border border-border/40 shadow-sm min-w-max">
           <button
-            onClick={() => setActiveCategory("info")}
-            className={cn(
-              "flex items-center gap-1.5 px-4 py-2 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
-              activeCategory === "info" 
-                ? "bg-accent text-white shadow-sm" 
-                : "text-muted hover:text-foreground"
-            )}
-          >
-            <Info className="h-3 w-3" />
-            Info
-          </button>
-          <button
             onClick={() => setActiveCategory("accommodation")}
             className={cn(
               "flex items-center gap-1.5 px-4 py-2 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all whitespace-nowrap",
@@ -171,36 +159,6 @@ export function InteractiveExperience({
         {/* Sidebar: Content depending on category */}
         <div className="flex flex-col gap-8 order-1 max-h-[500px] lg:max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent pr-4">
             <AnimatePresence mode="wait">
-                {activeCategory === "info" ? (
-                    <motion.div
-                        key="info-list"
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
-                        className="flex flex-col gap-6"
-                    >
-                         <div className="rounded-3xl bg-surface/50 border border-border/30 p-6">
-                            <h4 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-4">
-                                <Info className="h-3 w-3" /> Info Práctica
-                            </h4>
-                            <p className="text-[11px] text-muted leading-relaxed mb-6 italic">
-                                Detalles importantes para vuestro viaje y estancia durante el evento.
-                            </p>
-                            <PracticalList variant="strip" items={practicalItems} />
-                             
-                             <div className="mt-8 pt-8 border-t border-border/20">
-                                <h5 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/80 mb-3">
-                                    <Sparkles className="h-3 w-3 text-accent" /> Autobuses y Traslados
-                                </h5>
-                                <div className="rounded-2xl bg-accent/5 border border-accent/10 p-5">
-                                    <p className="text-[11px] text-muted-foreground leading-relaxed italic">
-                                        Estamos coordinando los horarios y puntos de recogida para vuestra máxima comodidad. Muy pronto actualizaremos esta sección con todos los detalles confirmados.
-                                    </p>
-                                </div>
-                             </div>
-                         </div>
-                    </motion.div>
-                ) : activeCategory === "accommodation" ? (
                     <motion.div
                         key="acc-list"
                         initial={{ opacity: 0, x: -10 }}
@@ -322,7 +280,7 @@ export function InteractiveExperience({
            <MapInteractive 
              mapboxToken={mapboxToken} 
              embedUrl={embedUrl}
-             category={activeCategory === "info" ? "accommodation" : activeCategory}
+             category={activeCategory}
            />
         </div>
       </div>
