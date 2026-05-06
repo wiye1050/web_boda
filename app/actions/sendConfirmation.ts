@@ -10,7 +10,8 @@ interface EmailData {
   guests: number;
   attendance: "si" | "no";
   transport: "si" | "no";
-  rsvpId?: string; // Permitir asociar el error a un RSVP específico
+  rsvpId?: string;
+  editToken?: string;
 }
 
 export async function sendConfirmationEmail(data: EmailData) {
@@ -59,8 +60,13 @@ export async function sendConfirmationEmail(data: EmailData) {
           ${data.attendance === "si" ? `<p style="margin: 5px 0;"><strong>Número de adultos:</strong> ${data.guests}</p>` : ""}
           ${data.attendance === "si" ? `<p style="margin: 5px 0;"><strong>Transporte (Bus):</strong> ${transportText}</p>` : ""}
         </div>
+        <div style="margin: 30px 0;">
+          <a href="https://ayg2026.vercel.app/?token=${data.editToken || ''}" style="background-color: #d4a373; color: white; padding: 12px 24px; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">
+            Ver o modificar mi respuesta
+          </a>
+        </div>
         <p style="font-size: 14px; color: #666; margin-top: 30px;">
-          Si necesitas modificar algo, escríbenos directamente.
+          Si necesitas modificar algo más adelante, puedes usar el botón de arriba o escribirnos directamente.
           <br>
           ¡Nos vemos pronto!
         </p>

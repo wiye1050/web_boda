@@ -2,8 +2,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
 import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
 import { firebaseClient } from "@/lib/firebase";
 import { DEFAULT_PUBLIC_CONTENT, type RsvpFormCopy } from "@/lib/publicContent";
 import { sendConfirmationEmail } from "@/app/actions/sendConfirmation";
@@ -72,6 +73,10 @@ export function RSVPForm({
 }: RSVPFormProps) {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [status, setStatus] = useState<RSVPStatus>("idle");
+  const searchParams = useSearchParams();
+  const editTokenParam = searchParams.get("token");
+  const [activeEditToken, setActiveEditToken] = useState<string | null>(null);
+  const [existingDocId, setExistingDocId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [botField, setBotField] = useState("");
   const [submittedInfo, setSubmittedInfo] = useState<SubmittedSummary | null>(
@@ -91,7 +96,47 @@ export function RSVPForm({
         lastSubmittedAt.current = parsed;
       }
     }
-  }, []);
+
+    // Cargar datos si hay token en la URL
+    if (editTokenParam) {
+      loadRSVPByToken(editTokenParam);
+    }
+  }, [editTokenParam]);
+
+  async function loadRSVPByToken(token: string) {
+    try {
+      const db = firebaseClient.getFirestore();
+      const q = query(collection(db, "rsvps"), where("editToken", "==", token));
+      const querySnapshot = await getDocs(q);
+      
+      if (!querySnapshot.empty) {
+        const rsvpDoc = querySnapshot.docs[0];
+        const data = rsvpDoc.data();
+        
+        setForm({
+          fullName: data.fullName || "",
+          email: data.email || "",
+          phone: data.phone || "",
+          attendance: data.attendance || null,
+          guests: String(data.guests || ""),
+          guestNames: data.guestNames || "",
+          preboda: data.preboda || null,
+          needsTransport: data.needsTransport || null,
+          transportSeats: String(data.transportSeats || ""),
+          requests: data.requests || "",
+          dietary: data.dietary || "",
+          reminderOptIn: data.reminderOptIn || false,
+          acceptedTerms: true,
+        });
+        
+        setActiveEditToken(token);
+        setExistingDocId(rsvpDoc.id);
+        toast.info("Hemos cargado tu respuesta anterior para que puedas editarla.");
+      }
+    } catch (e) {
+      console.error("Error loading RSVP by token:", e);
+    }
+  }
 
   const attending = form.attendance === "si";
   const guestsNumber = Number.parseInt(form.guests, 10);
@@ -256,8 +301,9 @@ export function RSVPForm({
     try {
       const db = firebaseClient.getFirestore();
       const phoneDigits = form.phone.replace(/[^\d+]/g, "");
-      const editToken = Math.random().toString(36).slice(2, 10);
-      const docRef = await addDoc(collection(db, "rsvps"), {
+      const editToken = activeEditToken || Math.random().toString(36).slice(2, 10);
+      
+      const rsvpData = {
         fullName: form.fullName.trim(),
         email: form.email.trim(),
         phone: phoneDigits,
@@ -275,9 +321,21 @@ export function RSVPForm({
         reminderOptIn: Boolean(form.reminderOptIn),
         acceptedTerms: true,
         editToken,
-        submittedAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
         source: "web",
-      });
+      };
+
+      let docId = existingDocId;
+
+      if (existingDocId) {
+        await updateDoc(doc(db, "rsvps", existingDocId), rsvpData);
+      } else {
+        const docRef = await addDoc(collection(db, "rsvps"), {
+          ...rsvpData,
+          submittedAt: serverTimestamp(),
+        });
+        docId = docRef.id;
+      }
 
       setStatus("success");
       setSubmittedInfo({
@@ -288,7 +346,7 @@ export function RSVPForm({
         guests: attending ? guestsNumber : 0,
         needsTransport: form.needsTransport ?? "no",
       });
-      toast.success("¡Confirmación recibida correctamente!");
+      toast.success(existingDocId ? "¡Cambios guardados correctamente!" : "¡Confirmación recibida correctamente!");
       
       if (form.attendance === "si") {
         const colors = ["#8b7e74", "#d4af37", "#b89d7b", "#f8f5f2", "#5b634a"];
@@ -307,10 +365,11 @@ export function RSVPForm({
         guests: attending ? guestsNumber : 0,
         attendance: form.attendance!,
         transport: (form.needsTransport ?? "no") as "si" | "no",
-        rsvpId: docRef.id
+        rsvpId: docId!,
+        editToken: editToken
       };
 
-      setForm(INITIAL_STATE);
+      // No reseteamos el form aquí para que si pulsa "Editar" tenga sus datos
       lastSubmittedAt.current = Date.now();
       if (typeof window !== "undefined") {
         window.localStorage.setItem(
@@ -331,8 +390,11 @@ export function RSVPForm({
       const msg = "No pudimos guardar tu respuesta. Inténtalo de nuevo en unos minutos o contáctanos directamente.";
       setErrorMessage(msg);
       toast.error(msg);
-    } finally {
+      
+      // Auto-reset error status after 6 seconds
       setTimeout(() => setStatus("idle"), 6000);
+    } finally {
+      // El estado de success lo dejamos permanente para que el usuario vea la confirmación
     }
   }
 
@@ -354,7 +416,7 @@ export function RSVPForm({
       </label>
 
       {submittedInfo && status === "success" ? (
-        <div className="flex flex-col items-center justify-center gap-8 rounded-[2rem] bg-accent/5 p-10 text-center shadow-inner border border-accent/10 animate-in fade-in zoom-in duration-700">
+        <div className="flex flex-col items-center justify-center gap-8 rounded-[2rem] bg-accent/5 p-10 text-center shadow-inner border border-accent/10 animate-in fade-in zoom-in duration-700 max-w-2xl mx-auto w-full">
           <div className="flex h-24 w-24 items-center justify-center rounded-full bg-accent/20 text-accent shadow-premium relative">
             <div className="absolute inset-0 bg-accent/20 blur-xl rounded-full animate-pulse" />
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-12 w-12 z-10">

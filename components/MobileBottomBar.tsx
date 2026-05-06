@@ -99,7 +99,7 @@ export function MobileBottomBar({
     <>
       <div
         className={cn(
-          "fixed left-[50%] z-50 w-[94%] max-w-[420px] sm:hidden transition-transform duration-700 ease-in-out",
+          "fixed left-[50%] z-50 w-[94%] max-w-[420px] lg:hidden transition-transform duration-700 ease-in-out",
           isHidden ? "pointer-events-none opacity-0" : "opacity-100"
         )}
         style={{

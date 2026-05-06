@@ -72,8 +72,10 @@ function CopyableDetail({ text }: { text: string }) {
   };
 
   return (
-    <li className="flex w-full items-center justify-center gap-4">
-      <span className="font-mono text-base sm:text-xl tracking-tight sm:tracking-tighter font-medium text-foreground">{text}</span>
+    <li className="flex w-full items-center justify-center gap-2 sm:gap-4 px-2">
+      <span className="font-mono text-[3.8vw] sm:text-base md:text-xl tracking-tight sm:tracking-tighter font-medium text-foreground whitespace-nowrap">
+        {text}
+      </span>
       <button
         onClick={handleCopy}
         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface text-muted-foreground transition-all hover:bg-primary hover:text-white hover:scale-105 active:scale-95 border border-border/40"
@@ -104,7 +106,11 @@ function FlipCard({ details }: { details: string[] }) {
           {/* Front: Envelope Design */}
           <div 
             className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl bg-[#fdfaf6] border border-stone-200 shadow-2xl overflow-hidden"
-            style={{ backfaceVisibility: "hidden" }}
+            style={{ 
+              backfaceVisibility: "hidden", 
+              WebkitBackfaceVisibility: "hidden",
+              transform: "translateZ(1px)"
+            }}
           >
             {/* Envelope Flap Effect */}
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
@@ -157,7 +163,11 @@ function FlipCard({ details }: { details: string[] }) {
           {/* Back: Invitation Card */}
           <div 
             className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl bg-[#fdfaf6] border border-stone-200 shadow-2xl p-4 sm:p-8"
-            style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+            style={{ 
+              backfaceVisibility: "hidden", 
+              WebkitBackfaceVisibility: "hidden",
+              transform: "rotateY(180deg) translateZ(1px)" 
+            }}
           >
             <ul className="flex flex-col items-center gap-3 w-full">
               {details.map((detail) => (

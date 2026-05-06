@@ -7,6 +7,7 @@ import { getPublicConfig } from "@/lib/getPublicConfig";
 import { getAccommodations } from "@/lib/getAccommodations";
 import { DEFAULT_PUBLIC_CONTENT } from "@/lib/publicContent";
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import type { GiftOption } from "@/components/GiftList";
 import { SaveTheDateManager } from "@/components/SaveTheDateManager";
 
@@ -84,17 +85,10 @@ export default async function Home() {
   
   return (
     <>
-      <head>
-        {/* Preload critical Hero assets */}
-        <link rel="preload" href="/photos/hero/hero_ilustracion.png" as="image" />
-        <link rel="preload" href="/images/masks/brush_stroke_1.png" as="image" />
-        <link rel="preload" href="/images/masks/brush_stroke_2.png" as="image" />
-        <link rel="preload" href="/images/masks/brush.png" as="image" />
-      </head>
       <SaveTheDateManager>
       <div id="top" className="flex min-h-screen flex-col w-full">
 
-        <main className="flex-1 pb-32 sm:pb-0">
+        <main className="flex-1 pb-32 lg:pb-0">
           <HeroRedesign
             config={{
               heroTitle: config.heroTitle,
@@ -118,36 +112,40 @@ export default async function Home() {
             >
               <ScrollReveal>
                 <div className="flex flex-col items-center">
-                  {/* Handwritten Details Grid */}
-                  <div className="grid max-w-4xl gap-12 md:gap-24 sm:grid-cols-2 w-full">
-                    <article className="flex flex-col items-center justify-center text-center group">
-                      <p className="font-script text-2xl text-accent/80 -mb-2">Fecha</p>
-                      <h3 className="text-3xl sm:text-4xl font-serif font-medium text-foreground leading-tight">
-                        {config.prebodaTime.replace(/\s*h\s*$/i, "")}
-                      </h3>
-                    </article>
+                  {/* Card Unificada de Detalles */}
+                  <div className="mx-auto w-full max-w-5xl">
+                    <div className="bg-white/60 backdrop-blur-md border border-accent/10 shadow-premium rounded-[2rem] p-8 md:p-12">
+                      <div className="grid gap-12 md:gap-24 sm:grid-cols-2 w-full">
+                        <article className="flex flex-col items-center justify-center text-center group">
+                          <p className="font-script text-2xl text-accent/80 -mb-2">Fecha</p>
+                          <h3 className="text-3xl sm:text-4xl font-serif font-medium text-foreground leading-tight">
+                            {config.prebodaTime.replace(/\s*h\s*$/i, "")}
+                          </h3>
+                        </article>
 
-                    <article className="flex flex-col items-center justify-center text-center group">
-                      <p className="font-script text-2xl text-accent/80 -mb-2">Lugar</p>
-                      <h3 className="text-3xl sm:text-4xl font-serif font-medium text-foreground leading-tight">
-                        {config.prebodaPlace}
-                      </h3>
-                      {config.prebodaAddress && (
-                        <p className="mt-3 text-sm text-foreground/60 leading-relaxed max-w-[280px] font-medium italic">
-                          {config.prebodaAddress}
-                        </p>
-                      )}
-                      {prebodaMapUrl && (
-                        <CTAButton
-                          href={prebodaMapUrl}
-                          variant="ghost"
-                          className="mt-10 w-fit tracking-[0.25em] font-bold uppercase text-[10px] border-accent/20 text-accent/80 hover:bg-accent/5"
-                          prefetch={false}
-                        >
-                          Cómo llegar
-                        </CTAButton>
-                      )}
-                    </article>
+                        <article className="flex flex-col items-center justify-center text-center group">
+                          <p className="font-script text-2xl text-accent/80 -mb-2">Lugar</p>
+                          <h3 className="text-3xl sm:text-4xl font-serif font-medium text-foreground leading-tight">
+                            {config.prebodaPlace}
+                          </h3>
+                          {config.prebodaAddress && (
+                            <p className="mt-3 text-sm text-foreground/60 leading-relaxed max-w-[280px] font-medium italic">
+                              {config.prebodaAddress}
+                            </p>
+                          )}
+                          {prebodaMapUrl && (
+                            <CTAButton
+                              href={prebodaMapUrl}
+                              variant="ghost"
+                              className="mt-10 w-fit tracking-[0.25em] font-bold uppercase text-[10px] border-accent/20 text-accent/80 hover:bg-accent/5"
+                              prefetch={false}
+                            >
+                              Cómo llegar
+                            </CTAButton>
+                          )}
+                        </article>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </ScrollReveal>
@@ -165,34 +163,38 @@ export default async function Home() {
             >
               <ScrollReveal>
                 <div className="flex flex-col items-center">
-                  {/* Handwritten Details Grid */}
-                  <div className="mx-auto grid max-w-4xl gap-12 md:gap-24 sm:grid-cols-2 w-full">
-                    <article className="flex flex-col items-center justify-center text-center group">
-                      <p className="font-script text-2xl text-accent/80 -mb-2">Cuándo</p>
-                      <h3 className="text-3xl sm:text-4xl font-serif font-medium text-foreground leading-tight">
-                        {config.eventDate.split('·')[0]} · {config.ceremonyTime}
-                      </h3>
-                    </article>
+                  {/* Card Unificada de Detalles */}
+                  <div className="mx-auto w-full max-w-5xl">
+                    <div className="bg-white/60 backdrop-blur-md border border-accent/10 shadow-premium rounded-[2rem] p-8 md:p-12">
+                      <div className="grid gap-12 md:gap-24 sm:grid-cols-2 w-full">
+                        <article className="flex flex-col items-center justify-center text-center group">
+                          <p className="font-script text-2xl text-accent/80 -mb-2">Fecha</p>
+                          <h3 className="text-3xl sm:text-4xl font-serif font-medium text-foreground leading-tight">
+                            {config.eventDate.split('·')[0]} · {config.ceremonyTime}
+                          </h3>
+                        </article>
 
-                    <article className="flex flex-col items-center justify-center text-center group">
-                      <p className="font-script text-2xl text-accent/80 -mb-2">El Lugar</p>
-                      <h3 className="text-3xl sm:text-4xl font-serif font-medium text-foreground leading-tight">{config.locationName}</h3>
-                      {config.locationAddress && (
-                        <p className="mt-3 text-sm text-foreground/60 leading-relaxed max-w-[280px] font-medium italic">
-                          {config.locationAddress}
-                        </p>
-                      )}
-                      {weddingMapUrl && (
-                        <CTAButton
-                          href={weddingMapUrl}
-                          variant="ghost"
-                          className="mt-10 w-fit tracking-[0.25em] font-bold uppercase text-[10px] border-accent/20 text-accent/80 hover:bg-accent/5"
-                          prefetch={false}
-                        >
-                          Cómo llegar
-                        </CTAButton>
-                      )}
-                    </article>
+                        <article className="flex flex-col items-center justify-center text-center group">
+                          <p className="font-script text-2xl text-accent/80 -mb-2">Lugar</p>
+                          <h3 className="text-3xl sm:text-4xl font-serif font-medium text-foreground leading-tight">{config.locationName}</h3>
+                          {config.locationAddress && (
+                            <p className="mt-3 text-sm text-foreground/60 leading-relaxed max-w-[280px] font-medium italic">
+                              {config.locationAddress}
+                            </p>
+                          )}
+                          {weddingMapUrl && (
+                            <CTAButton
+                              href={weddingMapUrl}
+                              variant="ghost"
+                              className="mt-10 w-fit tracking-[0.25em] font-bold uppercase text-[10px] border-accent/20 text-accent/80 hover:bg-accent/5"
+                              prefetch={false}
+                            >
+                              Cómo llegar
+                            </CTAButton>
+                          )}
+                        </article>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </ScrollReveal>
@@ -273,11 +275,13 @@ export default async function Home() {
                 <div className="flex flex-col items-center">
                   <div className="mx-auto max-w-4xl w-full">
                     <div className="rounded-[var(--radius-card)] glass p-6 md:p-14 shadow-premium">
-                      <RSVPForm
-                        importantTitle={config.rsvpImportantTitle}
-                        importantNotes={config.rsvpImportantNotes}
-                        copy={config.rsvpForm}
-                      />
+                      <Suspense fallback={<div className="flex justify-center p-10"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div></div>}>
+                        <RSVPForm
+                          importantTitle={config.rsvpImportantTitle}
+                          importantNotes={config.rsvpImportantNotes}
+                          copy={config.rsvpForm}
+                        />
+                      </Suspense>
                     </div>
                   </div>
                 </div>
