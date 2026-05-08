@@ -130,6 +130,7 @@ service cloud.firestore {
         "requests",
         "dietary",
         "submittedAt",
+        "updatedAt",
         "source",
         "editToken",
         "reminderOptIn",
@@ -151,7 +152,16 @@ service cloud.firestore {
         request.resource.data.acceptedTerms == true
       );
 
-      allow read, update, delete: if isAdmin();
+      allow read: if isAdmin() || resource.data.editToken != null;
+
+      allow update: if isAdmin() || (
+        // Permitir actualizar si el token coincide y los datos son válidos
+        resource.data.editToken == request.resource.data.editToken &&
+        baseRsvpChecks(request.resource.data) &&
+        request.resource.data.updatedAt == request.time
+      );
+
+      allow delete: if isAdmin();
     }
 
     function baseTaskChecks(data) {
