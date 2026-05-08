@@ -205,7 +205,7 @@ export default async function Home() {
             <Section 
               id="detalles"
               fineArt
-              eyebrow="Faq"
+              eyebrow="FAQ"
               title="Información Útil"
               description="Detalles prácticos para vuestra comodidad durante la jornada"
               showDivider
