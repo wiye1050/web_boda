@@ -572,6 +572,7 @@ export function RSVPForm({
                       </label>
                     ))}
                   </div>
+                  <p className="text-[11px] md:text-xs text-foreground/40 italic leading-snug font-medium">{copy.transportNote}</p>
                 </fieldset>
 
                 {form.needsTransport === "si" && (

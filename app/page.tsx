@@ -207,7 +207,7 @@ export default async function Home() {
               fineArt
               eyebrow="FAQ"
               title="Información Útil"
-              description="Detalles prácticos para vuestra comodidad durante la jornada"
+              description="Detalles prácticos para vuestra comodidad"
               showDivider
             >
               <ScrollReveal>

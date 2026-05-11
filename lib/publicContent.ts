@@ -310,11 +310,11 @@ export const DEFAULT_PUBLIC_CONTENT: PublicContent = {
     prebodaYesLabel: "¡Claro!",
     prebodaNoLabel: "No podré ir",
     prebodaNote: "Viernes 11/09 · 19:30 · Casino Rooftop Ponferrada.",
-    transportLegend: "¿Necesitas traslado?",
+    transportLegend: "¿Necesitas autobús a la boda?",
     transportYesLabel: "Sí, quiero bus",
     transportNoLabel: "No, iremos por nuestra cuenta",
     transportNote:
-      "Organizaremos bus desde Ponferrada si hay suficientes plazas.",
+      "Servicio de ida y vuelta a la finca para el día de la boda (sábado 12). Los horarios y paradas definitivos se confirmarán más adelante.",
     transportSeatsLabel: "¿Cuántas plazas de bus necesitáis?",
     transportSeatsPlaceholder: "Ej: 2",
     transportSeatsError: "Indica un número de plazas válido (≤ asistentes).",
